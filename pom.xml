@@ -246,16 +246,40 @@
             <cheese>Gouda</cheese>
             <js>dynjs</js>
           </environmentVariables>
-          <systemPropertyVariables>
-            <vertx.langs..js>dynjs</vertx.langs..js>
-            <vertx.mods>target/mods</vertx.mods>
-          </systemPropertyVariables>
           <includes>
             <include>**/integration/**</include>
           </includes>
         </configuration>
         <executions>
           <execution>
+            <id>Rhino</id>
+            <configuration>
+              <systemPropertyVariables>
+                <vertx.langs..coffee>rhino</vertx.langs..coffee>
+                <vertx.langs..js>rhino</vertx.langs..js>
+                <vertx.mods>target/mods</vertx.mods>
+              </systemPropertyVariables>
+              <includes>
+                <include>**/integration/**</include>
+              </includes>
+            </configuration>
+            <goals>
+              <goal>integration-test</goal>
+              <goal>verify</goal>
+            </goals>
+          </execution>
+          <execution>
+            <id>DynJS</id>
+            <configuration>
+              <systemPropertyVariables>
+                <vertx.langs..coffee>dynjs</vertx.langs..coffee>
+                <vertx.langs..js>dynjs</vertx.langs..js>
+                <vertx.mods>target/mods</vertx.mods>
+              </systemPropertyVariables>
+              <includes>
+                <include>**/integration/**</include>
+              </includes>
+            </configuration>
             <goals>
               <goal>integration-test</goal>
               <goal>verify</goal>
