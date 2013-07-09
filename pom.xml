@@ -25,8 +25,8 @@
 
     <!-- plugin versions -->
     <maven.compiler.plugin.version>3.0</maven.compiler.plugin.version>
-    <maven.failsafe.plugin.version>2.14</maven.failsafe.plugin.version>
-    <maven.surefire.plugin.version>2.14</maven.surefire.plugin.version>
+    <maven.failsafe.plugin.version>2.15</maven.failsafe.plugin.version>
+    <maven.surefire.plugin.version>2.15</maven.surefire.plugin.version>
     <maven.resources.plugin.version>2.6</maven.resources.plugin.version>
     <maven.dependency.plugin.version>2.7</maven.dependency.plugin.version>
     <maven.assembly.plugin.version>2.4</maven.assembly.plugin.version>
@@ -242,15 +242,14 @@
         <artifactId>maven-failsafe-plugin</artifactId>
         <version>${maven.failsafe.plugin.version}</version>
         <configuration>
-          <systemProperties>
-            <property>
-              <name>vertx.mods</name>
-              <value>target/mods</value>
-            </property>
-          </systemProperties>
           <environmentVariables>
             <cheese>Gouda</cheese>
+            <js>dynjs</js>
           </environmentVariables>
+          <systemPropertyVariables>
+            <vertx.langs..js>dynjs</vertx.langs..js>
+            <vertx.mods>target/mods</vertx.mods>
+          </systemPropertyVariables>
           <includes>
             <include>**/integration/**</include>
           </includes>

@@ -34,20 +34,6 @@ var sha1 = function(s) {
   return org.vertx.java.core.json.impl.Base64.encodeBytes(bytes);
 }
 
-vertxTest.startTests({
-  testManualWebSockets: function() {
-    if (typeof dynjs != 'undefined') {
-      // we can only do manual websockets
-      // with dynjs since handling native
-      // Java Bytes is something I don't know
-      // how to do in rhino.
-      dynJSManualWebSockets();
-    } else {
-      vassert.testComplete();
-    }
-  }
-});
-
 var dynJSManualWebSockets = function() {
   var path    = "/some/path";
   var message = "chili cheese fries";
@@ -86,4 +72,19 @@ var dynJSManualWebSockets = function() {
     });
   });
 }
+
+
+vertxTest.startTests({
+  testManualWebSockets: function() {
+    if (typeof dynjs != 'undefined') {
+      // we can only do manual websockets
+      // with dynjs since handling native
+      // Java Bytes is something I don't know
+      // how to do in rhino.
+      dynJSManualWebSockets();
+    } else {
+      vassert.testComplete();
+    }
+  }
+});
 
