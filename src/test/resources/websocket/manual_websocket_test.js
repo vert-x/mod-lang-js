@@ -36,42 +36,54 @@ var sha1 = function(s) {
 
 vertxTest.startTests({
   testManualWebSockets: function() {
-    var path    = "/some/path";
-    var message = "chili cheese fries";
-
-    server.requestHandler(function(req) {
-      vassert.assertEquals(path, req.path());
-      vassert.assertEquals("Upgrade", req.headers().get("Connection"));
-
-      var sock  = req.netSocket();
-      var secHeader = req.headers().get("Sec-WebSocket-Key");
-      var secKey = secHeader + "258EAFA5-E914-47DA-95CA-C5AB0DC85B11";
-      sock.write("HTTP/1.1 101 Web Socket Protocol Handshake\r\n" +
-                 "Upgrade: WebSocket\r\n" +
-                 "Sec-WebSocket-Accept: " + sha1(secKey) + "\r\n" +
-                 "Connection: Upgrade\r\n" +
-                 "\r\n");
-
-      // write raw text frame
-      var buff = new vertx.Buffer();
-      var txtFrame = new java.lang.Byte(129);
-      var txtLength = new java.lang.Byte(message.length);
-
-      buff.appendByte(txtFrame);
-      buff.appendByte(txtLength);
-      buff.appendString(message);
-      sock.write(buff);
-    });
-
-    server.listen(8080, "0.0.0.0", function(err, srv) {
-      vassert.assertTrue(err === null);
-      client.connectWebsocket(path, function(ws) {
-        ws.dataHandler(function(buffer) {
-          vassert.assertEquals(message, buffer.toString('UTF-8'));
-          vassert.testComplete();
-        });
-      });
-    });
+    if (typeof dynjs != 'undefined') {
+      // we can only do manual websockets
+      // with dynjs since handling native
+      // Java Bytes is something I don't know
+      // how to do in rhino.
+      dynJSManualWebSockets();
+    } else {
+      vassert.testComplete();
+    }
   }
 });
+
+var dynJSManualWebSockets = function() {
+  var path    = "/some/path";
+  var message = "chili cheese fries";
+
+  server.requestHandler(function(req) {
+    vassert.assertEquals(path, req.path());
+    vassert.assertEquals("Upgrade", req.headers().get("Connection"));
+
+    var sock  = req.netSocket();
+    var secHeader = req.headers().get("Sec-WebSocket-Key");
+    var secKey = secHeader + "258EAFA5-E914-47DA-95CA-C5AB0DC85B11";
+    sock.write("HTTP/1.1 101 Web Socket Protocol Handshake\r\n" +
+               "Upgrade: WebSocket\r\n" +
+               "Sec-WebSocket-Accept: " + sha1(secKey) + "\r\n" +
+               "Connection: Upgrade\r\n" +
+               "\r\n");
+
+    // write raw text frame
+    var buff = new vertx.Buffer();
+    var txtFrame = new java.lang.Byte(129);
+    var txtLength = new java.lang.Byte(message.length);
+
+    buff.appendByte(txtFrame);
+    buff.appendByte(txtLength);
+    buff.appendString(message);
+    sock.write(buff);
+  });
+
+  server.listen(8080, "0.0.0.0", function(err, srv) {
+    vassert.assertTrue(err === null);
+    client.connectWebsocket(path, function(ws) {
+      ws.dataHandler(function(buffer) {
+        vassert.assertEquals(message, buffer.toString('UTF-8'));
+        vassert.testComplete();
+      });
+    });
+  });
+}
 

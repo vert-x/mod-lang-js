@@ -46,7 +46,7 @@ HttpTest = {
       }
     });
     server.listen(8080, "0.0.0.0", function(err, serv) {
-      vassert.assertEquals(err, null);
+      vassert.assertTrue(err === null);
       client.port(8080);
       var req = client.post("/form", function(resp) {
         // assert the response
@@ -94,7 +94,7 @@ HttpTest = {
           }
       });
       server.listen(8080, "0.0.0.0", function(err, serv) {
-          vassert.assertEquals(err, null);
+          vassert.assertTrue(err === null);
           client.port(8080);
           var req = client.post("/form", function(resp) {
               // assert the response

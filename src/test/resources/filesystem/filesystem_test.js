@@ -33,9 +33,9 @@ FsTest = {
     var content = "some-data";
     fs.writeFile(from, content, function() {
       fs.copy(from, to, function(err, res) {
-        vassert.assertEquals(null, err);
+        vassert.assertTrue(null === err);
         fs.readFile(to, function(err, res) {
-          vassert.assertEquals(null, err);
+          vassert.assertTrue(null === err);
           vassert.assertEquals(content, res.toString());
           vassert.testComplete();
         });
@@ -49,12 +49,12 @@ FsTest = {
     var content = "some-data";
     fs.writeFile(from, content, function() {
       fs.move(from, to, function(err, res) {
-        vassert.assertEquals(null, err);
+        vassert.assertTrue(null === err);
         fs.readFile(to, function(err, res) {
-          vassert.assertEquals(null, err);
+          vassert.assertTrue(null === err);
           vassert.assertEquals(content, res.toString());
           fs.exists(from, function(err, res) {
-            vassert.assertEquals(null, err);
+            vassert.assertTrue(null === err);
             vassert.assertTrue(!res);
             vassert.testComplete();
           });
@@ -67,9 +67,9 @@ FsTest = {
     // arguments: string, boolean, handler
     var dir = fileDir + "/foo/bar";
     fs.mkDir(dir, true, function(err, res) {
-      vassert.assertEquals(null, err);
+      vassert.assertTrue(null === err);
       fs.readDir(dir, function(err, res) {
-        vassert.assertEquals(null, err);
+        vassert.assertTrue(null === err);
         vassert.testComplete();
       });
     });
@@ -79,7 +79,7 @@ FsTest = {
     var dir = fileDir + "/testMkDirSync";
     fs.mkDirSync(dir);
     fs.readDir(dir, function(err, res) {
-      vassert.assertEquals(null, err);
+      vassert.assertTrue(null === err);
       vassert.testComplete();
     });
   },
@@ -93,7 +93,7 @@ FsTest = {
       fs.writeFile(file2, content, function() {
         fs.writeFile(file3, content, function() {
           fs.readDir(fileDir, function(err, res) {
-            vassert.assertEquals(null, err);
+            vassert.assertTrue(null === err);
             vassert.assertEquals("3", res.length.toString());
             vassert.testComplete();
           });
@@ -107,7 +107,7 @@ FsTest = {
     var content = "some-data";
     fs.writeFile(file, content, function() {
       fs.props(file, function(err, res) {
-        vassert.assertEquals(null, err);
+        vassert.assertTrue(null === err);
         vassert.assertTrue(res.isRegularFile);
         vassert.assertEquals('number', typeof res.creationTime);
         vassert.assertEquals('number', typeof res.lastAccessTime);
@@ -123,9 +123,9 @@ FsTest = {
     var content = tu.generateRandomBuffer(10000);
     fs.writeFile(from, content, function() {
       fs.open(from, function(err, file1) {
-        vassert.assertEquals(null, err);
+        vassert.assertTrue(null === err);
         fs.open(to, function(err, file2) {
-          vassert.assertEquals(null, err);
+          vassert.assertTrue(null === err);
           var rs = file1;
           var ws = file2;
           var pump = new Pump(rs, ws);
@@ -134,7 +134,7 @@ FsTest = {
             file1.close(function() {
               file2.close(function() {
                 fs.readFile(to, function(err, res) {
-                  vassert.assertEquals(null, err);
+                  vassert.assertTrue(null === err);
                   vassert.assertTrue(tu.buffersEqual(content, res));
                   vassert.testComplete();
                 });

@@ -37,7 +37,14 @@ MultiMap = function(j_map) {
    *          <code>name</code>, the first value is returned.
    */
   this.get = function(name) {
-    return j_map.get(name);
+    var value = j_map.get(name);
+    // Handles discrepancy between how rhino and dynjs deal with null return values 
+    // from Java objects. It seems as though Rhino changes the null to undefined, or
+    // perhaps has some distinction where undefined is returned iff the key isn't there.
+    if (value == null) { 
+      return undefined 
+    }
+    return value;
   }
 
   /**

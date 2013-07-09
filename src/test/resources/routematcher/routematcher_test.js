@@ -121,7 +121,7 @@ RouteMatcherTest = {
   testInterceptAll: function() {
     var count = 0
     var handler = function(req) {
-      vassert.assertEquals(1, ++count)
+      vassert.assertTrue(1 == ++count)
       // Now call the request handler of the routematcher
       rm.call(req);
     }
@@ -129,7 +129,7 @@ RouteMatcherTest = {
     server.requestHandler(handler);
 
     rm.get("/:name/:version", function(req) {
-      vassert.assertEquals(2, ++count);
+      vassert.assertTrue(2 == ++count);
       req.response.end();
     });
 
@@ -146,6 +146,8 @@ RouteMatcherTest = {
 function route(method, regex, pattern, params, uri) {
 
   var handler = function(req) {
+    var console = require('vertx/console');
+    var print = console.log;
     for (k in req.params()) {
       vassert.assertTrue(params[k] === req.params().get(k));
     }

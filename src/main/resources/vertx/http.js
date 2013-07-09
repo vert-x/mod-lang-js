@@ -757,7 +757,7 @@ http.HttpServer = function() {
    * @param {Handler} [handler] The handler to notify when close() completes
    */
   this.close = function(handler) {
-    if (jserver) {
+    if (handler) {
       jserver.close(handler);
     } else {
       jserver.close();
