@@ -1,0 +1,12 @@
+.cache
+.classpath
+.gradle
+.project
+.settings
+bin
+*.class
+target
+mods
+.idea/
+*.iml
+js-test-output
