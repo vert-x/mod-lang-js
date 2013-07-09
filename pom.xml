@@ -262,6 +262,7 @@
               <includes>
                 <include>**/integration/**</include>
               </includes>
+              <summaryFile>target/failsafe-reports/failsafe-summary-rhino.xml</summaryFile>
             </configuration>
             <goals>
               <goal>integration-test</goal>
@@ -279,6 +280,7 @@
               <includes>
                 <include>**/integration/**</include>
               </includes>
+              <summaryFile>target/failsafe-reports/failsafe-summary-dynjs.xml</summaryFile>
             </configuration>
             <goals>
               <goal>integration-test</goal>
