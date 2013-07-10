@@ -31,16 +31,16 @@ HttpTest = {
     server.requestHandler(function(req) {
       if (req.uri() === '/form') {
         req.response.chunked(true);
-        req.uploadHandler(function(event) {
-          event.dataHandler(function(buffer) {
+        req.uploadHandler(function(upload) {
+          vassert.assertTrue(upload.filename() === "tmp-0.txt")
+          vassert.assertTrue(upload.contentType() === "image/gif")
+          upload.dataHandler(function(buffer) {
             vassert.assertEquals(content, buffer.toString());
           });
         });
         req.endHandler(function() {
           var attrs = req.formAttributes();
-          vassert.assertEquals(attrs.get('name'), "file");
-          vassert.assertEquals(attrs.get('filename'), "tmp-0.txt");
-          vassert.assertEquals(attrs.get('Content-Type'), "image/gif");
+          vassert.assertTrue(attrs.isEmpty());
           req.response.end();
         });
       }

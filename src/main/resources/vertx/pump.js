@@ -87,7 +87,7 @@ var Pump = function(rs, ws) {
    * Return the total number of bytes pumped by this pump.
    * @returns {number} the number of bytes pumped
    */
-  this.getBytesPumped = function() {
+  this.bytesPumped = function() {
     return pumped;
   },
   /**

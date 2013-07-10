@@ -127,10 +127,10 @@ function addProps(obj) {
 addProps(vertx.net);
 addProps(vertx.http);
 addProps(vertx.timer);
-addProps(vertx.sockjs);
-addProps(vertx.parse_tools);
-addProps(vertx.shared_data);
-addProps(vertx.file_system);
+addProps(vertx.sockJS);
+addProps(vertx.parseTools);
+addProps(vertx.sharedData);
+addProps(vertx.fileSystem);
 
 module.exports = vertx;
 
