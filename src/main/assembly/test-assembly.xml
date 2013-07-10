@@ -1,6 +1,6 @@
 <?xml version="1.0"?>
 <assembly>
-  <id>mod</id>
+  <id>TEST-mod</id>
   <formats>
     <format>zip</format>
   </formats>
@@ -8,7 +8,7 @@
   <fileSets>
     <fileSet>
       <outputDirectory/>
-      <directory>target/mods/${module.name}</directory>
+      <directory>target/mods/${test.module.name}</directory>
       <includes>
         <include>**</include>
       </includes>
@@ -16,3 +16,4 @@
     </fileSet>
   </fileSets>
 </assembly>
+

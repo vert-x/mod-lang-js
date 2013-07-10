@@ -18,6 +18,7 @@
   <properties>
     <!-- vert.x module name -->
     <module.name>${project.groupId}~${project.artifactId}~${project.version}</module.name>
+    <test.module.name>${project.groupId}~${project.artifactId}~${project.version}-TEST</test.module.name>
 
     <!-- encodings -->
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
@@ -187,6 +188,26 @@
         </configuration>
         <executions>
           <execution>
+            <id>copy-test-resources</id>
+            <phase>process-classes</phase>
+            <goals>
+              <goal>copy-resources</goal>
+            </goals>
+            <configuration>
+              <overwrite>true</overwrite>
+              <outputDirectory>${basedir}/target/mods/${test.module.name}</outputDirectory>
+              <resources>
+                <resource>
+                  <directory>target/test-classes</directory>
+                  <filtering>false</filtering>
+                  <excludes>
+                    <exclude>org/**/*</exclude>
+                  </excludes>
+                </resource>
+              </resources>
+            </configuration>
+          </execution>
+          <execution>
             <id>copy-resources</id>
             <phase>process-classes</phase>
             <goals>
@@ -306,16 +327,29 @@
         <artifactId>maven-assembly-plugin</artifactId>
         <version>${maven.assembly.plugin.version}</version>
         <configuration>
-          <appendAssemblyId>false</appendAssemblyId>
-          <descriptors>
-            <descriptor>src/main/assembly/assembly.xml</descriptor>
-          </descriptors>
           <attach>true</attach>
         </configuration>
         <executions>
           <execution>
             <id>assemble</id>
             <phase>package</phase>
+            <configuration>
+              <descriptors>
+                <descriptor>src/main/assembly/assembly.xml</descriptor>
+              </descriptors>
+            </configuration>
+            <goals>
+              <goal>single</goal>
+            </goals>
+          </execution>
+          <execution>
+            <id>assemble-tests</id>
+            <phase>package</phase>
+            <configuration>
+              <descriptors>
+                <descriptor>src/main/assembly/test-assembly.xml</descriptor>
+              </descriptors>
+            </configuration>
             <goals>
               <goal>single</goal>
             </goals>
