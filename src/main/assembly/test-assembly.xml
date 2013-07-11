@@ -1,17 +1,19 @@
 <?xml version="1.0"?>
 <assembly>
-  <id>test</id>
+  <id>tests</id>
   <formats>
     <format>zip</format>
   </formats>
-  <includeBaseDirectory>false</includeBaseDirectory>
   <fileSets>
     <fileSet>
       <outputDirectory/>
-      <directory>target/test-classes</directory>
+      <directory>src/test</directory>
       <includes>
         <include>**</include>
       </includes>
+      <excludes>
+        <exclude>java/**/*</exclude>
+      </excludes>
       <filtered>false</filtered>
     </fileSet>
   </fileSets>

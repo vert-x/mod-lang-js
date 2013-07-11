@@ -1,4 +1,4 @@
-package org.vertx.lang.dynjs.integration;
+package org.vertx.lang.js.integration;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;
