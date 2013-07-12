@@ -1,8 +1,10 @@
 # Javascript Language Module for Vert.x
 
+[![Build Status](https://travis-ci.org/vert-x/mod-lang-js.png?branch=master)](https://travis-ci.org/vert-x/mod-lang-js)
+
 This is the Javascript language module used by 
-[lang-dynjs](https://github.com/vert-x/mod-lang-dynjs) and
-[lang-rhino](https://github.com/vert-x/mod-lang-rhino). 
+[mod-lang-dynjs](https://github.com/vert-x/mod-lang-dynjs) and
+[mod-lang-rhino](https://github.com/vert-x/mod-lang-rhino). 
 This module is not typically used directly, but rather both `mod-lang-rhino`
 and `mod-lang-dynjs` have a dependency on this module which provides
 the core Javascript API for Vert.x.
@@ -14,8 +16,8 @@ are on the CI server.
 
 ## Continuous Integration
 
-The module is built on our [Cloudbees CI server](https://projectodd.ci.cloudbees.com/view/DynJS/job/lang-js/)
-with each push to github.
+The module is built on our [Cloudbees CI server](https://projectodd.ci.cloudbees.com/view/DynJS/job/lang-js/),
+as well as on [Travis CI](https://travis-ci.org/vert-x/mod-lang-js) with each push to GitHub.
 
 ## Running the tests
 
@@ -25,6 +27,8 @@ first. Then you can clone and build.
     $ git clone https://github.com/vert-x/mod-lang-js.git
     $ cd mod-lang-js
     $ mvn verify
+
+This will run all of the integration tests against both `mod-lang-rhino` and `mod-lang-dynjs`.
 
 If you're hacking on this code and want to install this module locally:
 
