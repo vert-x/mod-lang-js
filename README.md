@@ -11,7 +11,7 @@ the core Javascript API for Vert.x.
 
 ## API Documentation
 
-The [API docs](https://projectodd.ci.cloudbees.com/view/DynJS/job/lang-js/lastSuccessfulBuild/artifact/target/docs/index.html)
+The [API docs](https://projectodd.ci.cloudbees.com/job/lang-js/lastSuccessfulBuild/artifact/target/docs/index.html)
 are on the CI server.
 
 ## Continuous Integration
