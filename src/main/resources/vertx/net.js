@@ -48,6 +48,13 @@ net.createNetClient = function() {
 }
 
 /**
+ * A <code>ListenHandler</code> is a {@linkcode Handler} that is
+ * notified when a call to {@linkcode module:vertx/net.NetServer#listen}
+ * has been initiated and the underlying socket has been bound.
+ * @typedef {function} ListenHandler
+ */
+
+/**
  * A <code>ConnectHandler</code> is a {@linkcode Handler} that accepts a
  * {@linkcode module:vertx/net.NetSocket} as it's parameter.
  * @typedef {function} ConnectHandler
@@ -94,7 +101,7 @@ net.NetServer = function() {
    *
    * @param {number} port The network port to listen on
    * @param {string} [host] The hostname or IP address to listen on
-   * @param {ConnectHandler} [handler] The connection handler
+   * @param {ListenHandler} [handler] The listen handler
    * @returns {module:vertx/net.NetServer} this
    */
   this.listen = function() {
