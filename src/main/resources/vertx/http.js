@@ -1255,9 +1255,11 @@ http.HttpClientRequest = function(jreq) {
    * has the effect of canceling any existing timeout and starting the timeout from scratch.
    *
    * @param {number} timeout The amount of time in milliseconds to wait before timing out
+   * @returns {module:vertx/http.HttpClientRequest}
    */
   this.timeout = function(t) {
     jreq.setTimeout(t);
+    return that;
   }
 }
 
@@ -1273,7 +1275,7 @@ http.HttpClientRequest = function(jreq) {
  * {@linkcode module:vertx/pump~Pump|Pump} to pump data with flow control.
  * </p>
  * @constructor
- * @param {org.vertx.java.core.http.HttpClientResponse} the underlying Java proxy
+ * @param {org.vertx.java.core.http.HttpClientResponse} jresp the underlying Java proxy
  * @see ResponseHandler
  * @mixes ReadStream
  */

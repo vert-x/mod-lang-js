@@ -23,8 +23,28 @@ var tu = require('test_utils');
 var port = 8080
 var server = vertx.http.createHttpServer();
 var client = vertx.http.createHttpClient().port(port);
+var print  = require('vertx/console').log;
 
 HttpTest = {
+
+  testRequestTimeout: function() {
+    server.requestHandler(function(req) {
+      req.pause();
+      req.response.end("OK");
+    });
+    server.listen(8080, "0.0.0.0", function(err, serv) {
+      vassert.assertTrue(err === null);
+      client.port(8080);
+      var req = client.get("/foo", function(resp) {
+      });
+      req.exceptionHandler(function(e) {
+        // expected on timeout
+        vassert.testComplete();
+      });
+      vassert.assertTrue(req === req.timeout(1));
+      req.end();
+    });
+  },
 
   testFormFileUpload: function() {
     var content = "Vert.x rocks!";
