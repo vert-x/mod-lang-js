@@ -50,6 +50,7 @@ HttpTest = {
     var content = "Vert.x rocks!";
     server.requestHandler(function(req) {
       if (req.uri() === '/form') {
+        req.expectMultiPart(true);
         req.response.chunked(true);
         req.uploadHandler(function(upload) {
           vassert.assertTrue(upload.filename() === "tmp-0.txt")
@@ -100,6 +101,7 @@ HttpTest = {
 
           if (req.uri() === '/form') {
               req.response.chunked(true);
+              req.expectMultiPart(true);
               req.uploadHandler(function(event) {
                   event.dataHandler(function(buffer) {
                       vassert.fail("Data handler should not be called");

@@ -221,6 +221,19 @@ http.HttpServerRequest = function(jreq) {
   }
 
   /**
+   * Inform the server that we are expecting a multi-part form.
+   * You _must_ call this function _before_ receiving the request
+   * body if you expect it to contain a multi-part form.
+   *
+   * @param {boolean} expect Whether to expect a multi-part form
+   * @returns {module:vertx/http.HttpServerRequest} this
+   */
+  this.expectMultiPart = function(expect) {
+    jreq.expectMultiPart(expect);
+    return that;
+  }
+
+  /**
    * Return a form attributes object
    *
    * @returns {module:vertx/multi_map~MultiMap} The form attributes
