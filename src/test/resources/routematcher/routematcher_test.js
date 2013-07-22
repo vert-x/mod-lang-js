@@ -175,7 +175,5 @@ function route(method, regex, pattern, params, uri) {
 vertxTest.startTests(RouteMatcherTest);
 
 function vertxStop() {
-  server.close(function() {
-    client.close();
-  })
+  server.close();
 }
