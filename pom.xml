@@ -287,6 +287,7 @@
                 <vertx.langs..coffee>rhino</vertx.langs..coffee>
                 <vertx.langs..js>rhino</vertx.langs..js>
                 <vertx.mods>target/mods</vertx.mods>
+                <vertx.test.timeout>15</vertx.test.timeout>
               </systemPropertyVariables>
               <includes>
                 <include>**/integration/**</include>

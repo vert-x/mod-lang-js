@@ -101,7 +101,6 @@ var jEventBus = __jvertx.eventBus();
  * that address will be received by the handler. A single handler can be
  * registered against many addresses.
  * @param {MessageHandler} handler The handler
- *
  * @returns {module:vertx/event_bus} The event bus
  */
 eventBus.registerLocalHandler = function(address, handler) {
@@ -116,11 +115,13 @@ eventBus.registerLocalHandler = function(address, handler) {
  * that address will be received by the handler. A single handler can be
  * registered against many addresses.
  * @param {MessageHandler} handler The handler
+ * @param {Handler} [registrationHandler] If supplied, this handler is called
+ * when all nodes have registered this address
  *
  * @returns {module:vertx/event_bus} the event bus
  */
-eventBus.registerHandler = function(address, handler) {
-  registerHandler(address, handler, false);
+eventBus.registerHandler = function(address, handler, registrationHandler) {
+  registerHandler(address, handler, false, registrationHandler);
   return eventBus;
 };
 
@@ -129,13 +130,19 @@ eventBus.registerHandler = function(address, handler) {
  *
  * @param {string} address The address the handler is registered to
  * @param {MessageHandler} handler The handler to unregister
+ * @param {Handler} [registrationHandler] If supplied, this handler is called
+ * when all nodes have unregistered this address
  * @returns {module:vertx/event_bus} the event bus
  */
-eventBus.unregisterHandler = function(address, handler) {
+eventBus.unregisterHandler = function(address, handler, registrationHandler) {
   checkHandlerParams(address, handler);
   var wrapped = handlerMap[handler];
   if (wrapped) {
-    jEventBus.unregisterHandler(address, wrapped);
+    if (typeof registrationHandler == 'function') {
+      jEventBus.unregisterHandler(address, wrapped, registrationHandler);
+    } else {
+      jEventBus.unregisterHandler(address, wrapped);
+    }
     delete handlerMap[handler];
   }
   return eventBus;
@@ -223,10 +230,14 @@ function wrappedHandler(handler) {
   });
 }
 
-function registerHandler(address, handler, localOnly) {
+function registerHandler(address, handler, localOnly, registrationHandler) {
   checkHandlerParams(address, handler);
 
   var wrapped = wrappedHandler(handler);
+  if (typeof localOnly == 'function') {
+    registrationHandler = localOnly;
+    localOnly = false;
+  }
 
   // This is a bit more complex than it should be because we have to wrap the
   // handler - therefore we have to keep track of it :(
@@ -235,7 +246,11 @@ function registerHandler(address, handler, localOnly) {
   if (localOnly) {
     jEventBus.registerLocalHandler(address, wrapped);
   } else {
-    jEventBus.registerHandler(address, wrapped);
+    if (typeof registrationHandler == 'undefined') {
+      jEventBus.registerHandler(address, wrapped);
+    } else {
+      jEventBus.registerHandler(address, wrapped, registrationHandler);
+    }
   }
   return eventBus;
 }

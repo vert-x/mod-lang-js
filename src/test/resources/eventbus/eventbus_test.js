@@ -64,7 +64,24 @@ var echo = function(msg) {
   });
 }
 
+var NoopHandler = function(msg, replier) {
+}
+
 var EventBusTest = {
+  testRegistrationHandler: function() {
+    eb.registerHandler(address, NoopHandler, function() {
+      eb.unregisterHandler(address, NoopHandler);
+      vassert.testComplete();
+    });
+  },
+
+  testUnregistrationHandler: function() {
+    eb.registerHandler(address, NoopHandler);
+    eb.unregisterHandler(address, NoopHandler, function() {
+      vassert.testComplete();
+    });
+  },
+
   testSimple: function() {
     var handled = false;
     var ebus = eb.registerHandler(address, function MyHandler(msg, replier) {
