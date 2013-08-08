@@ -1432,8 +1432,28 @@ http.RouteMatcher = function() {
 
   var j_rm = new org.vertx.java.core.http.RouteMatcher();
 
+  // req_map keeps track of all JavaScript requests while the corresponding
+  // Java request traverses j_rm. We do this in order to pass any JavaScript
+  // request passed to this.call() unmodified to the route handlers in case
+  // the user has augmented the request.
+  var req_map = new java.util.HashMap();
+
+  function req_map_wrappedRequestHandler(handler) {
+    var wrappedHandler = wrappedRequestHandler(handler);
+    return function(jreq) {
+      var req = req_map.remove(jreq);
+      if (req) {
+        return handler(req);
+      } else {
+        return wrappedHandler(jreq);
+      }
+    }
+  }
+
   this.call = function(req) {
-    j_rm.handle(req._to_java_request())
+    var jreq = req._to_java_request();
+    req_map.put(jreq, req);
+    j_rm.handle(jreq);
   }
 
   /**
@@ -1444,7 +1464,7 @@ http.RouteMatcher = function() {
    * @return {module:vertx/http.RouteMatcher}
    */
   this.get = function(pattern, handler) {
-    j_rm.get(pattern, wrappedRequestHandler(handler));
+    j_rm.get(pattern, req_map_wrappedRequestHandler(handler));
     return this;
   }
 
@@ -1456,7 +1476,7 @@ http.RouteMatcher = function() {
    * @return {module:vertx/http.RouteMatcher}
    */
   this.put = function(pattern, handler) {
-    j_rm.put(pattern, wrappedRequestHandler(handler));
+    j_rm.put(pattern, req_map_wrappedRequestHandler(handler));
     return this;
   }
 
@@ -1468,7 +1488,7 @@ http.RouteMatcher = function() {
    * @return {module:vertx/http.RouteMatcher}
    */
   this.post = function(pattern, handler) {
-    j_rm.post(pattern, wrappedRequestHandler(handler));
+    j_rm.post(pattern, req_map_wrappedRequestHandler(handler));
     return this;
   }
 
@@ -1480,7 +1500,7 @@ http.RouteMatcher = function() {
    * @return {module:vertx/http.RouteMatcher}
    */
   this.delete = function(pattern, handler) {
-    j_rm.delete(pattern, wrappedRequestHandler(handler));
+    j_rm.delete(pattern, req_map_wrappedRequestHandler(handler));
     return this;
   }
 
@@ -1492,7 +1512,7 @@ http.RouteMatcher = function() {
    * @return {module:vertx/http.RouteMatcher}
    */
   this.options = function(pattern, handler) {
-    j_rm.options(pattern, wrappedRequestHandler(handler));
+    j_rm.options(pattern, req_map_wrappedRequestHandler(handler));
     return this;
   }
 
@@ -1504,7 +1524,7 @@ http.RouteMatcher = function() {
    * @return {module:vertx/http.RouteMatcher}
    */
   this.head = function(pattern, handler) {
-    j_rm.head(pattern, wrappedRequestHandler(handler));
+    j_rm.head(pattern, req_map_wrappedRequestHandler(handler));
     return this;
   }
 
@@ -1516,7 +1536,7 @@ http.RouteMatcher = function() {
    * @return {module:vertx/http.RouteMatcher}
    */
   this.trace = function(pattern, handler) {
-    j_rm.trace(pattern, wrappedRequestHandler(handler));
+    j_rm.trace(pattern, req_map_wrappedRequestHandler(handler));
     return this;
   }
 
@@ -1528,7 +1548,7 @@ http.RouteMatcher = function() {
    * @return {module:vertx/http.RouteMatcher}
    */
   this.connect = function(pattern, handler) {
-    j_rm.connect(pattern, wrappedRequestHandler(handler));
+    j_rm.connect(pattern, req_map_wrappedRequestHandler(handler));
     return this;
   }
 
@@ -1540,7 +1560,7 @@ http.RouteMatcher = function() {
    * @return {module:vertx/http.RouteMatcher}
    */
   this.patch = function(pattern, handler) {
-    j_rm.patch(pattern, wrappedRequestHandler(handler));
+    j_rm.patch(pattern, req_map_wrappedRequestHandler(handler));
     return this;
   }
 
@@ -1552,7 +1572,7 @@ http.RouteMatcher = function() {
    * @return {module:vertx/http.RouteMatcher}
    */
   this.all = function(pattern, handler) {
-    j_rm.all(pattern, wrappedRequestHandler(handler));
+    j_rm.all(pattern, req_map_wrappedRequestHandler(handler));
     return this;
   }
 
@@ -1565,7 +1585,7 @@ http.RouteMatcher = function() {
 
    */
   this.getWithRegEx = function(pattern, handler) {
-    j_rm.getWithRegEx(pattern, wrappedRequestHandler(handler));
+    j_rm.getWithRegEx(pattern, req_map_wrappedRequestHandler(handler));
     return this;
   }
 
@@ -1577,7 +1597,7 @@ http.RouteMatcher = function() {
    * @return {module:vertx/http.RouteMatcher}
    */
   this.putWithRegEx = function(pattern, handler) {
-    j_rm.putWithRegEx(pattern, wrappedRequestHandler(handler));
+    j_rm.putWithRegEx(pattern, req_map_wrappedRequestHandler(handler));
     return this;
   }
 
@@ -1589,7 +1609,7 @@ http.RouteMatcher = function() {
    * @return {module:vertx/http.RouteMatcher}
    */
   this.postWithRegEx = function(pattern, handler) {
-    j_rm.postWithRegEx(pattern, wrappedRequestHandler(handler));
+    j_rm.postWithRegEx(pattern, req_map_wrappedRequestHandler(handler));
     return this;
   }
 
@@ -1601,7 +1621,7 @@ http.RouteMatcher = function() {
    * @return {module:vertx/http.RouteMatcher}
    */
   this.deleteWithRegEx = function(pattern, handler) {
-    j_rm.deleteWithRegEx(pattern, wrappedRequestHandler(handler));
+    j_rm.deleteWithRegEx(pattern, req_map_wrappedRequestHandler(handler));
     return this;
   }
 
@@ -1613,7 +1633,7 @@ http.RouteMatcher = function() {
    * @return {module:vertx/http.RouteMatcher}
    */
   this.optionsWithRegEx = function(pattern, handler) {
-    j_rm.optionsWithRegEx(pattern, wrappedRequestHandler(handler));
+    j_rm.optionsWithRegEx(pattern, req_map_wrappedRequestHandler(handler));
     return this;
   }
 
@@ -1625,7 +1645,7 @@ http.RouteMatcher = function() {
    * @return {module:vertx/http.RouteMatcher}
    */
   this.headWithRegEx = function(pattern, handler) {
-    j_rm.headWithRegEx(pattern, wrappedRequestHandler(handler));
+    j_rm.headWithRegEx(pattern, req_map_wrappedRequestHandler(handler));
     return this;
   }
 
@@ -1637,7 +1657,7 @@ http.RouteMatcher = function() {
    * @return {module:vertx/http.RouteMatcher}
    */
   this.traceWithRegEx = function(pattern, handler) {
-    j_rm.traceWithRegEx(pattern, wrappedRequestHandler(handler));
+    j_rm.traceWithRegEx(pattern, req_map_wrappedRequestHandler(handler));
     return this;
   }
 
@@ -1649,7 +1669,7 @@ http.RouteMatcher = function() {
    * @return {module:vertx/http.RouteMatcher}
    */
   this.connectWithRegEx = function(pattern, handler) {
-    j_rm.connectWithRegEx(pattern, wrappedRequestHandler(handler));
+    j_rm.connectWithRegEx(pattern, req_map_wrappedRequestHandler(handler));
     return this;
   }
 
@@ -1661,7 +1681,7 @@ http.RouteMatcher = function() {
    * @return {module:vertx/http.RouteMatcher}
    */
   this.patchWithRegEx = function(pattern, handler) {
-    j_rm.patchWithRegEx(pattern, wrappedRequestHandler(handler));
+    j_rm.patchWithRegEx(pattern, req_map_wrappedRequestHandler(handler));
     return this;
   }
 
@@ -1673,7 +1693,7 @@ http.RouteMatcher = function() {
    * @return {module:vertx/http.RouteMatcher}
    */
   this.allWithRegEx = function(pattern, handler) {
-    j_rm.allWithRegEx(pattern, wrappedRequestHandler(handler));
+    j_rm.allWithRegEx(pattern, req_map_wrappedRequestHandler(handler));
     return this;
   }
 
@@ -1684,7 +1704,7 @@ http.RouteMatcher = function() {
    * @return {module:vertx/http.RouteMatcher}
    */
   this.noMatch = function(handler) {
-    j_rm.noMatch(wrappedRequestHandler(handler));
+    j_rm.noMatch(req_map_wrappedRequestHandler(handler));
     return this;
   }
   /**
@@ -1695,6 +1715,21 @@ http.RouteMatcher = function() {
   this._to_java_handler = function() {
     return j_rm;
   }
+
+  /**
+   * For testing.
+   * @returns the map of JavaScript requests where the corresponding Java
+   * request was passed to the Java RouteMatcher and has yet to return.
+   * @private
+   */
+  this._requests_in_limbo_map = function() {
+    return req_map;
+  }
+
+  // Regster default noMatchHandler to remove references from req_map.
+  this.noMatch(function(req) {
+    req.response.statusCode(404).end();
+  });
 }
 
 

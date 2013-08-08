@@ -139,8 +139,70 @@ RouteMatcherTest = {
         vassert.testComplete();
       }).end();
     });
-  }
+  },
 
+  testRequestIdentity: function() {
+    var req;
+    var handler = function (_req) {
+      // Store request so we can check identity in the route handler below.
+      req = _req;
+      rm.call(_req);
+    }
+
+    server.requestHandler(handler);
+
+    rm.get("/checkIdentityAfterRouteMatching", function (_req) {
+      vassert.assertTrue(req === _req);
+      vassert.testComplete();
+    });
+
+    server.listen(9999, "0.0.0.0", function() {
+      client.get("/checkIdentityAfterRouteMatching").end();
+    });
+  },
+
+  testRequestMapCleanup: function() {
+    var handler = function (req) {
+      rm.call(req);
+    }
+
+    server.requestHandler(handler);
+
+    rm.get("/checkRequestCleanup", function (req) {
+      vassert.assertTrue(rm._requests_in_limbo_map().isEmpty());
+      vassert.testComplete();
+    });
+
+    server.listen(9999, "0.0.0.0", function() {
+      client.get("/checkRequestCleanup").end();
+    });
+  },
+
+  testRequestMapCleanupNoMatch: function() {
+    var handler = function (req) {
+      rm.call(req);
+    }
+
+    server.requestHandler(handler);
+
+    server.listen(9999, "0.0.0.0", function() {
+      client.get("some-uri", function(resp) {
+        vassert.assertTrue(rm._requests_in_limbo_map().isEmpty());
+        vassert.testComplete();
+      }).end();
+    });
+  },
+
+  testUnusedRequestMapIsClean: function() {
+    server.requestHandler(rm);
+
+    server.listen(9999, "0.0.0.0", function() {
+      client.get("some-uri", function(resp) {
+        vassert.assertTrue(rm._requests_in_limbo_map().isEmpty());
+        vassert.testComplete();
+      }).end();
+    });
+  }
 }
 
 function route(method, regex, pattern, params, uri) {
