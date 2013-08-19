@@ -35,7 +35,7 @@
     <maven.source.plugin.version>2.2.1</maven.source.plugin.version>
 
     <!-- dependency versions -->
-    <version.vertx>2.1.0-SNAPSHOT</version.vertx>
+    <version.vertx>2.0.2-SNAPSHOT</version.vertx>
     <version.vertx.testframework>2.0.0-SNAPSHOT</version.vertx.testframework>
     <version.vertx.testtools>2.1.0-SNAPSHOT</version.vertx.testtools>
   </properties>
