@@ -18,7 +18,10 @@ if (typeof __vertxload === 'string') {
   throw "Use require() to load Vert.x API modules"
 }
 
-var console = require('vertx/console');
+// handler wrapper
+load("vertx/helpers.js");
+
+// TODO: WRAP JAVA LISTS IN ASYNC RESULT HANDLERS
 
 /**
  * @exports vertx/dns
@@ -43,21 +46,46 @@ var dns = {
 var DnsClient = function(servers) {
   var that = this;
 
-  var wrapIpAddresses = function(servers) {
-    if (typeof servers === 'string') {
-      // TODO: This is non-ideal
-      inetAddress = java.net.InetAddress.getByName(servers);
-      return [new java.net.InetSocketAddress(inetAddress, 53)];
-    } 
+  var wrapIpAddresses = function(addresses) {
+    if (typeof addresses === 'string') {
+      return [new java.net.InetSocketAddress(java.net.InetAddress.getByName(addresses), 53)];
+    } else {
+      // TODO: Be smarter about what's passed in
+      return [addresses];
+    }
   }
 
-  console.log("VERTX JAVA FUNC: " + __jvertx.createDnsClient);
+  this.lookup = function(name, handler) {
+    __jClient.lookup(name, adaptAsyncResultHandler(handler));
+    return that;
+  }
+
+  this.lookup4 = function(name, handler) {
+    __jClient.lookup4(name, adaptAsyncResultHandler(handler));
+    return that;
+  }
+
+  this.resolveNS = function(name, handler) {
+    __jClient.resolveNS(name, adaptAsyncResultHandler(handler));
+    return that;
+  }
+
+  this.resolveTXT = function(name, handler) {
+    __jClient.resolveTXT(name, adaptAsyncResultHandler(handler));
+    return that;
+  }
+
+  this.resolveMX = function(name, handler) {
+    __jClient.resolveMX(name, adaptAsyncResultHandler(handler));
+    return that;
+  }
+
+  this.resolveA = function(name, handler) {
+    __jClient.resolveA(name, adaptAsyncResultHandler(handler));
+    return that;
+  }
 
   var __jClient = __jvertx.createDnsClient(wrapIpAddresses(servers));
-
-  this.lookup = function() {
-  }
-
 }
 
 module.exports = dns;

@@ -38,6 +38,7 @@
     <version.vertx>2.0.2-SNAPSHOT</version.vertx>
     <version.vertx.testframework>2.0.0-SNAPSHOT</version.vertx.testframework>
     <version.vertx.testtools>2.1.0-SNAPSHOT</version.vertx.testtools>
+    <version.apacheds.dns>1.5.7</version.apacheds.dns>
   </properties>
   <developers>
     <developer>
@@ -110,6 +111,12 @@
       <groupId>io.vertx</groupId>
       <artifactId>testtools</artifactId>
       <version>${version.vertx.testtools}</version>
+      <scope>test</scope>
+    </dependency>
+    <dependency>
+      <groupId>org.apache.directory.server</groupId>
+      <artifactId>apacheds-protocol-dns</artifactId>
+      <version>${version.apacheds.dns}</version>
       <scope>test</scope>
     </dependency>
   </dependencies>
