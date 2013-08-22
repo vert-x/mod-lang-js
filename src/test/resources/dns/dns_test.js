@@ -111,6 +111,33 @@ DNSTest = {
     });
   },
 
+  testResolveCNAME: function() {
+    prepareDns(DnsServer.cnameRecordStore(), function(client) {
+      client.resolveCNAME("vertx.io", function(err, records) {
+        vassert.assertNotNull(records);
+        // Returns a string
+        record = records.get(0);  
+        vassert.assertTrue("Unexpected address: " + record, "cname.vertx.io" === record);
+        vassert.testComplete();
+      });
+    });
+  },
+
+  testResolveSRV: function() {
+    prepareDns(DnsServer.srvRecordStore(), function(client) {
+      client.resolveSRV("vertx.io", function(err, records) {
+        vassert.assertNotNull(records);
+        // Returns an SRV record
+        record = records.get(0);  
+        vassert.assertTrue("Unexpected value: " + record.priority(), 10 == record.priority());
+        vassert.assertTrue("Unexpected value: " + record.weight(), 1 == record.weight());
+        vassert.assertTrue("Unexpected value: " + record.port(), 80 == record.port());
+        vassert.assertTrue("Unexpected address: " + record.target(), "vertx.io" === record.target());
+        vassert.testComplete();
+      });
+    });
+  },
+
 }
 
 vertxTest.startTests(DNSTest);

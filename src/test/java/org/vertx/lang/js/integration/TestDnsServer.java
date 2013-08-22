@@ -146,4 +146,43 @@ public class TestDnsServer extends DnsServer {
         };
     }
 
+    public static RecordStore cnameRecordStore() {
+        return new RecordStore() {
+          @Override
+          public Set<ResourceRecord> getRecords(QuestionRecord questionRecord) throws org.apache.directory.server.dns.DnsException {
+              Set<ResourceRecord> set = new HashSet<>();
+
+              ResourceRecordModifier rm = new ResourceRecordModifier();
+              rm.setDnsClass(RecordClass.IN);
+              rm.setDnsName("dns.vertx.io");
+              rm.setDnsTtl(100);
+              rm.setDnsType(RecordType.CNAME);
+              rm.put(DnsAttribute.DOMAIN_NAME, "cname.vertx.io");
+              set.add(rm.getEntry());
+              return set;
+          }
+        };
+    }
+
+    public static RecordStore srvRecordStore() {
+        return new RecordStore() {
+          @Override
+          public Set<ResourceRecord> getRecords(QuestionRecord questionRecord) throws org.apache.directory.server.dns.DnsException {
+              Set<ResourceRecord> set = new HashSet<>();
+
+              ResourceRecordModifier rm = new ResourceRecordModifier();
+              rm.setDnsClass(RecordClass.IN);
+              rm.setDnsName("dns.vertx.io");
+              rm.setDnsTtl(100);
+              rm.setDnsType(RecordType.SRV);
+              rm.put(DnsAttribute.SERVICE_PRIORITY, "10");
+              rm.put(DnsAttribute.SERVICE_WEIGHT, "1");
+              rm.put(DnsAttribute.SERVICE_PORT, "80");
+              rm.put(DnsAttribute.DOMAIN_NAME, "vertx.io");
+              set.add(rm.getEntry());
+              return set;
+          }
+        };
+    }
+
 }

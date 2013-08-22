@@ -85,6 +85,16 @@ var DnsClient = function(servers) {
     return that;
   }
 
+  this.resolveCNAME = function(name, handler) {
+    __jClient.resolveCNAME(name, adaptAsyncResultHandler(handler));
+    return that;
+  }
+
+  this.resolveSRV = function(name, handler) {
+    __jClient.resolveSRV(name, adaptAsyncResultHandler(handler));
+    return that;
+  }
+
   var __jClient = __jvertx.createDnsClient(wrapIpAddresses(servers));
 }
 
