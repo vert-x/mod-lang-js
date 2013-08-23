@@ -102,6 +102,38 @@ FsTest = {
     });
   },
 
+  testReadDirSync: function() {
+    var file1 = fileDir + "/foo.tmp";
+    var file2 = fileDir + "/bar.tmp";
+    var file3 = fileDir + "/baz.tmp";
+    var content = "some-data";
+    fs.writeFile(file1, content, function() {
+      fs.writeFile(file2, content, function() {
+        fs.writeFile(file3, content, function() {
+          files = fs.readDirSync(fileDir);
+          vassert.assertTrue("Expected 3, got : " + files.length, files.length === 3);
+          vassert.testComplete();
+        });
+      });
+    });
+  },
+
+  testFilteredReadDirSync: function() {
+    var file1 = fileDir + "/foo.tmp";
+    var file2 = fileDir + "/bar.tmp";
+    var file3 = fileDir + "/baz.tmp";
+    var content = "some-data";
+    fs.writeFile(file1, content, function() {
+      fs.writeFile(file2, content, function() {
+        fs.writeFile(file3, content, function() {
+          files = fs.readDirSync(fileDir, 'ba.\.tmp');
+          vassert.assertTrue("Expected 2, got : " + files.length, files.length === 2);
+          vassert.testComplete();
+        });
+      });
+    });
+  },
+
   testProps: function() {
     var file = fileDir + "/foo.tmp";
     var content = "some-data";

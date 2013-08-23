@@ -503,7 +503,7 @@ fileSystem.readDir = function(path, arg1, arg2) {
  * @returns {Array} an array of strings, each representing a matched path name.
  */
 fileSystem.readDirSync = function(path, filter) {
-  if (!filter) filter = false;
+  if (!filter) filter = null;
   return jfs.readDirSync(path, filter);
 }
 
