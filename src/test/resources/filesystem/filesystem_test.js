@@ -167,7 +167,6 @@ FsTest = {
               file2.close(function() {
                 fs.readFile(to, function(err, res) {
                   vassert.assertTrue(null === err);
-                  var console = require('vertx/console');
                   vassert.assertTrue(tu.buffersEqual(content, res));
                   vassert.testComplete();
                 });
