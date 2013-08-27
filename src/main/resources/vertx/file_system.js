@@ -38,6 +38,8 @@ var jfs = __jvertx.fileSystem();
  */
 var fileSystem = {};
 
+var console = require('vertx/console');
+
 load("vertx/read_stream.js");
 load("vertx/write_stream.js");
 
@@ -715,6 +717,8 @@ fileSystem.open = function(path, arg1, arg2, arg3, arg4) {
  */
 
 fileSystem.AsyncFile = function(jaf) {
+  writeStream(this, jaf);
+  readStream(this, jaf);
   var that = this;
 
   /**
@@ -737,7 +741,13 @@ fileSystem.AsyncFile = function(jaf) {
    * @returns {module:vertx/file_system}
    */
   this.write = function(buffer, position, handler) {
-    jaf.write(buffer, position, wrapHandler(handler));
+    if (position == null || position == undefined) {
+      // WriteStream interface
+      jaf.write(buffer);
+    } else {
+      // AsyncFile interface
+      jaf.write(buffer, position, wrapHandler(handler));
+    }
     return that;
   }
 
@@ -766,8 +776,6 @@ fileSystem.AsyncFile = function(jaf) {
       jaf.flush();
     }
   }
-  writeStream(this, jaf);
-  readStream(this, jaf);
 }
 
 /**
