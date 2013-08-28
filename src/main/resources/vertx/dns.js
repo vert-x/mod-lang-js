@@ -55,20 +55,34 @@ var DnsClient = function(servers) {
     }
   }
 
+  // converts java addresses
+  var hostAddressConverter = function(address) { return address.getHostAddress() }
+
+  // Java Lists don't automagically coerce to javascript arrays. We have to do
+  // that ourselves for now.
+  var console = require('vertx/console');
+  var mappedHostAddressConverter = function(addresses) {
+    var addrs = [];
+    for (var i = 0; i < addresses.size(); i++) {
+      addrs[i] = addresses.get(i).getHostAddress();
+    }
+    return addrs;
+  }
+
   this.lookup = function(name, handler) {
-    __jClient.lookup(name, adaptAsyncResultHandler(handler));
+    __jClient.lookup(name, adaptAsyncResultHandler(handler, hostAddressConverter));
     return that;
   }
 
   this.lookup4 = function(name, handler) {
-    __jClient.lookup4(name, adaptAsyncResultHandler(handler));
+    __jClient.lookup4(name, adaptAsyncResultHandler(handler, hostAddressConverter));
     return that;
   }
 
   this.lookup6 = function(name, handler) {
-    __jClient.lookup6(name, adaptAsyncResultHandler(handler));
+    __jClient.lookup6(name, adaptAsyncResultHandler(handler, hostAddressConverter));
     return that;
-  },
+  }
 
   this.resolveNS = function(name, handler) {
     __jClient.resolveNS(name, adaptAsyncResultHandler(handler));
@@ -86,12 +100,12 @@ var DnsClient = function(servers) {
   }
 
   this.resolveA = function(name, handler) {
-    __jClient.resolveA(name, adaptAsyncResultHandler(handler));
+    __jClient.resolveA(name, adaptAsyncResultHandler(handler, mappedHostAddressConverter));
     return that;
   }
 
   this.resolveAAAA = function(name, handler) {
-    __jClient.resolveAAAA(name, adaptAsyncResultHandler(handler));
+    __jClient.resolveAAAA(name, adaptAsyncResultHandler(handler, mappedHostAddressConverter));
     return that;
   }
 

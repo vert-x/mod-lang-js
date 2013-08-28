@@ -44,7 +44,7 @@ DNSTest = {
     prepareDns(DnsServer.testResolveA(ip), function(client) {
       client.lookup("vertx.io", function(err, address) {
         vassert.assertNotNull(address);
-        vassert.assertTrue("Unexpected address: " + address.getHostAddress(), ip === address.getHostAddress());
+        vassert.assertTrue("Unexpected address: " + address, ip === address);
         vassert.testComplete();
       });
     });
@@ -55,7 +55,7 @@ DNSTest = {
     prepareDns(DnsServer.testResolveA(ip), function(client) {
       client.lookup4("vertx.io", function(err, address) {
         vassert.assertNotNull(address);
-        vassert.assertTrue("Unexpected address: " + address.getHostAddress(), ip === address.getHostAddress());
+        vassert.assertTrue("Unexpected address: " + address, ip === address);
         vassert.testComplete();
       });
     });
@@ -65,7 +65,7 @@ DNSTest = {
     prepareDns(DnsServer.testLookup6(), function(client) {
       client.lookup6("vertx.io", function(err, address) {
         vassert.assertNotNull(address);
-        vassert.assertTrue("Unexpected address: "+address.getHostAddress(), '0:0:0:0:0:0:0:1' === address.getHostAddress());
+        vassert.assertTrue("Unexpected address: " + address, '0:0:0:0:0:0:0:1' === address);
         vassert.testComplete();
       });
     });
@@ -122,9 +122,7 @@ DNSTest = {
     prepareDns(DnsServer.testResolveA(ip), function(client) {
       client.resolveA("vertx.io", function(err, records) {
         vassert.assertNotNull(records);
-        // Returns a Java Inet4Address
-        record = records.get(0);  
-        vassert.assertTrue("Unexpected address: " + record.getHostAddress(), ip === record.getHostAddress());
+        vassert.assertTrue("Unexpected address: " + records[0], ip === records[0]);
         vassert.testComplete();
       });
     });
@@ -135,10 +133,7 @@ DNSTest = {
     prepareDns(DnsServer.testResolveAAAA(ip), function(client) {
       client.resolveAAAA("vertx.io", function(err, records) {
         vassert.assertNotNull(records);
-        // Returns a Java Inet4Address
-        record = records.get(0);  
-        vassert.assertTrue("Unexpected number of response records: " + records.size(), 1 === records.size());
-        vassert.assertTrue("Unexpected address: " + record.getHostAddress(), '0:0:0:0:0:0:0:1' === record.getHostAddress());
+        vassert.assertTrue("Unexpected address: " + records[0], '0:0:0:0:0:0:0:1' === records[0]);
         vassert.testComplete();
       });
     });
