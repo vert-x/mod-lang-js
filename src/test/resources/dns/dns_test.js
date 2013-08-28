@@ -61,6 +61,16 @@ DNSTest = {
     });
   },
 
+  testLookup6: function() {
+    prepareDns(DnsServer.testLookup6(), function(client) {
+      client.lookup6("vertx.io", function(err, address) {
+        vassert.assertNotNull(address);
+        vassert.assertTrue("Unexpected address: "+address.getHostAddress(), '0:0:0:0:0:0:0:1' === address.getHostAddress());
+        vassert.testComplete();
+      });
+    });
+  },
+
   testLookupNonexisting: function() {
     prepareDns(DnsServer.testLookupNonExisting(), function(client) {
       client.lookup("asdfadsf.com", function(err, address) {
@@ -120,6 +130,20 @@ DNSTest = {
     });
   },
 
+  testResolveAAAA: function() {
+    var ip = '::1'
+    prepareDns(DnsServer.testResolveAAAA(ip), function(client) {
+      client.resolveAAAA("vertx.io", function(err, records) {
+        vassert.assertNotNull(records);
+        // Returns a Java Inet4Address
+        record = records.get(0);  
+        vassert.assertTrue("Unexpected number of response records: " + records.size(), 1 === records.size());
+        vassert.assertTrue("Unexpected address: " + record.getHostAddress(), '0:0:0:0:0:0:0:1' === record.getHostAddress());
+        vassert.testComplete();
+      });
+    });
+  },
+
   testResolveCNAME: function() {
     var cname = "cname.vertx.io"
     prepareDns(DnsServer.testResolveCNAME(cname), function(client) {
@@ -128,6 +152,17 @@ DNSTest = {
         // Returns a string
         record = records.get(0);  
         vassert.assertTrue("Unexpected address: " + record, cname === record);
+        vassert.testComplete();
+      });
+    });
+  },
+
+  testResolvePTR: function() {
+    var ptr = "ptr.vertx.io"
+    prepareDns(DnsServer.testResolvePTR(ptr), function(client) {
+      client.resolvePTR("10.0.0.1.in-addr.arpa", function(err, record) {
+        vassert.assertNotNull(record);
+        vassert.assertTrue("Unexpected address: " + record, ptr === record);
         vassert.testComplete();
       });
     });

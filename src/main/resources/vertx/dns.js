@@ -65,6 +65,11 @@ var DnsClient = function(servers) {
     return that;
   }
 
+  this.lookup6 = function(name, handler) {
+    __jClient.lookup6(name, adaptAsyncResultHandler(handler));
+    return that;
+  },
+
   this.resolveNS = function(name, handler) {
     __jClient.resolveNS(name, adaptAsyncResultHandler(handler));
     return that;
@@ -85,8 +90,18 @@ var DnsClient = function(servers) {
     return that;
   }
 
+  this.resolveAAAA = function(name, handler) {
+    __jClient.resolveAAAA(name, adaptAsyncResultHandler(handler));
+    return that;
+  }
+
   this.resolveCNAME = function(name, handler) {
     __jClient.resolveCNAME(name, adaptAsyncResultHandler(handler));
+    return that;
+  }
+
+  this.resolvePTR = function(name, handler) {
+    __jClient.resolvePTR(name, adaptAsyncResultHandler(handler));
     return that;
   }
 
