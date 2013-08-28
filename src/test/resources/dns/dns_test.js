@@ -188,6 +188,28 @@ DNSTest = {
     });
   },
 
+  testReverseLookupIPv4: function() {
+    var ptr = 'ptr.vertx.io';
+    prepareDns(DnsServer.testReverseLookup(ptr), function(client) {
+      client.reverseLookup('10.0.0.1', function(err, record) {
+        vassert.assertNotNull(record);
+        vassert.assertTrue("Unexpected address: " + record.getHostName(), record.getHostName() === ptr);
+        vassert.testComplete();
+      });
+    });
+  },
+
+  testReverseLookupIPv6: function() {
+    var ptr = 'ptr.vertx.io';
+    prepareDns(DnsServer.testReverseLookup(ptr), function(client) {
+      client.reverseLookup('::1', function(err, record) {
+        vassert.assertNotNull(record);
+        vassert.assertTrue("Unexpected address: " + record.getHostName(), record.getHostName() === ptr);
+        vassert.testComplete();
+      });
+    });
+  },
+
 }
 
 vertxTest.startTests(DNSTest);

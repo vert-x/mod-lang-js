@@ -110,6 +110,11 @@ var DnsClient = function(servers) {
     return that;
   }
 
+  this.reverseLookup = function(name, handler) {
+    __jClient.reverseLookup(name, adaptAsyncResultHandler(handler));
+    return that;
+  }
+
   var __jClient = __jvertx.createDnsClient(wrapIpAddresses(servers));
 }
 
