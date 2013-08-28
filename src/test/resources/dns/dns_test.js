@@ -18,47 +18,51 @@ var dns = require('vertx/dns');
 var vertxTest = require("vertx_tests");
 var vassert = vertxTest.vassert;
 
-var DnsServer = org.vertx.lang.js.integration.TestDnsServer;
+var DnsServer = org.vertx.testtools.TestDnsServer
+var server = null; // server instance set in prepareDns
 
 // Debugging
 var console = require('vertx/console');
 
-function prepareDns(store, testFunc) {
-  var dnsServer =  new DnsServer(store);
-  dnsServer.start();
-  testFunc( dns.createDnsClient(dnsServer.getLocalAddress()) );
+function prepareDns(srv, testFunc) {
+  server = srv
+  server.start();
+  testFunc( dns.createDnsClient( server.getTransports()[0].getAcceptor().getLocalAddress() ) );
 }
 
 DNSTest = {
   testCreateDnsClient: function() {
-    prepareDns(DnsServer.aRecordStore(), function(client) {
+    var ip = '10.0.0.1'
+    prepareDns(DnsServer.testResolveA(ip), function(client) {
       vassert.assertTrue("Can't create DnsClient", typeof client === 'object');
       vassert.testComplete();
     });
   },
 
   testLookup: function() {
-    prepareDns(DnsServer.aRecordStore(), function(client) {
+    var ip = '10.0.0.1'
+    prepareDns(DnsServer.testResolveA(ip), function(client) {
       client.lookup("vertx.io", function(err, address) {
         vassert.assertNotNull(address);
-        vassert.assertTrue("Unexpected address: " + address.getHostAddress(), "10.0.0.1" === address.getHostAddress());
+        vassert.assertTrue("Unexpected address: " + address.getHostAddress(), ip === address.getHostAddress());
         vassert.testComplete();
       });
     });
   },
 
   testLookup4: function() {
-    prepareDns(DnsServer.aRecordStore(), function(client) {
+    var ip = '10.0.0.1'
+    prepareDns(DnsServer.testResolveA(ip), function(client) {
       client.lookup4("vertx.io", function(err, address) {
         vassert.assertNotNull(address);
-        vassert.assertTrue("Unexpected address: " + address.getHostAddress(), "10.0.0.1" === address.getHostAddress());
+        vassert.assertTrue("Unexpected address: " + address.getHostAddress(), ip === address.getHostAddress());
         vassert.testComplete();
       });
     });
   },
 
   testLookupNonexisting: function() {
-    prepareDns(DnsServer.nullRecordStore(), function(client) {
+    prepareDns(DnsServer.testLookupNonExisting(), function(client) {
       client.lookup("asdfadsf.com", function(err, address) {
         vassert.assertNotNull(err);
         vassert.testComplete();
@@ -67,72 +71,83 @@ DNSTest = {
   },
 
   testResolveNS: function() {
-    prepareDns(DnsServer.nsRecordStore(), function(client) {
+    var ns = 'ns.vertx.io'
+    prepareDns(DnsServer.testResolveNS(ns), function(client) {
       client.resolveNS("vertx.io", function(err, records) {
         vassert.assertTrue("Unexpected number of response records: " + records.size(), 1 === records.size());
-        vassert.assertTrue("Unexpected result: " + records.get(0), "ns.vertx.io" === records.get(0));
+        vassert.assertTrue("Unexpected result: " + records.get(0), ns === records.get(0));
         vassert.testComplete();
       });
     });
   },
 
   testResolveTxt: function() {
-    prepareDns(DnsServer.txtRecordStore(), function(client) {
+    var txt = "vert.x is awesome"
+    prepareDns(DnsServer.testResolveTXT(txt), function(client) {
       client.resolveTXT("vertx.io", function(err, records) {
         vassert.assertTrue("Unexpected number of response records: " + records.size(), 1 === records.size());
-        vassert.assertTrue("Unexpected result: " + records.get(0), "vertx is awesome" === records.get(0));
+        vassert.assertTrue("Unexpected result: " + records.get(0), txt === records.get(0));
         vassert.testComplete();
       });
     });
   },
 
   testResolveMx: function() {
-    prepareDns(DnsServer.mxRecordStore(), function(client) {
+    var prio = 10,
+        name = "mail.vertx.io"
+    prepareDns(DnsServer.testResolveMX(prio, name), function(client) {
       client.resolveMX("vertx.io", function(err, records) {
         vassert.assertTrue("Unexpected number of response records: " + records.size(), 1 === records.size());
         // Returns a Java MxRecord
         record = records.get(0);
-        vassert.assertTrue("Unexpected result: " + record.priority(), 10 == record.priority());
-        vassert.assertTrue("Unexpected result: " + record.name(), "mail.vertx.io" === record.name());
+        vassert.assertTrue("Unexpected result: " + record.priority(), prio == record.priority());
+        vassert.assertTrue("Unexpected result: " + record.name(), name === record.name());
         vassert.testComplete();
       });
     });
   },
 
   testResolveA: function() {
-    prepareDns(DnsServer.aRecordStore(), function(client) {
+    var ip = '10.0.0.1'
+    prepareDns(DnsServer.testResolveA(ip), function(client) {
       client.resolveA("vertx.io", function(err, records) {
         vassert.assertNotNull(records);
         // Returns a Java Inet4Address
         record = records.get(0);  
-        vassert.assertTrue("Unexpected address: " + record.getHostAddress(), "10.0.0.1" === record.getHostAddress());
+        vassert.assertTrue("Unexpected address: " + record.getHostAddress(), ip === record.getHostAddress());
         vassert.testComplete();
       });
     });
   },
 
   testResolveCNAME: function() {
-    prepareDns(DnsServer.cnameRecordStore(), function(client) {
+    var cname = "cname.vertx.io"
+    prepareDns(DnsServer.testResolveCNAME(cname), function(client) {
       client.resolveCNAME("vertx.io", function(err, records) {
         vassert.assertNotNull(records);
         // Returns a string
         record = records.get(0);  
-        vassert.assertTrue("Unexpected address: " + record, "cname.vertx.io" === record);
+        vassert.assertTrue("Unexpected address: " + record, cname === record);
         vassert.testComplete();
       });
     });
   },
 
   testResolveSRV: function() {
-    prepareDns(DnsServer.srvRecordStore(), function(client) {
+    var prio = 10,
+        weight = 1,
+        port = 80,
+        target = 'vertx.io'
+    prepareDns(DnsServer.testResolveSRV(prio, weight, port, target), function(client) {
       client.resolveSRV("vertx.io", function(err, records) {
         vassert.assertNotNull(records);
         // Returns an SRV record
         record = records.get(0);  
-        vassert.assertTrue("Unexpected value: " + record.priority(), 10 == record.priority());
-        vassert.assertTrue("Unexpected value: " + record.weight(), 1 == record.weight());
-        vassert.assertTrue("Unexpected value: " + record.port(), 80 == record.port());
-        vassert.assertTrue("Unexpected address: " + record.target(), "vertx.io" === record.target());
+        vassert.assertTrue("Unexpected value: " + record.priority(), prio == record.priority());
+        vassert.assertTrue("Unexpected value: " + record.weight(), weight == record.weight());
+        vassert.assertTrue("Unexpected value: " + record.port(), port == record.port());
+        vassert.assertTrue("Unexpected address: " + record.target(), target === record.target());
+
         vassert.testComplete();
       });
     });
