@@ -107,11 +107,8 @@ DNSTest = {
         name = "mail.vertx.io"
     prepareDns(DnsServer.testResolveMX(prio, name), function(client) {
       client.resolveMX("vertx.io", function(err, records) {
-        vassert.assertTrue("Unexpected number of response records: " + records.size(), 1 === records.size());
-        // Returns a Java MxRecord
-        record = records.get(0);
-        vassert.assertTrue("Unexpected result: " + record.priority(), prio == record.priority());
-        vassert.assertTrue("Unexpected result: " + record.name(), name === record.name());
+        vassert.assertTrue("Unexpected result: " + records[0].priority, prio == records[0].priority);
+        vassert.assertTrue("Unexpected result: " + records[0].name, name === records[0].name);
         vassert.testComplete();
       });
     });
@@ -171,12 +168,11 @@ DNSTest = {
     prepareDns(DnsServer.testResolveSRV(prio, weight, port, target), function(client) {
       client.resolveSRV("vertx.io", function(err, records) {
         vassert.assertNotNull(records);
-        // Returns an SRV record
-        record = records.get(0);  
-        vassert.assertTrue("Unexpected value: " + record.priority(), prio == record.priority());
-        vassert.assertTrue("Unexpected value: " + record.weight(), weight == record.weight());
-        vassert.assertTrue("Unexpected value: " + record.port(), port == record.port());
-        vassert.assertTrue("Unexpected address: " + record.target(), target === record.target());
+        record = records[0];
+        vassert.assertTrue("Unexpected value: " + record.priority, prio == record.priority);
+        vassert.assertTrue("Unexpected value: " + record.weight, weight == record.weight);
+        vassert.assertTrue("Unexpected value: " + record.port, port == record.port);
+        vassert.assertTrue("Unexpected address: " + record.target, target === record.target);
 
         vassert.testComplete();
       });

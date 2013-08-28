@@ -55,18 +55,57 @@ var DnsClient = function(servers) {
     }
   }
 
-  // converts java addresses
   var hostAddressConverter = function(address) { return address.getHostAddress() }
 
-  // Java Lists don't automagically coerce to javascript arrays. We have to do
-  // that ourselves for now.
-  var console = require('vertx/console');
   var mappedHostAddressConverter = function(addresses) {
     var addrs = [];
     for (var i = 0; i < addresses.size(); i++) {
       addrs[i] = addresses.get(i).getHostAddress();
     }
     return addrs;
+  }
+
+  /** 
+   * @typedef {{}} MxRecord 
+   * @property {number} priority The record priority
+   * @property {string} name The record name
+   * */
+  var mappedMxConverter = function(records) {
+    var recs = [];
+    for (var i = 0; i < records.size(); i++) {
+      recs[i] = {
+        priority: records.get(i).priority(),
+        name: records.get(i).name()
+      }
+    }
+    return recs;
+  }
+
+  /** 
+   * @typedef {{}} SrvRecord 
+   * @property {number} priority The record priority
+   * @property {number} weight The record weight
+   * @property {number} port The record port
+   * @property {string} name The record name
+   * @property {string} protocol The record protocol
+   * @property {string} service The record service
+   * @property {string} target The record target
+   * */
+  var mappedSrvConverter = function(records) {
+    var recs = [];
+    for (var i = 0; i < records.size(); i++) {
+      var record = records.get(i);
+      recs[i] = {
+        priority: record.priority(),
+        weight: record.weight(),
+        port: record.port(),
+        name: record.name(),
+        protocol: record.protocol(),
+        service: record.service(),
+        target: record.target()
+      }
+    }
+    return recs;
   }
 
   this.lookup = function(name, handler) {
@@ -95,7 +134,7 @@ var DnsClient = function(servers) {
   }
 
   this.resolveMX = function(name, handler) {
-    __jClient.resolveMX(name, adaptAsyncResultHandler(handler));
+    __jClient.resolveMX(name, adaptAsyncResultHandler(handler, mappedMxConverter));
     return that;
   }
 
@@ -120,7 +159,7 @@ var DnsClient = function(servers) {
   }
 
   this.resolveSRV = function(name, handler) {
-    __jClient.resolveSRV(name, adaptAsyncResultHandler(handler));
+    __jClient.resolveSRV(name, adaptAsyncResultHandler(handler, mappedSrvConverter));
     return that;
   }
 
