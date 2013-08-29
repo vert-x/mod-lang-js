@@ -84,8 +84,8 @@ DNSTest = {
     var ns = 'ns.vertx.io'
     prepareDns(DnsServer.testResolveNS(ns), function(client) {
       client.resolveNS("vertx.io", function(err, records) {
-        vassert.assertTrue("Unexpected number of response records: " + records.size(), 1 === records.size());
-        vassert.assertTrue("Unexpected result: " + records.get(0), ns === records.get(0));
+        vassert.assertTrue("Unexpected number of response records: " + records.length, 1 === records.length);
+        vassert.assertTrue("Unexpected result: " + records[0], ns === records[0]);
         vassert.testComplete();
       });
     });
@@ -95,8 +95,8 @@ DNSTest = {
     var txt = "vert.x is awesome"
     prepareDns(DnsServer.testResolveTXT(txt), function(client) {
       client.resolveTXT("vertx.io", function(err, records) {
-        vassert.assertTrue("Unexpected number of response records: " + records.size(), 1 === records.size());
-        vassert.assertTrue("Unexpected result: " + records.get(0), txt === records.get(0));
+        vassert.assertTrue("Unexpected number of response records: " + records.length, 1 === records.length);
+        vassert.assertTrue("Unexpected result: " + records[0], txt === records[0]);
         vassert.testComplete();
       });
     });
@@ -141,9 +141,7 @@ DNSTest = {
     prepareDns(DnsServer.testResolveCNAME(cname), function(client) {
       client.resolveCNAME("vertx.io", function(err, records) {
         vassert.assertNotNull(records);
-        // Returns a string
-        record = records.get(0);  
-        vassert.assertTrue("Unexpected address: " + record, cname === record);
+        vassert.assertTrue("Unexpected address: " + records, cname === records[0]);
         vassert.testComplete();
       });
     });
@@ -184,7 +182,7 @@ DNSTest = {
     prepareDns(DnsServer.testReverseLookup(ptr), function(client) {
       client.reverseLookup('10.0.0.1', function(err, record) {
         vassert.assertNotNull(record);
-        vassert.assertTrue("Unexpected address: " + record.getHostName(), record.getHostName() === ptr);
+        vassert.assertTrue("Unexpected address: " + record, record === ptr);
         vassert.testComplete();
       });
     });
@@ -195,7 +193,7 @@ DNSTest = {
     prepareDns(DnsServer.testReverseLookup(ptr), function(client) {
       client.reverseLookup('::1', function(err, record) {
         vassert.assertNotNull(record);
-        vassert.assertTrue("Unexpected address: " + record.getHostName(), record.getHostName() === ptr);
+        vassert.assertTrue("Unexpected address: " + record, record === ptr);
         vassert.testComplete();
       });
     });

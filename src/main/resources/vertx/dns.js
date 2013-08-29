@@ -21,8 +21,6 @@ if (typeof __vertxload === 'string') {
 // handler wrapper
 load("vertx/helpers.js");
 
-// TODO: WRAP JAVA LISTS IN ASYNC RESULT HANDLERS
-
 /**
  * @exports vertx/dns
  */
@@ -30,20 +28,22 @@ var dns = {
   /**
    * Creates and returns a DNS client object
    *
-   * @param {Array|string} [servers] The DNS server address(es). If not supplied, defaults
-   *        to Google DNS servers 8.8.8.8 and 8.8.4.4
-   *        TODO: Figure out proper default behavior
-   * @returns {DnsClient} A DnsClient object 
+   * @param {Array|string} servers The DNS server address(es). 
+   * @returns {module:vertx/dns.DnsClient} A DnsClient object 
    */
   createDnsClient: function(servers) {
     if (typeof servers == 'undefined') {
       servers = '8.8.8.8';
     }
-    return new DnsClient(servers);
+    return new dns.DnsClient(servers);
   },
 };
 
-var DnsClient = function(servers) {
+/**
+* @class 
+* @param {Array|string} servers The DNS server address(es). 
+*/
+dns.DnsClient = function(servers) {
   var that = this;
 
   var wrapIpAddresses = function(addresses) {
@@ -55,8 +55,6 @@ var DnsClient = function(servers) {
     }
   }
 
-  var hostAddressConverter = function(address) { return address.getHostAddress() }
-
   var mappedHostAddressConverter = function(addresses) {
     var addrs = [];
     for (var i = 0; i < addresses.size(); i++) {
@@ -66,6 +64,8 @@ var DnsClient = function(servers) {
   }
 
   /** 
+   * Represents a DNS MX record.
+   *
    * @typedef {{}} MxRecord 
    * @property {number} priority The record priority
    * @property {string} name The record name
@@ -82,6 +82,7 @@ var DnsClient = function(servers) {
   }
 
   /** 
+   * Represents a DNS SRV record
    * @typedef {{}} SrvRecord 
    * @property {number} priority The record priority
    * @property {number} weight The record weight
@@ -108,31 +109,86 @@ var DnsClient = function(servers) {
     return recs;
   }
 
+  /**
+   * Lookup a server address
+   * @param {string} name The server name to be looked up
+   * @param {ResultHandler} handler The handler to be called when the lookup has completed.
+   * The result parameter provided to the handler is a string address.
+   * @returns {module:vertx/dns.DnsClient}
+   *
+   * @example
+   * // use google dns
+   * var client = dns.createClient(['8.8.8.8', '8.8.4.4']); 
+   *
+   * client.lookup('vertx.io', function(err, address) {
+   *   if (err) {
+   *     console.log("Can't find the server");
+   *   } else {
+   *     console.log("Address: " + address);
+   *   }
+   * }
+   */
   this.lookup = function(name, handler) {
-    __jClient.lookup(name, adaptAsyncResultHandler(handler, hostAddressConverter));
+    __jClient.lookup(name, adaptAsyncResultHandler(handler, function(address) { return address.getHostAddress() }));
     return that;
   }
 
+  /**
+   * Look up the IPv4 address for name
+   * @param {string} name
+   * @param {ResultHandler} handler The handler is called with a string address
+   * when the lookup completes.
+   * @returns {module:vertx/dns.DnsClient}
+   */
   this.lookup4 = function(name, handler) {
-    __jClient.lookup4(name, adaptAsyncResultHandler(handler, hostAddressConverter));
+    __jClient.lookup4(name, adaptAsyncResultHandler(handler, function(address) { return address.getHostAddress() }));
     return that;
   }
 
+  /**
+   * Look up the IPv6 address for name
+   * @param {string} name
+   * @param {ResultHandler} handler The handler is called with a string address
+   * when the lookup completes.
+   * @returns {module:vertx/dns.DnsClient}
+   */
   this.lookup6 = function(name, handler) {
-    __jClient.lookup6(name, adaptAsyncResultHandler(handler, hostAddressConverter));
+    __jClient.lookup6(name, adaptAsyncResultHandler(handler, function(address) { return address.getHostAddress() }));
     return that;
   }
 
+  /**
+   * Try to resolve all NS records for the given name.
+   * @param {string} name
+   * @param {ResultHandler} handler The handler is called with an array of string addresses
+   * when the lookup completes.
+   * @returns {module:vertx/dns.DnsClient}
+   */
   this.resolveNS = function(name, handler) {
-    __jClient.resolveNS(name, adaptAsyncResultHandler(handler));
+    console = require('vertx/console');
+    __jClient.resolveNS(name, adaptAsyncResultHandler(handler, function(list) { return list.toArray(); }));
     return that;
   }
 
+  /**
+   * Try to resolve all TXT records for the given name.
+   * @param {string} name
+   * @param {ResultHandler} handler The handler is called with an array of string TXT records
+   * when the lookup completes.
+   * @returns {module:vertx/dns.DnsClient}
+   */
   this.resolveTXT = function(name, handler) {
-    __jClient.resolveTXT(name, adaptAsyncResultHandler(handler));
+    __jClient.resolveTXT(name, adaptAsyncResultHandler(handler, function(list) { return list.toArray(); }));
     return that;
   }
 
+  /**
+   * Try to resolve all MX records for the given name.
+   * @param {string} name
+   * @param {ResultHandler} handler The handler is called with an array of MxRecord objects
+   * when the lookup completes.
+   * @returns {module:vertx/dns.DnsClient}
+   */
   this.resolveMX = function(name, handler) {
     __jClient.resolveMX(name, adaptAsyncResultHandler(handler, mappedMxConverter));
     return that;
@@ -149,7 +205,7 @@ var DnsClient = function(servers) {
   }
 
   this.resolveCNAME = function(name, handler) {
-    __jClient.resolveCNAME(name, adaptAsyncResultHandler(handler));
+    __jClient.resolveCNAME(name, adaptAsyncResultHandler(handler, function(list) { return list.toArray(); }));
     return that;
   }
 
@@ -164,7 +220,7 @@ var DnsClient = function(servers) {
   }
 
   this.reverseLookup = function(name, handler) {
-    __jClient.reverseLookup(name, adaptAsyncResultHandler(handler));
+    __jClient.reverseLookup(name, adaptAsyncResultHandler(handler, function(address) { return address.getHostName() }));
     return that;
   }
 
