@@ -194,31 +194,75 @@ dns.DnsClient = function(servers) {
     return that;
   }
 
+  /**
+   * Try to resolve all A records for the given name.
+   * @param {string} name
+   * @param {ResultHandler} handler The handler is called with an array of Strings
+   * when the lookup completes.
+   * @returns {module:vertx/dns.DnsClient}
+   */
   this.resolveA = function(name, handler) {
     __jClient.resolveA(name, adaptAsyncResultHandler(handler, mappedHostAddressConverter));
     return that;
   }
 
+  /**
+   * Try to resolve all AAAA records for the given name.
+   * @param {string} name
+   * @param {ResultHandler} handler The handler is called with an array of Strings
+   * when the lookup completes.
+   * @returns {module:vertx/dns.DnsClient}
+   */
   this.resolveAAAA = function(name, handler) {
     __jClient.resolveAAAA(name, adaptAsyncResultHandler(handler, mappedHostAddressConverter));
     return that;
   }
 
+  /**
+   * Try to resolve all AAAA records for the given name.
+   * @param {string} name
+   * @param {ResultHandler} handler The handler is called with an array of Strings
+   * when the lookup completes.
+   * @returns {module:vertx/dns.DnsClient}
+   */
   this.resolveCNAME = function(name, handler) {
     __jClient.resolveCNAME(name, adaptAsyncResultHandler(handler, function(list) { return list.toArray(); }));
     return that;
   }
 
+  /**
+   * Try to resolve the PTR record for the given name.
+   * @param {string} name
+   * @param {ResultHandler} handler The handler is called with a string
+   * when the lookup completes.
+   * @returns {module:vertx/dns.DnsClient}
+   */
   this.resolvePTR = function(name, handler) {
     __jClient.resolvePTR(name, adaptAsyncResultHandler(handler));
     return that;
   }
 
+  /**
+   * Try to resolve all SRV records for the given name.
+   * @param {string} name
+   * @param {ResultHandler} handler The handler is called with an array of SRV records
+   * when the lookup completes.
+   * @returns {module:vertx/dns.DnsClient}
+   */
   this.resolveSRV = function(name, handler) {
     __jClient.resolveSRV(name, adaptAsyncResultHandler(handler, mappedSrvConverter));
     return that;
   }
 
+  /**
+   * Try to do a reverse lookup of an ipaddress. This is basically the same as
+   * doing trying to resolve a PTR record but allows you to just pass in the
+   * ipaddress and not a valid ptr query string.
+   * @param {string} name
+   * @param {ResultHandler} handler The handler is called with a string
+   * when the lookup completes.
+   * @returns {module:vertx/dns.DnsClient}
+   */
   this.reverseLookup = function(name, handler) {
     __jClient.reverseLookup(name, adaptAsyncResultHandler(handler, function(address) { return address.getHostName() }));
     return that;
