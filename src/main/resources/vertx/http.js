@@ -804,7 +804,7 @@ http.HttpServer = function() {
   /**
    * @private
    */
-  _to_java_server: function() {
+  _to_java_server = function() {
     return jserver;
   }
 }
