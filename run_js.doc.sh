@@ -1,1 +1,1 @@
-./jsdoc-master/jsdoc -r -d target/docs src/main/resources README.md
+./jsdoc-master/jsdoc -r -d target/docs src/main/resources API.md
