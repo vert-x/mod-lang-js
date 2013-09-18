@@ -1,6 +1,6 @@
 # Javascript Language Module for Vert.x
 
-[![Build Status](https://travis-ci.org/vert-x/mod-lang-js.png?branch=master)](https://travis-ci.org/vert-x/mod-lang-js)
+[![Build Status](https://travis-ci.org/vert-x/mod-lang-js.png?branch=master "Build Status")](https://travis-ci.org/vert-x/mod-lang-js)
 
 This is the Javascript language module used by 
 [mod-lang-dynjs](https://github.com/vert-x/mod-lang-dynjs) and
