@@ -75,6 +75,7 @@ DNSTest = {
     prepareDns(DnsServer.testLookupNonExisting(), function(client) {
       client.lookup("asdfadsf.com", function(err, address) {
         vassert.assertNotNull(err);
+        vassert.assertTrue(err instanceof org.vertx.java.core.dns.DnsException);
         vassert.testComplete();
       });
     });
