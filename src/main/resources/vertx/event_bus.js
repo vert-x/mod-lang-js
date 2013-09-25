@@ -168,6 +168,15 @@ eventBus.sendWithTimeout = function(address, message, timeout, replyHandler) {
   return eventBus;
 };
 
+eventBus.setDefaultReplyTimeout = function(timeout) {
+  jEventBus.setDefaultReplyTimeout(timeout);
+  return eventBus;
+};
+
+eventBus.getDefaultReplyTimeout = function() {
+  return jEventBus.getDefaultReplyTimeout();
+};
+
 /**
  * Publish a message on the event bus.
  * Message should be a JSON object It should have a property "address".

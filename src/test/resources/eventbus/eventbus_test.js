@@ -99,6 +99,39 @@ var EventBusTest = {
     });
   },
 
+  testSetGetDefaultReplyTimeout: function() {
+    vassert.assertTrue("Expected default timeout of -1", eb.getDefaultReplyTimeout() === -1);
+    vassert.assertTrue(eb.setDefaultReplyTimeout(timeout) === eb);
+    vassert.assertTrue("Expected default timeout of " + timeout, eb.getDefaultReplyTimeout() === timeout);
+    eb.setDefaultReplyTimeout(-1);
+    vassert.testComplete();
+  },
+
+  testSendWithDefaultTimeoutReplyTimesOut: function() {
+    eb.setDefaultReplyTimeout(timeout);
+
+    // delayed response handler
+    eb.registerHandler(address, function(msg, replier) {
+      // reply after the handler should have timed out
+      timers.setTimer(timeout*2, function() {
+        replier("response");
+        eb.send(address + ".end", "end", function(msg) {
+          vassert.testComplete();
+        });
+      });
+    });
+
+    // end test handler
+    eb.registerHandler(address + ".end", function(msg, replier) {
+      replier("ack");
+    });
+
+    // send a message that should time out
+    eb.send(address, "message", function(msg) {
+      vassert.fail("Reply handler should not be called");
+    });
+  },
+
   testRegistrationHandler: function() {
     eb.registerHandler(address, NoopHandler, function() {
       eb.unregisterHandler(address, NoopHandler);
