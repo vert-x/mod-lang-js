@@ -85,6 +85,21 @@ var EventBusTest = {
     });
   },
 
+  testReplyWithTimeoutGetsReply: function() {
+
+    eb.registerHandler(address, function(msg, replier) {
+      replier(reply, function(err, msg) {
+        vassert.assertEquals("ack", msg);
+        vassert.testComplete();
+      }, timeout);
+    });
+    eb.send(address, sent, function(msg, replier) {
+      vassert.assertEquals(reply.desc, msg.desc)
+      vassert.assertTrue("Unexpected reply.status", reply.status === msg.status)
+      replier("ack");
+    });
+  },
+
   testSendWithTimeoutReplyTimesOut: function() {
 
     eb.registerHandler(address, function(msg, replier) {
@@ -96,6 +111,25 @@ var EventBusTest = {
       vassert.assertTrue("Message should have timed out and passed an error", err != null);
       vassert.assertTrue("Message should have timed out, but got: " + msg, msg === null);
       vassert.testComplete();
+    });
+  },
+
+  testReplyWithTimeoutReplyTimesOut: function() {
+
+    eb.registerHandler(address, function(msg, replier) {
+      replier(reply, function(err, msg) {
+        vassert.assertTrue("Message should have timed out and passed an error", err != null);
+        vassert.assertTrue("Message should have timed out, but got: " + msg, msg === null);
+        vassert.testComplete();
+      }, timeout);
+    });
+
+    eb.send(address, sent, function(msg, replier) {
+      vassert.assertEquals(reply.desc, msg.desc)
+      vassert.assertTrue("Unexpected reply.status", reply.status === msg.status)
+      timers.setTimer(timeout*2, function() {
+        replier("ack");
+      });
     });
   },
 
@@ -115,7 +149,7 @@ var EventBusTest = {
       // reply after the handler should have timed out
       timers.setTimer(timeout*2, function() {
         replier("response");
-        eb.send(address + ".end", "end", function(msg) {
+        eb.send(address + ".end", "end", function(msg, replier) {
           vassert.testComplete();
         });
       });

@@ -21,12 +21,6 @@ if (typeof __vertxload === 'string') {
 load('vertx/helpers.js');
 
 /**
- * Message handlers receive event_bus messages as JSON.
- * @see module:vertx/event_bus
- * @typedef {JSON} JsonMessage
- */
-
-/**
  * While JSON is the preferred messaging on the event bus,
  * you can send any basic type as a message, for example,
  * <code>string</code>, <code>boolean</code>, etc. can all be passed
@@ -35,17 +29,17 @@ load('vertx/helpers.js');
  * Javascript objects. Objects will be converted to <code>JSON</code>
  * before being placed on the bus.
  * @see module:vertx/event_bus
- * @typedef {string|boolean|number|{}|module:vertx/buffer~Buffer} Message
+ * @typedef {string|boolean|number|{}|JSON|module:vertx/buffer~Buffer} Message
  */
 
 /**
  * A <code>MessageHandler</code> is a {@linkcode Handler} that responds to
  * messages on the {@linkcode module:vertx/event_bus} module. <code>MessageHandler</code>s
- * are called with a {@linkcode JsonMessage} object as the parameter.
+ * are called with a {@linkcode Message} object as the parameter.
  *
  * @see module:vertx/event_bus.registerHandler
  * @typedef {function} MessageHandler
- * @param {JsonMessage} message The JSON message
+ * @param {Message} message The message
  */
 
 
@@ -151,7 +145,6 @@ eventBus.unregisterHandler = function(address, handler, registrationHandler) {
 
 /**
  * Sends a message on the event bus.
- * Message should be a JSON object It should have a property "address"
  *
  * @param {string} address The address to send the message to
  * @param {Message} message The message to send
@@ -163,16 +156,44 @@ eventBus.send = function(address, message, replyHandler) {
   return eventBus;
 };
 
+/**
+ * Sends a message on the event bus. If a reply is not received within
+ * `timeout` milliseconds, the `replyHandler` will be called with an
+ * error and empty message body, then discarded.
+ *
+ * @param {string} address The address to send the message to
+ * @param {Message} message The message to send
+ * @param {number} timeout The timeout period in milliseconds
+ * @param {ResultHandler} resultHandler called when the message receives a reply, or when the timeout triggers
+ * 
+ */
 eventBus.sendWithTimeout = function(address, message, timeout, replyHandler) {
   sendWithTimeout(address, message, replyHandler, timeout);
   return eventBus;
 };
 
+/**
+ * Set the default reply time in milliseconds.
+ * Unless changed, the default will be -1 which means messages sent on
+ * the event bus will never timeout unless `sendWithTimeout()` is
+ * used explicitly. Any other value will cause the event bus to
+ * timeout reply hanlders in the given number of milliseconds.
+ * @param {number} timeout the number of milliseconds to wait before timing out a handler
+ * @returns {module:vertx/event_bus}
+ */
 eventBus.setDefaultReplyTimeout = function(timeout) {
   jEventBus.setDefaultReplyTimeout(timeout);
   return eventBus;
 };
 
+/**
+ * Get the default reply timeout in milliseconds.
+ * Unless changed, the default will be -1 which means messages sent on
+ * the event bus will never timeout unless `sendWithTimeout()` is
+ * used explicitly. Any other value will cause the event bus to
+ * timeout reply hanlders in the given number of milliseconds.
+ * @returns {number}
+ */
 eventBus.getDefaultReplyTimeout = function() {
   return jEventBus.getDefaultReplyTimeout();
 };
@@ -235,14 +256,17 @@ function wrappedHandler(handler) {
   return new org.vertx.java.core.Handler({
     handle: function(jMsg) {
       var body = resultConverter(jMsg);
-      handler(body, function(reply, replyHandler) {
+      handler(body, function(reply, replyHandler, timeout) {
         if (typeof reply === 'undefined') {
           throw "Reply message must be specified";
         }
         reply = convertMessage(reply);
         if (replyHandler) {
-          var wrapped = wrappedHandler(replyHandler);
-          jMsg.reply(reply, wrapped);
+          if (timeout) {
+            jMsg.replyWithTimeout(reply, timeout, adaptAsyncResultHandler(replyHandler, resultConverter));
+          } else {
+            jMsg.reply(reply, wrappedHandler(replyHandler));
+          }
         } else {
           jMsg.reply(reply);
         }
