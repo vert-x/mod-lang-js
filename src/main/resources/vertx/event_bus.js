@@ -18,6 +18,7 @@ if (typeof __vertxload === 'string') {
   throw "Use require() to load Vert.x API modules"
 }
 
+load('vertx/helpers.js');
 
 /**
  * Message handlers receive event_bus messages as JSON.
@@ -162,6 +163,11 @@ eventBus.send = function(address, message, replyHandler) {
   return eventBus;
 };
 
+eventBus.sendWithTimeout = function(address, message, timeout, replyHandler) {
+  sendWithTimeout(address, message, replyHandler, timeout);
+  return eventBus;
+};
+
 /**
  * Publish a message on the event bus.
  * Message should be a JSON object It should have a property "address".
@@ -191,29 +197,35 @@ function checkHandlerParams(address, handler) {
 }
 
 var jsonObjectClass = new org.vertx.java.core.json.JsonObject().getClass();
-var jsonArrayClass = new org.vertx.java.core.json.JsonArray().getClass();
+var jsonArrayClass  = new org.vertx.java.core.json.JsonArray().getClass();
+
+// Converts a received message from the java event bus into something
+// a little more palatable for javascript
+var resultConverter = function(jMsg) {
+  var body = jMsg.body();
+
+  if (typeof body === 'object') {
+    var clazz = body.getClass();
+    if (clazz === jsonObjectClass || clazz === jsonArrayClass) {
+      // Convert to JS JSON
+      if (body) {
+        body = JSON.parse(body.encode());
+      } else {
+        body = undefined;
+      }
+    }
+  } else if (body && typeof body === 'org.vertx.java.core.json.JsonObject') {
+    // DynJS returns a fully qualified class name for `typeof` on most
+    // java objects, so we need to check for this too.
+    body = JSON.parse(body.encode());
+  }
+  return body;
+}
 
 function wrappedHandler(handler) {
   return new org.vertx.java.core.Handler({
     handle: function(jMsg) {
-      var body = jMsg.body();
-
-      if (typeof body === 'object') {
-        var clazz = body.getClass();
-        if (clazz === jsonObjectClass || clazz === jsonArrayClass) {
-          // Convert to JS JSON
-          if (body) {
-            body = JSON.parse(body.encode());
-          } else {
-            body = undefined;
-          }
-        }
-      } else if (body && typeof body === 'org.vertx.java.core.json.JsonObject') {
-        // DynJS returns a fully qualified class name for `typeof` on most
-        // java objects, so we need to check for this too.
-        body = JSON.parse(body.encode());
-      }
-
+      var body = resultConverter(jMsg);
       handler(body, function(reply, replyHandler) {
         if (typeof reply === 'undefined') {
           throw "Reply message must be specified";
@@ -302,6 +314,20 @@ function sendOrPub(send, address, message, replyHandler) {
   } else {
     jEventBus.publish(address, message);
   }
+  return eventBus;
+}
+
+function sendWithTimeout(address, message, replyHandler, timeout) {
+  if (!address) {
+    throw "address must be specified";
+  }
+  if (typeof address !== "string") {
+    throw "address must be a string";
+  }
+  if (replyHandler && typeof replyHandler !== "function") {
+    throw "replyHandler must be a function";
+  }
+  jEventBus.sendWithTimeout(address, convertMessage(message), timeout, adaptAsyncResultHandler(replyHandler, resultConverter));
   return eventBus;
 }
 

@@ -66,8 +66,39 @@ var echo = function(msg) {
 
 var NoopHandler = function(msg, replier) {
 }
+var timeout = 500;
+var console = require('vertx/console');
+var timers  = require('vertx/timer');
 
 var EventBusTest = {
+
+  testSendWithTimeoutGetsReply: function() {
+
+    eb.registerHandler(address, function(msg, replier) {
+      replier(reply);
+    });
+    eb.sendWithTimeout(address, sent, timeout, function(err, msg) {
+      vassert.assertTrue("Message should not have timed out and passed an error", err === null);
+      vassert.assertEquals(reply.desc, msg.desc)
+      vassert.assertTrue("Unexpected reply.status", reply.status === msg.status)
+      vassert.testComplete();
+    });
+  },
+
+  testSendWithTimeoutReplyTimesOut: function() {
+
+    eb.registerHandler(address, function(msg, replier) {
+      timers.setTimer(timeout*2, function() {
+        replier("response");
+      });
+    });
+    eb.sendWithTimeout(address, "message", timeout, function(err, msg) {
+      vassert.assertTrue("Message should have timed out and passed an error", err != null);
+      vassert.assertTrue("Message should have timed out, but got: " + msg, msg === null);
+      vassert.testComplete();
+    });
+  },
+
   testRegistrationHandler: function() {
     eb.registerHandler(address, NoopHandler, function() {
       eb.unregisterHandler(address, NoopHandler);
@@ -76,9 +107,24 @@ var EventBusTest = {
   },
 
   testUnregistrationHandler: function() {
-    eb.registerHandler(address, NoopHandler);
-    eb.unregisterHandler(address, NoopHandler, function() {
+    var handleCount = 0;
+    var handler = function(msg, replier) {
+      vassert.fail("Handler should have been unregistered");
       vassert.testComplete();
+    }
+    eb.registerHandler(address, handler, function() {
+      eb.unregisterHandler(address, handler, function() {
+        eb.registerHandler(address, function(msg, replier) {
+          handleCount = handleCount + 1;
+          if (handleCount == 3) {
+            vassert.testComplete();
+          }
+        }, function() {
+          eb.send(address, sent);
+          eb.send(address, sent);
+          eb.send(address, sent);
+        });
+      });
     });
   },
 
