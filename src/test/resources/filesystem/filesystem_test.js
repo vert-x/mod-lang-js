@@ -18,16 +18,28 @@ var tu = require('test_utils');
 var vertxTest = require('vertx_tests');
 var vassert = vertxTest.vassert;
 
-var fs = require("vertx/file_system")
-var Pump = require("vertx/pump")
+var fs = require("vertx/file_system");
+var Pump = require("vertx/pump");
+var Buffer = require('vertx/buffer');
+var timer = require('vertx/timer');
 
-var fileDir = "js-test-output"
-
-// More tests needed
+var fileDir = "js-test-output";
 
 FsTest = {
 
-  testCopy: function() {
+  testReadWriteFile: function() {
+    var file = fileDir + "/beers.tmp";
+    var beers  = new Buffer("Little Sumpin' Sumpin' Ale\nShiva IPA");
+    fs.writeFile(file, beers, function() {
+      fs.readFile(file, function(err, res) {
+        vassert.assertTrue(null === err);
+        vassert.assertEquals(beers.toString(), res.toString());
+        vassert.testComplete();
+      });
+    });
+  },
+
+  testCopyFile: function() {
     var from = fileDir + "/foo.tmp";
     var to = fileDir + "/bar.tmp";
     var content = "some-data";
@@ -161,7 +173,6 @@ FsTest = {
           var rs = file1;
           var ws = file2;
           var pump = new Pump(rs, ws);
-          pump.start();
           rs.endHandler(function() {
             file1.close(function() {
               file2.close(function() {
@@ -173,6 +184,7 @@ FsTest = {
               });
             });
           });
+          pump.start();
         });
       });
     });

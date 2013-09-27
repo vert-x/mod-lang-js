@@ -39,9 +39,9 @@ var jfs = __jvertx.fileSystem();
 var fileSystem = {};
 
 var console = require('vertx/console');
+var streams = require('vertx/streams');
 
-load("vertx/read_stream.js");
-load("vertx/write_stream.js");
+load('vertx/helpers.js');
 
 function wrapHandler(handler) {
   return function(asyncResult) {
@@ -587,7 +587,7 @@ fileSystem.CREATE_NEW = 4;
  * @param {boolean} [flush] flush file writes immediately (default is false)
  * @param {string} [permissions] the permissions to create the file with if the
  *        file is created when opened.
- * @returns {AsyncFile}
+ * @returns {vertx/file_system.AsyncFile}
  */
 fileSystem.openSync = function(path, arg1, arg2, arg3) {
   // TODO combine this code with the similar code in open
@@ -714,12 +714,14 @@ fileSystem.open = function(path, arg1, arg2, arg3, arg4) {
  * @param {org.vertx.java.core.file.AsyncFile} asyncFile the underlying java representation of this AsyncFile
  * @mixes ReadStream
  * @mixes WriteStream
+ * @see {vertx/streams~ReadStream}
+ * @see {vertx/streams~WriteStream}
  */
-
-fileSystem.AsyncFile = function(jaf) {
-  writeStream(this, jaf);
-  readStream(this, jaf);
+fileSystem.AsyncFile = AsyncFile = function(jaf) {
   var that = this;
+
+  streams.WriteStream.call(this, jaf);
+  streams.ReadStream.call(this, jaf);
 
   /**
    * Close the file asynchronously
@@ -743,6 +745,7 @@ fileSystem.AsyncFile = function(jaf) {
   this.write = function(buffer, position, handler) {
     if (position == null || position == undefined) {
       // WriteStream interface
+      console.log("WRITING " + buffer.toString());
       jaf.write(buffer);
     } else {
       // AsyncFile interface

@@ -25,4 +25,3 @@ adaptAsyncResultHandler = function(handler, resultConverter) {
   }
 }
 
-

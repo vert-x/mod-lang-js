@@ -26,9 +26,8 @@ if (typeof __vertxload === 'string') {
 var http = {};
 var net = require('vertx/net');
 var MultiMap = require('vertx/multi_map').MultiMap;
+var streams = require('vertx/streams');
 
-load("vertx/read_stream.js");
-load("vertx/write_stream.js");
 load("vertx/ssl_support.js");
 load("vertx/tcp_support.js");
 load("vertx/helpers.js");
@@ -100,8 +99,6 @@ http.HttpServerRequest = function(jreq) {
   var reqFormAttrs = null;
   var netSocket    = null;
   var that         = this;
-
-  readStream(this, jreq);
 
   /**
    * The HTTP version - either HTTP_1_0 or HTTP_1_1
@@ -286,6 +283,9 @@ http.HttpServerRequest = function(jreq) {
   this._to_java_request = function() {
     return jreq;
   }
+
+  streams.ReadStream.call(this, jreq);
+
 }
 
 /**
@@ -473,7 +473,7 @@ http.HttpServerResponse = function(jresp) {
     return that;
   }
 
-  writeStream(that, jresp);
+  streams.WriteStream.call(that, jresp);
 }
 
 /**
@@ -486,7 +486,6 @@ http.HttpServerResponse = function(jresp) {
  * @mixes ReadStream
  */
 http.HttpServerFileUpload = function(jupload) {
-  readStream(this, jupload);
   /**
    * Stream the upload to the given file
    *
@@ -552,6 +551,7 @@ http.HttpServerFileUpload = function(jupload) {
     return jupload.size();
   }
 
+  streams.ReadStream.call(this, jupload);
 }
 
 /**
@@ -586,8 +586,6 @@ var wrapUploadHandler = function(handler) {
  */
 http.WebSocket = function(jwebsocket, server) {
   var headers = null;
-  readStream(this, jwebsocket);
-  writeStream(this, jwebsocket);
 
   /**
    * When a WebSocket is created it automatically registers an event handler
@@ -692,6 +690,8 @@ http.WebSocket = function(jwebsocket, server) {
       return headers;
     }
   }
+  streams.WriteStream.call(this, jwebsocket);
+  streams.ReadStream.call(this, jwebsocket);
 }
 
 /**
@@ -1150,7 +1150,6 @@ http.HttpClient = function() {
 http.HttpClientRequest = function(jreq) {
   var that = this;
   var reqHeaders = null;
-  writeStream(this, jreq);
 
   /**
    * Sets or gets whether the request should used HTTP chunked encoding or not.
@@ -1274,6 +1273,7 @@ http.HttpClientRequest = function(jreq) {
     jreq.setTimeout(t);
     return that;
   }
+  streams.WriteStream.call(this, jreq);
 }
 
 /**
@@ -1297,7 +1297,6 @@ http.HttpClientResponse = function(jresp) {
   var respHeaders = null;
   var respTrailers = null;
   var netSocket    = null;
-  readStream(this, jresp)
 
   /**
    *
@@ -1373,6 +1372,7 @@ http.HttpClientResponse = function(jresp) {
     jresp.bodyHandler(handler);
     return that;
   }
+  streams.ReadStream.call(this, jresp);
 }
 
 

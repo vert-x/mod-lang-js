@@ -24,6 +24,7 @@ if (typeof __vertxload === 'string') {
  * @exports vertx/net
  */
 var net = {};
+var streams = require('vertx/streams');
 
 load("vertx/ssl_support.js");
 load("vertx/tcp_support.js");
@@ -271,8 +272,8 @@ net.NetClient = function() {
  */
 net.NetSocket = function(jNetSocket) {
   var that = this;
-  readStream(this, jNetSocket);
-  writeStream(this, jNetSocket);
+  streams.ReadStream.call(this, jNetSocket);
+  streams.WriteStream.call(this, jNetSocket);
 
   /**
    * <p>

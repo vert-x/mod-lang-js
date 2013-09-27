@@ -17,6 +17,7 @@
 if (typeof __vertxload === 'string') {
   throw "Use require() to load Vert.x API modules"
 }
+var console = require('vertx/console');
 
 /** 
  * <p>
@@ -45,60 +46,53 @@ if (typeof __vertxload === 'string') {
  * </p>
  *
  * @constructor 
- * @param {ReadStream} readStream a ReadStream
- * @param {WriteStream} writeStream a WriteStream
+ * @param {module:vertx/streams~ReadStream} readStream a ReadStream
+ * @param {module:vertx/streams~WriteStream} writeStream a WriteStream
  * */
 var Pump = function(rs, ws) {
 
-  var that = this;
-  var pumped = 0;
-
-  var drainHandler = function() {
-    rs.resume();
-  }
-
-  var dataHandler = function(buffer) {
-    ws.write(buffer);
-    pumped += buffer.length();
-    if (ws.writeQueueFull()) {
-      rs.pause();
-      ws.drainHandler(drainHandler);
-    }
-  }
-
   /**
    * Start the Pump. The Pump can be started and stopped multiple times.
-   * @returns {Pump}
+   * @returns {module:vertx/pump~Pump}
    */
   this.start = function() {
-    rs.dataHandler(dataHandler);
-    return that;
-  },
+    _delegate.start();
+    return _self;
+  }
+
   /**
    * Stop the Pump. The Pump can be started and stopped multiple times.
-   * @returns {Pump}
+   * @returns {vertx/pump~Pump}
    */
   this.stop = function() {
-    ws.drainHandler(null);
-    rs.dataHandler(null);
-    return that;
-  },
+    _delegate.stop();
+    return _self;
+  }
+
   /**
    * Return the total number of bytes pumped by this pump.
    * @returns {number} the number of bytes pumped
    */
   this.bytesPumped = function() {
-    return pumped;
-  },
+    return _delegate.bytesPumped();;
+  }
+
   /**
    * Set the write queue max size to maxSize
    * @param {number} maxSize the maximum size of the write queue
-   * @returns {Pump}
+   * @returns {vertx/pump~Pump}
    */
   this.setWriteQueueMaxSize = function(maxSize) {
-    ws.setWriteQueueMaxSize(maxSize);
-    return that;
+    _delegate.setWriteQueueMaxSize();
+    return _self;
   }
+
+  /** @private */
+  _delegate = org.vertx.java.core.streams.Pump.createPump(rs._delegate(), ws._delegate());
+
+
+  /** @private */
+  _self = this;
 }
 
 /** @module vertx/pump */
