@@ -19,7 +19,7 @@ if (typeof __vertxload === 'string') {
 }
 
 /**
- * @see https://github.com/vert-x/vert.x/blob/master/vertx-core/src/main/java/org/vertx/java/core/buffer/Buffer.java
+ * @see https://github.com/eclipse/vert.x/blob/master/vertx-core/src/main/java/org/vertx/java/core/buffer/Buffer.java
  * @external org.vertx.java.core.buffer.Buffer
  */
 
@@ -34,7 +34,7 @@ if (typeof __vertxload === 'string') {
  * vert.x Java documents. The methods documented for the Java Buffer objects
  * are applicable to Javascript Buffer instances as well. 
  *
- * @see https://github.com/vert-x/vert.x/blob/master/vertx-core/src/main/java/org/vertx/java/core/buffer/Buffer.java
+ * @see https://github.com/eclipse/vert.x/blob/master/vertx-core/src/main/java/org/vertx/java/core/buffer/Buffer.java
  *
  * @example
  * var Buffer = require('vertx/buffer');
