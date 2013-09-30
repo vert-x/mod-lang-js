@@ -76,7 +76,7 @@ if (typeof __vertxload === 'string') {
  * @param {external:org.vertx.java.core.streams.WriteStream} delegate The Java delegate
  * @class
  */
-DrainHandler = function(delegate) {
+DrainSupport = function(delegate) {
   /**
    * Set the maximum size of the write queue to <code>maxSize</code>. You
    * will still be able to write to the stream even if there is more than
@@ -122,7 +122,7 @@ DrainHandler = function(delegate) {
  * directly.
  *
  * @param {external:WriteStream} delegate The Java delegate
- * @augments module:vertx/streams~DrainHandler
+ * @augments module:vertx/streams~DrainSupport
  * @class
  */
 WriteStream = function(delegate) {
@@ -140,7 +140,7 @@ WriteStream = function(delegate) {
     return this;
   }
 
-  DrainHandler.call(this, delegate);
+  DrainSupport.call(this, delegate);
 
   /**
    * @private
@@ -149,15 +149,14 @@ WriteStream = function(delegate) {
 }
 
 /**
- * Provides methods to read from a data stream. It's used by things
- * like {@linkcode module:vertx/file_system.AsyncFile} and {@linkcode
- * module:vertx/http.HttpServerResponse} and is not typically instantiated
- * directly.
+ * Provides methods to read from a data stream.  This is used internally and
+ * exposed through {@linkcode module:vertx/streams~ReadStream} and other mixins
+ * and is not typically used directly.
  *
  * @param {external:ReadStream} delegate The Java delegate
  * @class
  */
-ReadStream = function(delegate) {
+ReadSupport = function(delegate) {
   /**
    * Set a data handler. As data is read, the handler will be called with 
    * a Buffer containing the data read.
@@ -184,6 +183,27 @@ ReadStream = function(delegate) {
     return this;
   }
   /**
+   * Set an exception handler.
+   * @param {Handler} handler the handler to call
+   */
+  this.exceptionHandler = function(handler) {
+    delegate.exceptionHandler(handler);
+    return this;
+  }
+}
+
+/**
+ * Provides methods to read from a data stream. It's used by things
+ * like {@linkcode module:vertx/file_system.AsyncFile} and {@linkcode
+ * module:vertx/http.HttpServerResponse} and is not typically instantiated
+ * directly.
+ *
+ * @param {external:ReadStream} delegate The Java delegate
+ * @augments module:vertx/streams~ReadSupport
+ * @class
+ */
+ReadStream = function(delegate) {
+  /**
    * Set an end handler. Once the stream has ended, and there is no more data
    * to be read, the handler will be called.
    * @param {Handler} handler the handler to call
@@ -192,14 +212,8 @@ ReadStream = function(delegate) {
     delegate.endHandler(handler);
     return this;
   }
-  /**
-   * Set an exception handler.
-   * @param {Handler} handler the handler to call
-   */
-  this.exceptionHandler = function(handler) {
-    delegate.exceptionHandler(handler);
-    return this;
-  }
+
+  ReadSupport.call(this, delegate);
 
   /**
    * @private
@@ -207,7 +221,9 @@ ReadStream = function(delegate) {
   this._delegate = function() { return delegate; }
 }
 
+module.exports.ReadSupport  = ReadSupport;
 module.exports.ReadStream   = ReadStream;
+
+module.exports.DrainSupport = DrainSupport;
 module.exports.WriteStream  = WriteStream;
-module.exports.DrainHandler = DrainHandler;
 

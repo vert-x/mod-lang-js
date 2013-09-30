@@ -62,7 +62,7 @@ var Pump = function(rs, ws) {
 
   /**
    * Stop the Pump. The Pump can be started and stopped multiple times.
-   * @returns {vertx/pump~Pump}
+   * @returns {module:vertx/pump~Pump}
    */
   this.stop = function() {
     _delegate.stop();
@@ -80,7 +80,7 @@ var Pump = function(rs, ws) {
   /**
    * Set the write queue max size to maxSize
    * @param {number} maxSize the maximum size of the write queue
-   * @returns {vertx/pump~Pump}
+   * @returns {module:vertx/pump~Pump}
    */
   this.setWriteQueueMaxSize = function(maxSize) {
     _delegate.setWriteQueueMaxSize();
