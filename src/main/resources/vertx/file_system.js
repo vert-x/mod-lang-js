@@ -587,7 +587,7 @@ fileSystem.CREATE_NEW = 4;
  * @param {boolean} [flush] flush file writes immediately (default is false)
  * @param {string} [permissions] the permissions to create the file with if the
  *        file is created when opened.
- * @returns {vertx/file_system.AsyncFile}
+ * @returns {module:vertx/file_system.AsyncFile}
  */
 fileSystem.openSync = function(path, arg1, arg2, arg3) {
   // TODO combine this code with the similar code in open
@@ -712,10 +712,8 @@ fileSystem.open = function(path, arg1, arg2, arg3, arg4) {
  * </p>
  * @constructor
  * @param {org.vertx.java.core.file.AsyncFile} asyncFile the underlying java representation of this AsyncFile
- * @mixes ReadStream
- * @mixes WriteStream
- * @see {vertx/streams~ReadStream}
- * @see {vertx/streams~WriteStream}
+ * @augments module:vertx/streams~ReadStream
+ * @augments module:vertx/streams~WriteStream
  */
 fileSystem.AsyncFile = AsyncFile = function(jaf) {
   var that = this;

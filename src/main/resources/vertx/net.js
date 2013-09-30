@@ -267,8 +267,8 @@ net.NetClient = function() {
  * {@linkcode module:vertx/pump~Pump} to pump data with flow control.
  * </p>
  * @constructor
- * @mixes ReadStream
- * @mixes WriteStream
+ * @augments module:vertx/streams~ReadStream
+ * @augments module:vertx/streams~WriteStream
  */
 net.NetSocket = function(jNetSocket) {
   var that = this;

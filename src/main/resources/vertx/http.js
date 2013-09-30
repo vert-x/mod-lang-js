@@ -90,7 +90,7 @@ http.createHttpClient = function() {
  * @class 
  * @param {org.vertx.java.core.http.HttpServerRequest} request the underlying
  * Java HttpServerRequest object
- * @mixes ReadStream
+ * @augments module:vertx/streams~ReadStream
  */
 http.HttpServerRequest = function(jreq) {
   var reqHeaders   = null;
@@ -304,7 +304,7 @@ http.HttpServerRequest = function(jreq) {
  *
  * @class
  * @param {org.vertx.java.core.http.HttpServerResponse} jresp the underlying java proxy
- * @mixes WriteStream
+ * @augments module:vertx/streams~WriteStream
  */
 http.HttpServerResponse = function(jresp) {
   var that = this;
@@ -483,7 +483,7 @@ http.HttpServerResponse = function(jresp) {
  * @constructor
  * @param {org.vertx.java.core.http.HttpServerFileUpload} jupload the underlying java proxy object
  * @see UploadHandler
- * @mixes ReadStream
+ * @augments module:vertx/streams~ReadStream
  */
 http.HttpServerFileUpload = function(jupload) {
   /**
@@ -581,8 +581,8 @@ var wrapUploadHandler = function(handler) {
  * @param {org.vertx.java.core.http.WebSocketBase} jWebSocket The java WebSocketBase object
  * @param {boolean} [server] whether this is a server-side websocket (default: false)
  * @see WebSocketHandler
- * @mixes ReadStream
- * @mixes WriteStream
+ * @augments module:vertx/streams~ReadStream
+ * @augments module:vertx/streams~WriteStream
  */
 http.WebSocket = function(jwebsocket, server) {
   var headers = null;
@@ -1124,7 +1124,7 @@ http.HttpClient = function() {
  * </p>
  * <p>
  * This class supports both chunked and non-chunked HTTP.
- * It mixes in {@linkcode WriteStream} so it can be used with
+ * It mixes in {@linkcode module:vertx/streams~WriteStream} so it can be used with
  * {@linkcode module:vertx/pump~Pump} to pump data with flow control.
  * </p>
  * <p>
@@ -1145,7 +1145,7 @@ http.HttpClient = function() {
  *
  * @constructor
  * @param org.vertx.java.core.http.HttpClientRequest the underlying Java proxy
- * @mixes WriteStream
+ * @augments module:vertx/streams~WriteStream
  */
 http.HttpClientRequest = function(jreq) {
   var that = this;
@@ -1284,13 +1284,13 @@ http.HttpClientRequest = function(jreq) {
  * method was called on an instance of {@linkcode module:vertx/http.HttpClient}.
  * </p>
  * <p>
- * It mixes in {@linkcode ReadStream} so it can be used with
+ * It mixes in {@linkcode module:vertx/streams~ReadStream} so it can be used with
  * {@linkcode module:vertx/pump~Pump|Pump} to pump data with flow control.
  * </p>
  * @constructor
  * @param {org.vertx.java.core.http.HttpClientResponse} jresp the underlying Java proxy
  * @see ResponseHandler
- * @mixes ReadStream
+ * @augments module:vertx/streams~ReadStream
  */
 http.HttpClientResponse = function(jresp) {
   var that = this;

@@ -19,14 +19,61 @@ if (typeof __vertxload === 'string') {
 }
 
 /**
+ * <p>
+ * There are several objects in vert.x that allow data to be read from and
+ * written to in the form of Buffers.  In Vert.x, calls to write data return
+ * immediately and writes are internally queued.
+ * </p>
+ *
+ * <p>
+ * It's not hard to see that if you write to an object faster than it can
+ * actually write the data to its underlying resource then the write queue
+ * could grow without bound - eventually resulting in exhausting available
+ * memory.
+ * </p>
+ *
+ * <p>
+ * To solve this problem a simple flow control capability is provided by some
+ * objects in the vert.x API.
+ * </p>
+ *
+ * <p>
+ * Any flow control aware object that can be written to is said to implement
+ * {@linkcode module:vertx/streams~WriteStream}, and any flow control object
+ * that can be read from is said to implement {@linkcode module:vertx/streams~ReadStream}.  
+ * </p>
+ *
+ * <p>
+ * The object types defined in this module are typically not instantiated
+ * by directly, but are provided to callback functions in modules such as
+ * {@linkcode module:vertx/file_system}, {@linkcode module:vertx/net} and
+ * {@linkcode module:vertx/http}.
+ * </p>
+ *
  * @module vertx/streams
  */
 
 /**
+ * The {@linkcode module:vertx/streams~ReadStream} interface delegates most
+ * function calls to the Java class provided by Vert.x
+ *
+ * @see https://github.com/eclipse/vert.x/blob/master/vertx-core/src/main/java/org/vertx/java/core/streams/ReadStream.java
+ * @external org.vertx.java.core.streams.ReadStream
+ */
+
+/**
+ * The {@linkcode module:vertx/streams~WriteStream} interface delegates most
+ * function calls to the Java class provided by Vert.x
+ *
+ * @see https://github.com/eclipse/vert.x/blob/master/vertx-core/src/main/java/org/vertx/java/core/streams/WriteStream.java
+ * @external org.vertx.java.core.streams.WriteStream
+ */
+
+/**
  * Provides methods for querying and draining data streams.
- * This is used internally and exposed through the WriteStream
+ * This is used internally and exposed through {@linkcode module:vertx/streams~WriteStream}
  * and other mixins and is not typically used directly.
- * @param {org.vertx.java.core.streams.WriteStream} delegate The Java delegate
+ * @param {external:org.vertx.java.core.streams.WriteStream} delegate The Java delegate
  * @class
  */
 DrainHandler = function(delegate) {
@@ -69,14 +116,13 @@ DrainHandler = function(delegate) {
 }
 
 /**
- * Provides methods to write to a data stream. It's used by things
- * like AsyncFile and HttpClientRequest and is not meant to be used
+ * Provides methods to read from a data stream. It's used by things
+ * like {@linkcode module:vertx/file_system.AsyncFile} and {@linkcode
+ * module:vertx/http.HttpServerResponse} and is not typically instantiated
  * directly.
- * {@link module:vertx/streams~DrainHandler}
  *
- * @external org.vertx.java.core.streams.WriteStream
- * @param {org.vertx.java.core.streams.WriteStream} delegate The Java delegate
- * @mixes DrainHandler
+ * @param {external:WriteStream} delegate The Java delegate
+ * @augments module:vertx/streams~DrainHandler
  * @class
  */
 WriteStream = function(delegate) {
@@ -84,9 +130,10 @@ WriteStream = function(delegate) {
    * Write some data to the stream. The data is put on an internal write
    * queue, and the write actually happens asynchronously. To avoid running
    * out of memory by putting too much on the write queue, check the 
-   * {@link#writeQueueFull} method before writing. This is done automatically
-   * if using a {@link Pump}.
-   * @param {Buffer} data the data to write
+   * {@link module:vertx/streams~WriteStream#writeQueueFull} method before
+   * writing. This is done automatically if using a {@linkcode module:vertx/pump~Pump}.
+   *
+   * @param {module:vertx/buffer~Buffer} data the data to write
    */
   this.write = function(data) {
     delegate.write(data);
@@ -102,12 +149,13 @@ WriteStream = function(delegate) {
 }
 
 /**
- * This provides methods to read from a data stream. It's used by things
- * like AsyncFile and HttpServerResponse and is not meant to be used
+ * Provides methods to read from a data stream. It's used by things
+ * like {@linkcode module:vertx/file_system.AsyncFile} and {@linkcode
+ * module:vertx/http.HttpServerResponse} and is not typically instantiated
  * directly.
- * @external org.vertx.java.core.streams.ReadStream
- * @param {org.vertx.java.core.streams.ReadStream} delegate The Java delegate
- * @mixin
+ *
+ * @param {external:ReadStream} delegate The Java delegate
+ * @class
  */
 ReadStream = function(delegate) {
   /**

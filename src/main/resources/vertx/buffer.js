@@ -19,6 +19,9 @@ if (typeof __vertxload === 'string') {
 }
 
 /**
+ * The {@linkcode module:vertx/buffer~Buffer} interface delegates most
+ * function calls to the Java class provided by Vert.x
+ *
  * @see https://github.com/eclipse/vert.x/blob/master/vertx-core/src/main/java/org/vertx/java/core/buffer/Buffer.java
  * @external org.vertx.java.core.buffer.Buffer
  */
