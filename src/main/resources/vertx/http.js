@@ -27,9 +27,9 @@ var http = {};
 var net = require('vertx/net');
 var MultiMap = require('vertx/multi_map').MultiMap;
 var streams = require('vertx/streams');
+var tcp_support = require('vertx/tcp_support');
 
 load("vertx/ssl_support.js");
-load("vertx/tcp_support.js");
 load("vertx/helpers.js");
 
 /**
@@ -709,8 +709,8 @@ http.WebSocket = function(jwebsocket, server) {
  * server.listen(8000, 'localhost');
  *
  * @class
- * @mixes TCPSupport
- * @mixes ServerTCPSupport
+ * @augments module:vertx/tcp_support~TCPSupport
+ * @augments module:vertx/tcp_support~ServerTCPSupport
  * @mixes SSLSupport
  * @mixes ServerSSLSupport
  */
@@ -721,8 +721,8 @@ http.HttpServer = function() {
 
   sslSupport(this, jserver);
   serverSslSupport(this, jserver);
-  tcpSupport(this, jserver);
-  serverTcpSupport(this, jserver);
+  tcp_support.TCPSupport.call(this, jserver);
+  tcp_support.ServerTCPSupport.call(this, jserver);
 
   /**
    * Set the request handler for the server. As HTTP requests are received by
@@ -817,7 +817,7 @@ http.HttpServer = function() {
  * HTML5 {@linkcode module:vertx/http.WebSocket|websockets}.</p>
  *
  * @class
- * @mixes TCPSupport
+ * @augments module:vertx/tcp_support~TCPSupport
  * @mixes SSLSupport
  * @mixes ClientSSLSupport
  */
@@ -827,7 +827,7 @@ http.HttpClient = function() {
 
   sslSupport(this, jclient);
   clientSslSupport(this, jclient);
-  tcpSupport(this, jclient);
+  tcp_support.TCPSupport.call(this, jclient);
 
   /**
    * Set the exception handler.

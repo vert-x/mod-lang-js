@@ -56,6 +56,7 @@ if (typeof __vertxload === 'string') {
  * // TODO: Finish these examples
  *
  * @constructor
+ * @alias module:vertx/buffer
  */
 var Buffer = org.vertx.java.core.buffer.Buffer;
 

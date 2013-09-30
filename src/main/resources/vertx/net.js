@@ -27,10 +27,9 @@ var net = {};
 var streams = require('vertx/streams');
 
 load("vertx/ssl_support.js");
-load("vertx/tcp_support.js");
-load("vertx/read_stream.js");
-load("vertx/write_stream.js");
 load("vertx/helpers.js");
+
+var tcp_support = require('vertx/tcp_support');
 
 /**
  * Creates a {@linkcode module:vertx/net.NetServer|NetServer}.
@@ -67,8 +66,8 @@ net.createNetClient = function() {
  * @constructor
  * @mixes SSLSupport
  * @mixes ServerSSLSupport
- * @mixes TCPSupport
- * @mixes ServerTCPSupport
+ * @augments module:vertx/tcp_support~TCPSupport
+ * @augments module:vertx/tcp_support~ServerTCPSupport
  */
 net.NetServer = function() {
   var that = this;
@@ -76,8 +75,9 @@ net.NetServer = function() {
 
   sslSupport(this, jserver);
   serverSslSupport(this, jserver);
-  tcpSupport(this, jserver);
-  serverTcpSupport(this, jserver);
+
+  tcp_support.TCPSupport.call(this, jserver);
+  tcp_support.ServerTCPSupport.call(this, jserver);
 
   /**
    * Supply a connect handler for this server. The server can only have at most
@@ -163,14 +163,15 @@ net.NetServer = function() {
  * @constructor
  * @mixes sslSupport~SSLSupport
  * @mixes clientSslSupport~ClientSSLSupport
- * @mixes tcpSupport~TCPSupport
+ * @augments module:vertx/tcp_support~TCPSupport
  */
 net.NetClient = function() {
   var jclient = __jvertx.createNetClient();
   var that = this;
   sslSupport(this, jclient);
   clientSslSupport(this, jclient);
-  tcpSupport(this, jclient);
+
+  tcp_support.TCPSupport.call(this, jclient);
 
   /**
    * Attempt to open a connection to a server at the specific port and host.
