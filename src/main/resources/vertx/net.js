@@ -25,11 +25,11 @@ if (typeof __vertxload === 'string') {
  */
 var net = {};
 var streams = require('vertx/streams');
+var tcp_support = require('vertx/tcp_support');
+var ssl_support = require('vertx/ssl_support');
 
-load("vertx/ssl_support.js");
 load("vertx/helpers.js");
 
-var tcp_support = require('vertx/tcp_support');
 
 /**
  * Creates a {@linkcode module:vertx/net.NetServer|NetServer}.
@@ -64,8 +64,8 @@ net.createNetClient = function() {
 /**
  * Represents a TCP or SSL server.  
  * @constructor
- * @mixes SSLSupport
- * @mixes ServerSSLSupport
+ * @augments module:vertx/ssl_support~SSLSupport
+ * @augments module:vertx/ssl_support~ServerSSLSupport
  * @augments module:vertx/tcp_support~TCPSupport
  * @augments module:vertx/tcp_support~ServerTCPSupport
  */
@@ -73,11 +73,11 @@ net.NetServer = function() {
   var that = this;
   var jserver = __jvertx.createNetServer();
 
-  sslSupport(this, jserver);
-  serverSslSupport(this, jserver);
-
   tcp_support.TCPSupport.call(this, jserver);
   tcp_support.ServerTCPSupport.call(this, jserver);
+
+  ssl_support.SSLSupport.call(this, jserver);
+  ssl_support.ServerSSLSupport.call(this, jserver);
 
   /**
    * Supply a connect handler for this server. The server can only have at most
@@ -161,17 +161,17 @@ net.NetServer = function() {
  * </p>
  *
  * @constructor
- * @mixes sslSupport~SSLSupport
- * @mixes clientSslSupport~ClientSSLSupport
+ * @augments module:vertx/ssl_support~SSLSupport
+ * @augments module:vertx/ssl_support~ClientSSLSupport
  * @augments module:vertx/tcp_support~TCPSupport
  */
 net.NetClient = function() {
   var jclient = __jvertx.createNetClient();
   var that = this;
-  sslSupport(this, jclient);
-  clientSslSupport(this, jclient);
-
   tcp_support.TCPSupport.call(this, jclient);
+
+  ssl_support.SSLSupport.call(this, jclient);
+  ssl_support.ClientSSLSupport.call(this, jclient);
 
   /**
    * Attempt to open a connection to a server at the specific port and host.

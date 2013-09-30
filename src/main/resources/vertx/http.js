@@ -28,8 +28,8 @@ var net = require('vertx/net');
 var MultiMap = require('vertx/multi_map').MultiMap;
 var streams = require('vertx/streams');
 var tcp_support = require('vertx/tcp_support');
+var ssl_support = require('vertx/ssl_support');
 
-load("vertx/ssl_support.js");
 load("vertx/helpers.js");
 
 /**
@@ -711,18 +711,18 @@ http.WebSocket = function(jwebsocket, server) {
  * @class
  * @augments module:vertx/tcp_support~TCPSupport
  * @augments module:vertx/tcp_support~ServerTCPSupport
- * @mixes SSLSupport
- * @mixes ServerSSLSupport
+ * @augments module:vertx/ssl_support~SSLSupport
+ * @augments module:vertx/ssl_support~ServerSSLSupport
  */
 http.HttpServer = function() {
   var that = this;
   var jserver = __jvertx.createHttpServer();
 
-
-  sslSupport(this, jserver);
-  serverSslSupport(this, jserver);
   tcp_support.TCPSupport.call(this, jserver);
   tcp_support.ServerTCPSupport.call(this, jserver);
+
+  ssl_support.SSLSupport.call(this, jserver);
+  ssl_support.ServerSSLSupport.call(this, jserver);
 
   /**
    * Set the request handler for the server. As HTTP requests are received by
@@ -818,17 +818,17 @@ http.HttpServer = function() {
  *
  * @class
  * @augments module:vertx/tcp_support~TCPSupport
- * @mixes SSLSupport
- * @mixes ClientSSLSupport
+ * @augments module:vertx/ssl_support~SSLSupport
+ * @augments module:vertx/ssl_support~ClientSSLSupport
  */
 http.HttpClient = function() {
   var that = this;
   var jclient = __jvertx.createHttpClient();
 
-  sslSupport(this, jclient);
-  clientSslSupport(this, jclient);
   tcp_support.TCPSupport.call(this, jclient);
 
+  ssl_support.SSLSupport.call(this, jclient);
+  ssl_support.ClientSSLSupport.call(this, jclient);
   /**
    * Set the exception handler.
    *
