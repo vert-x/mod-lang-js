@@ -222,6 +222,10 @@ DatagramSocket = function(ipv4) {
    * @param {ResultHandler} [handler] The handler to notify when the listen operation completes
    */
   this.listen = function(port, host, handler) {
+    if (typeof host == 'function') {
+      handler = host;
+      host = '0.0.0.0';
+    }
     _delegate.listen(host, port, adaptAsyncResultHandler(handler, function() { return _that; }));
     return this;
   }
