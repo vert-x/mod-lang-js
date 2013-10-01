@@ -26,7 +26,7 @@ if (typeof __vertxload === 'string') {
  */
 
 
-var streams = require('vertx/streams');
+var streams        = require('vertx/streams');
 var NetworkSupport = require('vertx/network_support');
 
 load("vertx/helpers.js");
@@ -51,6 +51,7 @@ load("vertx/helpers.js");
  */
 DatagramSocket = function(ipv4) {
   var family = null;
+    family = org.vertx.java.core.datagram.InternetProtocolFamily.IPv4;
   if(ipv4 === true) {
     family = org.vertx.java.core.datagram.InternetProtocolFamily.IPv4;
   } else if (ipv4 === false) {
@@ -151,9 +152,129 @@ DatagramSocket = function(ipv4) {
    * TODO: Return a javascript object.
    * @return {external:InetSocketAddress}
    */
-  this.local_address = function() {
+  this.localAddress = function() {
     return _localAddress;
+  }
+
+  /**
+   * Joins a multicast group and listens for packets sent to it. The
+   * {@linkcode ResultHandler} is notified once the operation completes.
+   *
+   * @param {string} address The address of the multicast group to join
+   * @param {ResultHandler} handler The handler to notify when the operation has completed
+   * @param {string} [source] The address of the source to which we'll listen for packets
+   * @param {string} [networkInterface] The network interface on which to listen for packets
+   * @return {module:vertx/datagram~DatagramSocket} this
+   */
+  this.listenMulticastGroup = function(address, handler, source, networkInterface) {
+    if (networkInterface && source) {
+      _delegate.listenMulticastGroup(address, networkInterface, source, adaptAsyncResultHandler(handler, function() { return _that; }));
+    } else {
+      _delegate.listenMulticastGroup(address, adaptAsyncResultHandler(handler, function() { return _that; }));
+    }
+    return this;
+  }
+
+  /**
+   * Leaves a multicast group and stops listening for packets sent to it on the
+   * given network interface. The {@linkcode
+   *
+   * @param {string} address The address of the multicast group to stop listening to
+   * @param {ResultHandler} handler The handler to notify when the operation completes
+   * @param {string} [source] The source address to stop listening to
+   * @param {string} [networkInterface] The network interface this socket is currently listening on
+   * @return {module:vertx/datagram~DatagramSocket} this
+   */
+  this.unlistenMulticastGroup = function(address, handler, source, networkInterface) {
+    if (networkInterface && source) {
+      _delegate.unlistenMulticastGroup(address, networkInterface, source, adaptAsyncResultHandler(handler, function() { return _that; }));
+    } else {
+      _delegate.unlistenMulticastGroup(address, adaptAsyncResultHandler(handler, function() { return _that; }));
+    }
+    return this;
+  }
+
+  /**
+   * Blocks the given source address on the given network interface notifies
+   * the handler when this operation has completed.
+   *
+   * @param {string} address The address of the multicast group on which the source is broadcasting
+   * @param {ResultHandler} handler The handler to notify when the operation completes
+   * @param {string} source The source address to block
+   * @param {string} [networkInterface] The network interface this socket is currently listening on
+   * @return {module:vertx/datagram~DatagramSocket} this
+   */
+  this.blockMulticastGroup = function(address, handler, networkInterface, source) {
+    if (networkInterface && source) {
+      _delegate.blockMulticastGroup(address, networkInterface, source, adaptAsyncResultHandler(handler, function() { return _that; }));
+    } else {
+      _delegate.blockMulticastGroup(address, adaptAsyncResultHandler(handler, function() { return _that; }));
+    }
+    return this;
+  }
+
+  /**
+   * Listens to broadcast messages on the given port and optional host address. The
+   * handler is notified when the listen operation has completed.
+   *
+   * @param {number} port The port to listen on for incoming packets
+   * @param {string} [host] The host address to listen on. Defaults to '0.0.0.0'.
+   * @param {ResultHandler} [handler] The handler to notify when the listen operation completes
+   */
+  this.listen = function(port, host, handler) {
+    _delegate.listen(host, port, adaptAsyncResultHandler(handler, function() { return _that; }));
+    return this;
+  }
+
+  /**
+   * A <code>PacketHandler</code> is a {@linkcode Handler} that accepts a
+   * {@linkcode module:vertx/datagram.DatagramPacket} as it's parameter.
+   * @typedef {function} PacketHandler
+   * @param {module:vertx/datagram.DatagramPacket} datagramPacket The received packet
+   */
+
+  /**
+   * Set a {@linkcode PacketHandler} to be notified of incoming data. 
+   *
+   * @param {PacketHandler} handler The handler to be notified of incoming packets.
+   */
+  this.dataHandler = function(handler) {
+    _delegate.dataHandler(function(packet) {
+      handler(new DatagramPacket(packet));
+    });
   }
 }
 
+/**
+ * A received UDP datagram packet, with the received data and sender information.
+ * @param {external:DatagramPacket} packet the Java delegate
+ * @class
+ * @property {object} sender The sender of the packet
+ * @property {string} sender.host The packet sender's host address
+ * @property {number} sender.port The packet sender's port number
+ * @property {module:vertx/buffer} data The packet data that was sent
+ */
+DatagramPacket = function(_delegate) {
+  var _sender = null;
+  var _data   = null;
+
+  this.__defineGetter__('sender', function() {
+    if (_sender === null) {
+      _sender = { 
+        host: _delegate.sender().getAddress().getHostAddress(),
+        port: _delegate.sender().getPort()
+      }
+    }
+    return _sender;
+  });
+
+  this.__defineGetter__('data', function() {
+    if (_data === null) {
+      _data = _delegate.data();
+    }
+    return _data;
+  });
+}
+
 module.exports.DatagramSocket = DatagramSocket;
+module.exports.DatagramPacket = DatagramPacket;
