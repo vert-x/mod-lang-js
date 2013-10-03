@@ -175,7 +175,6 @@ var console = require('vertx/console'), peer1, peer2;
 vertxStop = function() {
   peer1 == null ? null : peer1.close();
   peer2 == null ? null : peer2.close();
-  console.log("Container stopping.");
 }
 
 vertxTest.startTests(DatagramTest);
