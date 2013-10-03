@@ -23,8 +23,8 @@ var vassert   = vertxTest.vassert;
 DatagramTest = {
 
   testSendReceive: function() {
-    var peer1 = new udp.DatagramSocket();
-    var peer2 = new udp.DatagramSocket();
+    peer1 = new udp.DatagramSocket();
+    peer2 = new udp.DatagramSocket();
     peer2.exceptionHandler(function(err) {
       vassert.assertTrue("Should receive an error object in the exception handler", err !== null);
       vassert.fail("Exception caught: " + err);
@@ -36,11 +36,7 @@ DatagramTest = {
       buffer = tu.generateRandomBuffer(128);
       peer2.dataHandler( function(packet) {
         vassert.assertTrue( tu.buffersEqual(packet.data, buffer) );
-        peer1.close(function() {
-          peer2.close(function() {
-            vassert.testComplete();
-          });
-        });
+        vassert.testComplete();
       });
 
       peer1.send('127.0.0.1', 1234, buffer, function(err, result) {
@@ -72,9 +68,114 @@ DatagramTest = {
     });
   },
 
+  DEFERREDtestListenSamePortMultipleTimes: function() {
+    peer1= new udp.DatagramSocket();
+    peer2= new udp.DatagramSocket();
+
+    peer2.listen(1234, function(err, result) {
+      vassert.assertTrue("Error: " + err, err === null);
+      vassert.assertTrue("Unexpected result: " + result, result == peer2);
+      peer1.listen(1234, function(err, result) {
+        vassert.assertTrue("Error: " + err, err === null);
+        vassert.assertTrue("Unexpected result: " + result, result == peer1);
+        vassert.testComplete();
+      });
+    });
+  },
+
+  testEcho: function() {
+    peer1 = new udp.DatagramSocket();
+    peer2 = new udp.DatagramSocket();
+
+    peer1.exceptionHandler(function(err) {
+      vassert.assertTrue("Exception should not be null", err !== null);
+      vassert.fail("Error: " + err);
+    });
+    peer2.exceptionHandler(function(err) {
+      vassert.assertTrue("Exception should not be null", err !== null);
+      vassert.fail("Error: " + err);
+    });
+
+    peer2.listen(1234, '127.0.0.1', function(err, result) {
+      vassert.assertTrue("Unexpected error: " + err, err === null);
+      vassert.assertTrue("Unexpected result: " + result, result == peer2);
+      buffer = tu.generateRandomBuffer(128);
+
+      peer2.dataHandler(function(packet) {
+        vassert.assertTrue("Unexpected data received: " + packet, tu.buffersEqual(buffer, packet.data));
+
+        peer2.send(packet.sender.host, packet.sender.port, buffer, function(err, result) {
+          vassert.assertTrue("Error: " + err, err === null);
+          vassert.assertTrue("Unexpected result: " + result, result == peer2);
+        });
+      });
+
+      peer1.listen(1235, '127.0.0.1', function(err, result) {
+        peer1.dataHandler(function(packet) {
+          vassert.assertTrue("Unexpected data received: " + packet, tu.buffersEqual(buffer, packet.data));
+          vassert.testComplete();
+        });
+      });
+      peer1.send('127.0.0.1', 1234, buffer, function(err, result) {
+        vassert.assertTrue("Unexpected error: " + err, err === null);
+        vassert.assertTrue("Unexpected result: " + result, result == peer1);
+      });
+    });
+  },
+
+  testSendAfterClose: function() {
+    peer1 = new udp.DatagramSocket();
+    peer2 = new udp.DatagramSocket();
+
+    peer1.close(function() {
+      peer1.send('127.0.0.1', 1234, 'test', function(err, result) {
+        vassert.assertTrue("Should have recieved an error.", err !== null);
+        vassert.assertTrue("Should have recieved an error.", err !== undefined);
+        vassert.assertTrue("Should not have recieved a result.", result === null);
+        peer2.close(function() {
+          peer2.send('127.0.0.1', 1234, 'test', function(err, result) {
+            vassert.assertTrue("Should have recieved an error.", err !== null);
+            vassert.assertTrue("Should have recieved an error.", err !== undefined);
+            vassert.assertTrue("Should not have recieved a result.", result === null);
+            vassert.testComplete();
+          });
+        });
+      });
+    });
+  },
+
+  testBroadcast: function() {
+    peer1 = new udp.DatagramSocket();
+    peer2 = new udp.DatagramSocket();
+
+    peer1.broadcast(true);
+    peer2.broadcast(true);
+
+    peer2.listen(1234, function(err, result) {
+      vassert.assertTrue("Unexpected error: " + err, err === null);
+      vassert.assertTrue("Unexpected result: " + result, result == peer2);
+
+      buffer = tu.generateRandomBuffer(128);
+
+      peer2.dataHandler(function(packet) {
+        vassert.assertTrue("Unexpected data: " + packet.data, tu.buffersEqual(packet.data, buffer));
+        vassert.testComplete();
+      });
+
+      peer1.send('255.255.255.255', 1234, buffer, function(err, result) {
+        vassert.assertTrue("Unexpected error: " + err, err === null);
+        vassert.assertTrue("Unexpected result: " + result, result == peer1);
+      });
+    });
+  }
+
 }
 
+var console = require('vertx/console'), peer1, peer2;
 vertxStop = function() {
+  peer1 == null ? null : peer1.close();
+  peer2 == null ? null : peer2.close();
+  console.log("Container stopping.");
 }
 
 vertxTest.startTests(DatagramTest);

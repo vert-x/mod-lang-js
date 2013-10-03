@@ -140,11 +140,7 @@ DatagramSocket = function(ipv4) {
    * @param {ResultHandler} handler the handler to notify when close() has completed.
    */
   this.close = function(handler) {
-    if (handler !== undefined) {
-      _delegate.close(adaptAsyncResultHandler(handler));
-    } else {
-      _delegate.close();
-    }
+    _delegate.close(adaptAsyncResultHandler(handler));
   }
 
   /** 
