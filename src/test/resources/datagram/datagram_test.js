@@ -68,16 +68,16 @@ DatagramTest = {
     });
   },
 
-  DEFERREDtestListenSamePortMultipleTimes: function() {
+  testListenSamePortMultipleTimes: function() {
     peer1= new udp.DatagramSocket();
     peer2= new udp.DatagramSocket();
 
     peer2.listen(1234, function(err, result) {
       vassert.assertTrue("Error: " + err, err === null);
-      vassert.assertTrue("Unexpected result: " + result, result == peer2);
+      vassert.assertTrue("Unexpected result: " + result, result === peer2);
       peer1.listen(1234, function(err, result) {
-        vassert.assertTrue("Error: " + err, err === null);
-        vassert.assertTrue("Unexpected result: " + result, result == peer1);
+        vassert.assertTrue("Error: " + err, err !== null);
+        vassert.assertTrue("Unexpected result: " + result, result === null);
         vassert.testComplete();
       });
     });
