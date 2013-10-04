@@ -167,7 +167,42 @@ DatagramTest = {
         vassert.assertTrue("Unexpected result: " + result, result == peer1);
       });
     });
-  }
+  },
+
+  testConfigure: function() {
+    peer1 = new udp.DatagramSocket();
+
+    vassert.assertTrue("Incorrect default for broadcast", !peer1.broadcast());
+    peer1.broadcast(true);
+    vassert.assertTrue("Change to broadcast failed", peer1.broadcast());
+
+    vassert.assertTrue("Incorrect default for multicast loopback mode", peer1.multicastLoopbackMode());
+    peer1.multicastLoopbackMode(false);
+    vassert.assertTrue("Change to multicast loopback mode failed", !peer1.multicastLoopbackMode());
+
+    vassert.assertTrue("Incorrect default for multicast network interface", peer1.multicastNetworkInterface() == null);
+    iface = java.net.NetworkInterface.getNetworkInterfaces().nextElement();
+    peer1.multicastNetworkInterface(iface.getName());
+    vassert.assertTrue("Change to multicast network interface failed", peer1.multicastNetworkInterface() == iface.getName());
+
+    vassert.assertTrue("Incorrect default for receive buffer size", peer1.receiveBufferSize() != 1024);
+    peer1.receiveBufferSize(1024);
+    vassert.assertTrue("Change to multicast receive buffer size failed", peer1.receiveBufferSize() == 1024);
+
+    vassert.assertTrue("Incorrect default for send buffer size", peer1.sendBufferSize() != 1024);
+    peer1.sendBufferSize(1024);
+    vassert.assertTrue("Change to multicast send buffer size failed", peer1.sendBufferSize() == 1024);
+
+    vassert.assertTrue("Incorrect default for reuse address", !peer1.reuseAddress());
+    peer1.reuseAddress(true);
+    vassert.assertTrue("Change to reuse address failed", peer1.reuseAddress());
+
+    vassert.assertTrue("Incorrect default for multicast ttl", peer1.multicastTimeToLive() != 2);
+    peer1.multicastTimeToLive(2);
+    vassert.assertTrue("Change to multicast multicast ttl failed", peer1.multicastTimeToLive() == 2);
+
+    vassert.testComplete();
+  },
 
 }
 

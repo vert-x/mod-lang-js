@@ -89,11 +89,12 @@ DatagramSocket = function(ipv4) {
   /**
    * Get or set the SO_BROADCAST option
    * @param {boolean} [value] turns on or off the SO_BROADCAST option
-   * @return {boolean} the SO_BROADCAST option as currently set
+   * @return {boolean|module:vertx/datagram~DatagramSocket} the SO_BROADCAST option as currently set or this
    */
   this.broadcast = function(value) {
     if (value !== undefined) {
       _delegate.setBroadcast(value);
+      return this;
     }
     return _delegate.isBroadcast();
   }
@@ -101,11 +102,12 @@ DatagramSocket = function(ipv4) {
   /**
    * Get or set the IP_MULTICAST_LOOP option
    * @param {boolean} [value] turns on or off the IP_MULTICAST_LOOP option
-   * @return {boolean} the IP_MULTICAST_LOOP option as currently set
+   * @return {boolean|module:vertx/datagram~DatagramSocket} the IP_MULTICAST_LOOP option as currently set or this
    */
   this.multicastLoopbackMode = function(value) {
     if (value !== undefined) {
       _delegate.setMulticastLoopbackMode(value);
+      return this;
     }
     return _delegate.isMulticastLoopbackMode();
   }
@@ -113,11 +115,12 @@ DatagramSocket = function(ipv4) {
   /**
    * Get or set the IP_MULTICAST_TTL option
    * @param {number} [value] the IP_MULTICAST_TTL value
-   * @return {number} the IP_MULTICAST_TTL option as currently set
+   * @return {number|module:vertx/datagram~DatagramSocket} the IP_MULTICAST_TTL option as currently set or this
    */
   this.multicastTimeToLive = function(value) {
     if (value !== undefined) {
       _delegate.setMulticastTimeToLive(value);
+      return this;
     }
     return _delegate.getMulticastTimeToLive();
   }
@@ -125,11 +128,12 @@ DatagramSocket = function(ipv4) {
   /**
    * Get or set the IP_MULTICAST_IF option
    * @param {string} [value] the IP_MULTICAST_IF value
-   * @return {string} the IP_MULTICAST_IF option as currently set
+   * @return {string|module:vertx/datagram~DatagramSocket} the IP_MULTICAST_IF option as currently set or this
    */
   this.multicastNetworkInterface = function(value) {
     if (value !== undefined) {
       _delegate.setMulticastNetworkInterface(value);
+      return this;
     }
     return _delegate.getMulticastNetworkInterface();
   }
