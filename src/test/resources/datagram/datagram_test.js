@@ -15,6 +15,7 @@
  */
 
 var udp       = require('vertx/datagram');
+var timer     = require('vertx/timer');
 
 var tu        = require('test_utils');
 var vertxTest = require('vertx_tests');
@@ -203,6 +204,61 @@ DatagramTest = {
 
     vassert.testComplete();
   },
+
+  testMulticastJoinLeave: function() {
+    buffer = tu.generateRandomBuffer(128);
+    groupAddress = '230.0.0.1';
+    received = false;
+
+    peer1 = new udp.DatagramSocket();
+    peer2 = new udp.DatagramSocket();
+
+    peer2.dataHandler(function(packet) {
+      vassert.assertTrue(tu.buffersEqual(buffer, packet.data));
+
+      // leave the group
+      peer2.unlistenMulticastGroup(groupAddress, function(err, socket) {
+        vassert.assertTrue("Unexpected error: " + err, err === null);
+        vassert.assertTrue("Unexpected result: " + socket, socket === peer2);
+      });
+    });
+
+    peer2.listen(1234, '127.0.0.1', function(err, peer) {
+      vassert.assertTrue("Unexpected error: " + err, err === null);
+      vassert.assertTrue("Unexpected result: " + peer, peer === peer2);
+
+      // join the group
+      peer2.listenMulticastGroup(groupAddress, function(err, socket) {
+        vassert.assertTrue("Unexpected error: " + err, err === null);
+        vassert.assertTrue("Unexpected result: " + socket, socket === peer2);
+
+        // send a message to the group
+        peer1.send('127.0.0.1', 1234, buffer, function(err, socket) {
+          vassert.assertTrue("Unexpected error: " + err, err === null);
+          vassert.assertTrue("Unexpected result: " + socket, socket === peer1);
+
+          // set a data handler that shouldn't be called
+          peer2.dataHandler(function(packet) {
+            vassert.fail("Should not have received a packet after leaving the multicast group. " + packet);
+          });
+
+          // now send another message, and wait to see if peer2 gets it
+          peer1.send('127.0.0.1', 1234, buffer, function(err, socket) {
+            vassert.assertTrue("Unexpected error: " + err, err === null);
+            vassert.assertTrue("Unexpected result: " + socket, socket === peer1);
+
+            timer.setTimer(1000, function() {
+              // peer2 didn't get the message - good
+              vassert.testComplete();
+            });
+          });
+        });
+      });
+      
+    });
+
+    vassert.testComplete();
+  }
 
 }
 
