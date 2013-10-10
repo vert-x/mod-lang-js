@@ -33,7 +33,7 @@ HttpTest = {
       req.response.end("OK");
     });
     server.listen(8080, "0.0.0.0", function(err, serv) {
-      vassert.assertTrue(err === null);
+      vassert.assertTrue("Unexpected error: " + err, err === null);
       client.port(8080);
       var req = client.get("/foo", function(resp) {
       });
