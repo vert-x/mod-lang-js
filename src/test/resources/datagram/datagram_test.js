@@ -242,14 +242,16 @@ DatagramTest = {
             vassert.fail("Should not have received a packet after leaving the multicast group. " + packet);
           });
 
-          // now send another message, and wait to see if peer2 gets it
-          peer1.send('127.0.0.1', 1234, buffer, function(err, socket) {
-            vassert.assertTrue("Unexpected error: " + err, err === null);
-            vassert.assertTrue("Unexpected result: " + socket, socket === peer1);
+          timers.setTimer(1000, function() {
+            // now send another message, and wait to see if peer2 gets it
+            peer1.send('127.0.0.1', 1234, buffer, function(err, socket) {
+              vassert.assertTrue("Unexpected error: " + err, err === null);
+              vassert.assertTrue("Unexpected result: " + socket, socket === peer1);
 
-            timer.setTimer(1000, function() {
-              // peer2 didn't get the message - good
-              vassert.testComplete();
+              timer.setTimer(1000, function() {
+                // peer2 didn't get the message - good
+                vassert.testComplete();
+              });
             });
           });
         });
