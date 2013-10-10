@@ -282,3 +282,4 @@ DatagramPacket = function(_delegate) {
 
 module.exports.DatagramSocket = DatagramSocket;
 module.exports.DatagramPacket = DatagramPacket;
+module.exports.InternetProtocolFamily = org.vertx.java.core.datagram.InternetProtocolFamily;

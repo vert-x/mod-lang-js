@@ -171,7 +171,7 @@ DatagramTest = {
   },
 
   testConfigure: function() {
-    peer1 = new udp.DatagramSocket();
+    peer1 = new udp.DatagramSocket(udp.InternetProtocolFamily.IPv4);
 
     vassert.assertTrue("Incorrect default for broadcast", !peer1.broadcast());
     peer1.broadcast(true);
@@ -182,9 +182,23 @@ DatagramTest = {
     vassert.assertTrue("Change to multicast loopback mode failed", !peer1.multicastLoopbackMode());
 
     vassert.assertTrue("Incorrect default for multicast network interface", peer1.multicastNetworkInterface() == null);
-    iface = java.net.NetworkInterface.getNetworkInterfaces().nextElement();
-    peer1.multicastNetworkInterface(iface.getName());
-    vassert.assertTrue("Change to multicast network interface failed", peer1.multicastNetworkInterface() == iface.getName());
+    var iface = null;
+    ifaces = java.net.NetworkInterface.getNetworkInterfaces();
+    while(ifaces.hasMoreElements()) {
+      var networkInterface = ifaces.nextElement();
+      if (networkInterface.supportsMulticast()) {
+        var addresses = networkInterface.getInetAddresses();
+        while(addresses.hasMoreElements()) {
+          if (addresses.nextElement() instanceof java.net.Inet4Address) {
+            iface = networkInterface;
+          }
+        }
+        if (iface != null) {
+          peer1.multicastNetworkInterface(iface.getName());
+          vassert.assertTrue("Change to multicast network interface failed", peer1.multicastNetworkInterface() == iface.getName());
+        }
+      }
+    }
 
     vassert.assertTrue("Incorrect default for receive buffer size", peer1.receiveBufferSize() != 1024);
     peer1.receiveBufferSize(1024);
