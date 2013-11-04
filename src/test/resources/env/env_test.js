@@ -9,7 +9,6 @@ vertxTest.startTests({
       vassert.assertEquals("Gouda", container.env.get('cheese'));
       vassert.assertEquals("Gouda", container.env['cheese']);
       vassert.testComplete();
-      vassert.testComplete();
     });
   }
 });
