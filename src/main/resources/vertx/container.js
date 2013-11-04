@@ -150,7 +150,17 @@ container.config =  j_conf == null ? null : JSON.parse(j_conf.encode());
 /**
  * The container's environment variables
  */
-container.env = __jcontainer.env();
+container.env = {
+  get: function(key) {
+    return this[key];
+  }
+}
+
+var envIter = __jcontainer.env().entrySet().iterator();
+while(envIter.hasNext()) {
+  var entry = envIter.next();
+  container.env[entry.getKey()] = entry.getValue();
+}
 
 /**
  * The container's logger
