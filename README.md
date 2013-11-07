@@ -9,10 +9,11 @@ This module is not typically used directly, but rather both `mod-lang-rhino`
 and `mod-lang-dynjs` have a dependency on this module which provides
 the core Javascript API for Vert.x.
 
-## API Documentation
+## Documentation
 
-The [API docs](https://vertx.ci.cloudbees.com/view/Javascript/job/vert.x-mod-lang-js/lastSuccessfulBuild/artifact/target/docs/index.html)
-are on the CI server.
+- [User Manual](http://vertx.io/core_manual_js.html)
+- [1.0.0-Beta1 API Documentation](http://vertx.io/mod-lang-js/docs/1.0.0-Beta1/index.html)
+- [HEAD API Documentation](https://vertx.ci.cloudbees.com/view/Javascript/job/vert.x-mod-lang-js/lastSuccessfulBuild/artifact/target/docs/index.html)
 
 ## Continuous Integration
 
@@ -42,7 +43,7 @@ By default, vert.x runs Javascript verticles and modules with Rhino. Change
 this by creating a `langs.properties` file at the root of your project that
 looks like this.
 
-    dynjs=io.vertx~lang-dynjs~1.0.0-SNAPSHOT:org.dynjs.vertx.DynJSVerticleFactory
+    dynjs=io.vertx~lang-dynjs~1.0.0-Beta1:org.dynjs.vertx.DynJSVerticleFactory
     .js=dynjs
 
 Enjoy. And if you have any problems, hit us on on freenode at #dynjs or #vertx.
