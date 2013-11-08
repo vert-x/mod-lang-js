@@ -27,6 +27,26 @@ var print  = require('vertx/console').log;
 
 HttpTest = {
 
+  testHttpServerLocalRemoteAddress: function() {
+    server.requestHandler(function(req) {
+
+      local = req.localAddress();
+      vassert.assertTrue(local.getPort() > 0);
+      vassert.assertTrue(local.getHostString() !== null);
+
+      remote = req.remoteAddress();
+      vassert.assertTrue(remote.getPort() > 0);
+      vassert.assertTrue(remote.getHostString() !== null);
+
+      vassert.testComplete();
+    });
+    server.listen(8080, "0.0.0.0", function(err, serv) {
+      vassert.assertTrue("Unexpected error: " + err, err === null);
+      client.port(8080);
+      client.get("/foo").end();
+    });
+  },
+
   testRequestTimeout: function() {
     server.requestHandler(function(req) {
       req.pause();

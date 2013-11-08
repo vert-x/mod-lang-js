@@ -200,6 +200,15 @@ http.HttpServerRequest = function(jreq) {
   }
 
   /**
+   * Get the address of the server as a Java InetSocketAddress object
+   *
+   * @return {java.net.InetSocketAddress} the underlying Java socket address instance
+   */
+  this.localAddress = function() {
+    return jreq.localAddress();
+  }
+
+  /**
    * Get an array of Java X509Certificate objects
    *
    * @return {Array} Array of Java X509Certificate objects
