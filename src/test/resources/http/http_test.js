@@ -27,6 +27,22 @@ var print  = require('vertx/console').log;
 
 HttpTest = {
 
+  testMaxWebsocketFrameSizeServer: function() {
+    var size = 61231762;
+    vassert.assertTrue(65536 === server.maxWebSocketFrameSize());
+    vassert.assertEquals(server, server.maxWebSocketFrameSize(size));
+    vassert.assertTrue(size === server.maxWebSocketFrameSize());
+    vassert.testComplete();
+  },
+
+  testMaxWebsocketFrameSizeClient: function() {
+    var size = 61231762;
+    vassert.assertTrue(65536 === client.maxWebSocketFrameSize());
+    vassert.assertEquals(client, client.maxWebSocketFrameSize(size));
+    vassert.assertTrue(size === client.maxWebSocketFrameSize());
+    vassert.testComplete();
+  },
+
   testHttpServerLocalRemoteAddress: function() {
     server.requestHandler(function(req) {
 

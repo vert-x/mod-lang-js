@@ -773,6 +773,19 @@ http.HttpServer = function() {
   }
 
   /**
+   * Set or get the maximum frame size for websocket connections exposed
+   * over the SockJS bridge with this HTTPServer
+   * @param {number} [size] The frame size in bytes
+   */
+  this.maxWebSocketFrameSize = function(size) {
+    if (size) {
+      jserver.setMaxWebSocketFrameSize(size);
+      return this;
+    }
+    return jserver.getMaxWebSocketFrameSize();
+  }
+
+  /**
    * Close the server. If a handler is supplied, it will be called
    * when the underlying connection has completed closing.
    *
@@ -862,6 +875,19 @@ http.HttpClient = function() {
       jclient.setMaxPoolSize(size);
       return that;
     }
+  }
+
+  /**
+   * Set or get the maximum frame size for websocket connections exposed
+   * over the SockJS bridge with this HTTPClient
+   * @param {number} [size] The frame size in bytes
+   */
+  this.maxWebSocketFrameSize = function(size) {
+    if (size) {
+      jclient.setMaxWebSocketFrameSize(size);
+      return this;
+    }
+    return jclient.getMaxWebSocketFrameSize();
   }
 
   /**
