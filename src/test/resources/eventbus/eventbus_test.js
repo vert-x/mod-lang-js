@@ -72,6 +72,16 @@ var timers  = require('vertx/timer');
 
 var EventBusTest = {
 
+  testMessageAddresses: function() {
+    eb.registerHandler(address, function(msg, replier, addr) {
+      vassert.assertTrue("Message received should include an address", addr !== undefined);
+      vassert.assertTrue("Message received should include an address", addr !== null);
+      vassert.assertEquals(address, addr);
+      vassert.testComplete();
+    });
+    eb.send(address, "Hello world");
+  },
+
   testSendWithTimeoutGetsReply: function() {
 
     eb.registerHandler(address, function(msg, replier) {

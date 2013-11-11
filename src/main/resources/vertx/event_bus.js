@@ -270,7 +270,7 @@ function wrappedHandler(handler) {
         } else {
           jMsg.reply(reply);
         }
-      })
+      }, jMsg.address());
     }
   });
 }
