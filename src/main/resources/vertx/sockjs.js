@@ -75,6 +75,19 @@ sockJS.createSockJSServer = function(httpServer) {
  * using different path prefixes, each application will have its own handler,
  * and configuration.
  * </p>
+ * <p>
+ *    Configuration options and their defaults are:
+ *    <pre>
+ *      - session_timeout: 5000ms
+ *      - insert_JSESSIONID: true
+ *      - heartbeat_period: 25000ms
+ *      - max_bytes_streaming: 131072 (128*1024)
+ *      - prefix: "/"
+ *      - library_url: "http://cdn.sockjs.org/sockjs-0.3.4.min.js"
+ *      - disabled_transports: []
+ *    </pre>
+ *  </p>
+ *
  *
  * @constructor
  */
@@ -93,31 +106,28 @@ sockJS.SockJSServer = function() {
     jserver.installApp(new org.vertx.java.core.json.JsonObject(JSON.stringify(config)), handler);
   }
 
-  // TODO: This is broken. This should be hook() perhaps
-  // this.seteventbusbridgelistener = function(bridgelistener) {
-  //     jserver.seteventbusbridgelistener(new org.vertx.java.core.sockjs.eventbusbridgelistener(bridgelistener));
-  //     return that;
-  // }
-
-    /**
+  /**
    * Install an app which bridges the SockJS server to the event bus
    * @param {JSON} config The application configuration
    * @param {Array} inboundPermitted A list of JSON objects which define
    *                permitted matches for inbound (client->server) traffic 
    * @param {Array} outboundPermitted A list of JSON objects which define 
    *                permitted matches for outbound (server->client) traffic
+   * @param {JSON} bridgeConfig A JSON object containing the configuration for
+   *   the event bus bridge. Configuration options and their defaults are:
+   *    <pre>
+   *      auth_address: "vertx.basicauthmanager.authorise"
+   *      auth_timeout: 300000ms
+   *      ping_interval: 10000ms
+   *      max_address_length: 200
+   *      max_handlers_per_socket: 1000
+   *    </pre>
    */
-  this.bridge = function(config, inboundPermitted, outboundPermitted, authTimeout, authAddress) {
-    if (typeof authTimeout === 'undefined') {
-      authTimeout = 5 * 50 * 1000;
-    }
-    if (typeof authAddress === 'undefined') {
-      authAddress = null;
-    }
+  this.bridge = function(config, inboundPermitted, outboundPermitted, bridgeConfig) {
     var jInboundPermitted = convertPermitted(inboundPermitted);
     var jOutboundPermitted = convertPermitted(outboundPermitted);
     jserver.bridge(new org.vertx.java.core.json.JsonObject(JSON.stringify(config)),
-        jInboundPermitted, jOutboundPermitted, authTimeout, authAddress);
+        jInboundPermitted, jOutboundPermitted, JSON.stringify(bridgeConfig));
   }
 
   function convertPermitted(permitted) {
