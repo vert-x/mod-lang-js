@@ -73,10 +73,10 @@ var timers  = require('vertx/timer');
 var EventBusTest = {
 
   testMessageAddresses: function() {
-    eb.registerHandler(address, function(msg, replier, addr) {
-      vassert.assertTrue("Message received should include an address", addr !== undefined);
-      vassert.assertTrue("Message received should include an address", addr !== null);
-      vassert.assertEquals(address, addr);
+    eb.registerHandler(address, function(msg, replier, meta) {
+      vassert.assertTrue("Message received should include an address", meta !== undefined);
+      vassert.assertTrue("Message received should include an address", meta.address !== null);
+      vassert.assertEquals(address, meta.address);
       vassert.testComplete();
     });
     eb.send(address, "Hello world");
@@ -191,11 +191,35 @@ var EventBusTest = {
     });
   },
 
-  DEFERREDtestReplyRecipientFailure: function() {
+  testReplyRecipientFailure: function() {
     address = "some-address";
     message = "the bottom fell out";
-    eb.registerHandler(address, function(msg, replier) {
-      msg.fail(23, message);
+    eb.registerHandler(address, function(msg, replier, meta) {
+      meta.fail(23, message);
+    }, function() /* registration completion handler */ {
+      eb.sendWithTimeout(address, "what happened?", timeout, function(err, msg) {
+        vassert.assertTrue("Reply should have failed", err != null);
+        vassert.assertTrue("Reply should have failed", err != undefined);
+        vassert.assertTrue("Unexpected failure code", err.failureCode() === 23);
+        vassert.assertEquals(err.failureType().toString(), "RECIPIENT_FAILURE");
+        vassert.assertEquals(err.getMessage(), message);
+        vassert.testComplete();
+      });
+    });
+  },
+
+  testReplyRecipientFailureStandardHandler: function() {
+    address = "some-address";
+    message = "the bottom fell out";
+    eb.registerHandler(address, function(msg, replier, meta) {
+      meta.fail(23, message);
+    }, function() /* registration completion handler */ {
+      eb.send(address, "what happened?", function(reply) {
+        vassert.assertEquals("RECIPIENT_FAILURE", reply.failureType().toString());
+        vassert.assertTrue("Unexpected failure code", 23 === reply.failureCode());
+        vassert.assertEquals(reply.getMessage(), message);
+        vassert.testComplete();
+      });
     });
   },
 

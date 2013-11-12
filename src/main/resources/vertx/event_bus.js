@@ -256,6 +256,12 @@ function wrappedHandler(handler) {
   return new org.vertx.java.core.Handler({
     handle: function(jMsg) {
       var body = resultConverter(jMsg);
+      var meta = {
+        address: jMsg.address(),
+        fail: function(code, msg) {
+          jMsg.fail(code, msg);
+        }
+      }
       handler(body, function(reply, replyHandler, timeout) {
         if (typeof reply === 'undefined') {
           throw "Reply message must be specified";
@@ -270,7 +276,7 @@ function wrappedHandler(handler) {
         } else {
           jMsg.reply(reply);
         }
-      }, jMsg.address());
+      }, meta);
     }
   });
 }
