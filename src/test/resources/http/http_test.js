@@ -27,6 +27,20 @@ var print  = require('vertx/console').log;
 
 HttpTest = {
 
+  testServerCompressionSupportedProperty: function() {
+    vassert.assertTrue("HTTP server should default to no compression", !server.compressionSupported());
+    vassert.assertEquals(server, server.compressionSupported(true));
+    vassert.assertTrue("HTTP server should support compression", server.compressionSupported());
+    vassert.testComplete();
+  },
+
+  testClientTryCompressionProperty: function() {
+    vassert.assertTrue("HTTP client should default to no compression", !client.tryUseCompression());
+    vassert.assertEquals(client, client.tryUseCompression(true));
+    vassert.assertTrue("HTTP client should support compression", client.tryUseCompression());
+    vassert.testComplete();
+  },
+
   testMaxWebsocketFrameSizeServer: function() {
     var size = 61231762;
     vassert.assertTrue(65536 === server.maxWebSocketFrameSize());

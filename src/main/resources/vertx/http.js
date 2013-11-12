@@ -761,7 +761,6 @@ http.HttpServer = function() {
    * {@linkcode module:vertx/http.WebSocket|WebSocket} instance will be created
    * and passed to the handler.
    * 
-   
    * @param {WebSocketHandler} handler the function used to handle the request.
    * @return {module:vertx/http.HttpServer}
    */
@@ -773,6 +772,20 @@ http.HttpServer = function() {
   }
 
   /**
+   * Set or get whether the server should compress the http response if the
+   * connected client supports it.
+   * @param {boolean} [supported] whether compression should be supported when possible
+   * @return {boolean|module:vertx/http.HttpServer} the current server configuration or self
+   */
+  this.compressionSupported = function(bool) {
+    if (bool) {
+      jserver.setCompressionSupported(bool);
+      return that;
+    }
+    return jserver.isCompressionSupported();
+  }
+
+  /**
    * Set or get the maximum frame size for websocket connections exposed
    * over the SockJS bridge with this HTTPServer
    * @param {number} [size] The frame size in bytes
@@ -780,7 +793,7 @@ http.HttpServer = function() {
   this.maxWebSocketFrameSize = function(size) {
     if (size) {
       jserver.setMaxWebSocketFrameSize(size);
-      return this;
+      return that;
     }
     return jserver.getMaxWebSocketFrameSize();
   }
@@ -885,9 +898,22 @@ http.HttpClient = function() {
   this.maxWebSocketFrameSize = function(size) {
     if (size) {
       jclient.setMaxWebSocketFrameSize(size);
-      return this;
+      return that;
     }
     return jclient.getMaxWebSocketFrameSize();
+  }
+
+  /**
+   * Set or get whether the client should try to use compression
+   * @param {boolean} [shouldTry] Whether the client should try to use compression
+   * @return {boolean|module:vertx/http.HttpClient} Whether compression is tried or self
+   */
+  this.tryUseCompression = function(shouldTry) {
+    if (shouldTry) {
+      jclient.setTryUseCompression(shouldTry);
+      return that;
+    }
+    return jclient.getTryUseCompression();
   }
 
   /**
