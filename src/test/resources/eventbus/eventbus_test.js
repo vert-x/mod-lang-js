@@ -111,16 +111,21 @@ var EventBusTest = {
   },
 
   testSendWithTimeoutReplyTimesOut: function() {
-
-    eb.registerHandler(address, function(msg, replier) {
+    replied = false;
+    eb.registerHandler("some-address", function(msg, replier) {
       timers.setTimer(timeout*2, function() {
-        replier("response");
+        replier("too late");
       });
     });
-    eb.sendWithTimeout(address, "message", timeout, function(err, msg) {
+    eb.sendWithTimeout("some-address", "message", timeout, function(err, msg) {
+      vassert.assertTrue("Unexpected reply", !replied);
       vassert.assertTrue("Message should have timed out and passed an error", err != null);
       vassert.assertTrue("Message should have timed out, but got: " + msg, msg === null);
-      vassert.testComplete();
+      //just to be sure we don't get a reply
+      timers.setTimer(timeout*2, function() {
+        vassert.testComplete();
+      });
+      replied = true;
     });
   },
 
@@ -173,6 +178,24 @@ var EventBusTest = {
     // send a message that should time out
     eb.send(address, "message", function(msg) {
       vassert.fail("Reply handler should not be called");
+    });
+  },
+
+  testReplyNoHandlers: function() {
+    address = "some-address";
+    timeout = 500;
+    eb.sendWithTimeout(address, "a message", timeout, function(err, msg) {
+      vassert.assertTrue("Message should have failed to send", err != null);
+      vassert.assertEquals(err.failureType().toString(), "NO_HANDLERS");
+      vassert.testComplete();
+    });
+  },
+
+  DEFERREDtestReplyRecipientFailure: function() {
+    address = "some-address";
+    message = "the bottom fell out";
+    eb.registerHandler(address, function(msg, replier) {
+      msg.fail(23, message);
     });
   },
 
