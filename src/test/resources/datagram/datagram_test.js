@@ -170,6 +170,22 @@ DatagramTest = {
     });
   },
 
+  testLocalAddress: function() {
+    socket = new udp.DatagramSocket(true);
+    // address is not set until we start listening on the socket
+    vassert.assertTrue(socket.localAddress() === undefined);
+    socket.listen(54321, function(err, result) {
+      vassert.assertTrue("Unexpected error: " + err, err === null);
+      vassert.assertTrue("Unexpected result: " + result, result === socket);
+      var address = socket.localAddress();
+      vassert.assertTrue("No socket address assigned", address !== undefined);
+      vassert.assertTrue("Unexpeected port number", 54321 === address.port);
+      vassert.assertEquals('0.0.0.0', address.address);
+      vassert.assertEquals('IPv4', address.family);
+      vassert.testComplete();
+    });
+  },
+
   testConfigure: function() {
     peer1 = new udp.DatagramSocket(udp.InternetProtocolFamily.IPv4);
 

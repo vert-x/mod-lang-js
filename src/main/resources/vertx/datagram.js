@@ -15,7 +15,7 @@
  */
 
 if (typeof __vertxload === 'string') {
-  throw "Use require() to load Vert.x API modules"
+  throw "Use require() to load Vert.x API modules";
 }
 
 
@@ -58,9 +58,14 @@ DatagramSocket = function(ipv4) {
     family = org.vertx.java.core.datagram.InternetProtocolFamily.IPv6;
   }
 
-  var _delegate = __jvertx.createDatagramSocket(family);
-  var _localAddress = _delegate.localAddress(); // TODO: Make this a JS object
-  var _that     = this;
+  var _localAddress;
+  var _address  = {
+    port: undefined,
+    address: undefined,
+    family: family.toString()
+  };
+  var _delegate     = __jvertx.createDatagramSocket(family);
+  var _that         = this;
 
   streams.ReadSupport.call(this, _delegate);
   streams.DrainSupport.call(this, _delegate);
@@ -84,7 +89,7 @@ DatagramSocket = function(ipv4) {
       _delegate.send(packet, host, port, adaptAsyncResultHandler(handler, function() { return _that; }));
     }
     return this;
-  }
+  };
 
   /**
    * Get or set the SO_BROADCAST option
@@ -97,7 +102,7 @@ DatagramSocket = function(ipv4) {
       return this;
     }
     return _delegate.isBroadcast();
-  }
+  };
 
   /**
    * Get or set the IP_MULTICAST_LOOP option
@@ -110,7 +115,7 @@ DatagramSocket = function(ipv4) {
       return this;
     }
     return _delegate.isMulticastLoopbackMode();
-  }
+  };
 
   /**
    * Get or set the IP_MULTICAST_TTL option
@@ -123,7 +128,7 @@ DatagramSocket = function(ipv4) {
       return this;
     }
     return _delegate.getMulticastTimeToLive();
-  }
+  };
 
   /**
    * Get or set the IP_MULTICAST_IF option
@@ -136,7 +141,7 @@ DatagramSocket = function(ipv4) {
       return this;
     }
     return _delegate.getMulticastNetworkInterface();
-  }
+  };
 
   /**
    * Close the {@linkcode module:vertx/datagram~DatagramSocket} asynchronously
@@ -145,16 +150,18 @@ DatagramSocket = function(ipv4) {
    */
   this.close = function(handler) {
     _delegate.close(adaptAsyncResultHandler(handler));
-  }
+  };
 
   /** 
    * Get the local address of this socket. 
-   * TODO: Return a javascript object.
    * @return {external:InetSocketAddress}
    */
   this.localAddress = function() {
-    return _localAddress;
-  }
+    if (_localAddress === undefined) {
+      return  undefined;
+    }
+    return _address;
+  };
 
   /**
    * Joins a multicast group and listens for packets sent to it. The
@@ -173,7 +180,7 @@ DatagramSocket = function(ipv4) {
       _delegate.listenMulticastGroup(address, adaptAsyncResultHandler(handler, function() { return _that; }));
     }
     return this;
-  }
+  };
 
   /**
    * Leaves a multicast group and stops listening for packets sent to it on the
@@ -192,7 +199,7 @@ DatagramSocket = function(ipv4) {
       _delegate.unlistenMulticastGroup(address, adaptAsyncResultHandler(handler, function() { return _that; }));
     }
     return this;
-  }
+  };
 
   /**
    * Blocks the given source address on the given network interface notifies
@@ -211,7 +218,7 @@ DatagramSocket = function(ipv4) {
       _delegate.blockMulticastGroup(address, adaptAsyncResultHandler(handler, function() { return _that; }));
     }
     return this;
-  }
+  };
 
   /**
    * Listens to broadcast messages on the given port and optional host address. The
@@ -226,9 +233,15 @@ DatagramSocket = function(ipv4) {
       handler = host;
       host = '0.0.0.0';
     }
-    _delegate.listen(host, port, adaptAsyncResultHandler(handler, function() { return _that; }));
+    _delegate.listen(host, port, adaptAsyncResultHandler(handler, function() { 
+      _localAddress = _delegate.localAddress();
+      _address.address = _localAddress.getHostString();
+      _address.port = _localAddress.getPort();
+      _address.family = family.toString();
+      return _that; 
+    }));
     return this;
-  }
+  };
 
   /**
    * A <code>PacketHandler</code> is a {@linkcode Handler} that accepts a
@@ -246,8 +259,8 @@ DatagramSocket = function(ipv4) {
     _delegate.dataHandler(function(packet) {
       handler(new DatagramPacket(packet));
     });
-  }
-}
+  };
+};
 
 /**
  * A received UDP datagram packet, with the received data and sender information.
@@ -267,7 +280,7 @@ DatagramPacket = function(_delegate) {
       _sender = { 
         host: _delegate.sender().getAddress().getHostAddress(),
         port: _delegate.sender().getPort()
-      }
+      };
     }
     return _sender;
   });
@@ -278,7 +291,7 @@ DatagramPacket = function(_delegate) {
     }
     return _data;
   });
-}
+};
 
 module.exports.DatagramSocket = DatagramSocket;
 module.exports.DatagramPacket = DatagramPacket;
