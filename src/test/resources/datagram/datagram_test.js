@@ -21,6 +21,8 @@ var tu        = require('test_utils');
 var vertxTest = require('vertx_tests');
 var vassert   = vertxTest.vassert;
 
+var peer1, peer2;
+
 DatagramTest = {
 
   testSendReceive: function() {
@@ -240,7 +242,7 @@ DatagramTest = {
     vassert.testComplete();
   },
 
-  DEFERREDtestMulticastJoinLeave: function() {
+  testMulticastJoinLeave: function() {
     buffer = tu.generateRandomBuffer(128);
     groupAddress = '230.0.0.1';
     received = false;
@@ -248,31 +250,8 @@ DatagramTest = {
     peer1 = new udp.DatagramSocket();
     peer2 = new udp.DatagramSocket();
 
-    var console = require('vertx/console')
     peer2.dataHandler(function(packet) {
       vassert.assertTrue(tu.buffersEqual(buffer, packet.data));
-
-      // leave the group
-      peer2.unlistenMulticastGroup(groupAddress, function(err, socket) {
-        vassert.assertTrue("Unexpected error: " + err, err === null);
-        vassert.assertTrue("Unexpected result: " + socket, socket === peer2);
-
-        // set a data handler that shouldn't be called
-        peer2.dataHandler(function(packet) {
-          vassert.fail("Should not have received a packet after leaving the multicast group. " + packet);
-        });
-
-        // now send another message, and wait to see if peer2 gets it
-        peer1.send(groupAddress, 1234, buffer, function(err, socket) {
-          vassert.assertTrue("Unexpected error: " + err, err === null);
-          vassert.assertTrue("Unexpected result: " + socket, socket === peer1);
-
-          timer.setTimer(1000, function() {
-            // peer2 didn't get the message - good
-            vassert.testComplete();
-          });
-        });
-      });
 
     });
 
@@ -289,17 +268,38 @@ DatagramTest = {
         peer1.send(groupAddress, 1234, buffer, function(err, socket) {
           vassert.assertTrue("Unexpected error: " + err, err === null);
           vassert.assertTrue("Unexpected result: " + socket, socket === peer1);
+
+          // leave the group
+          peer2.unlistenMulticastGroup(groupAddress, function(err, socket) {
+            vassert.assertTrue("Unexpected error: " + err, err === null);
+            vassert.assertTrue("Unexpected result: " + socket, socket === peer2);
+
+            // set a data handler that shouldn't be called
+            peer2.dataHandler(function(packet) {
+              vassert.fail("Should not have received a packet after leaving the multicast group. " + packet);
+            });
+
+            // now send another message, and wait to see if peer2 gets it
+            peer1.send(groupAddress, 1234, buffer, function(err, socket) {
+              vassert.assertTrue("Unexpected error: " + err, err === null);
+              vassert.assertTrue("Unexpected result: " + socket, socket === peer1);
+
+              timer.setTimer(1000, function() {
+                // peer2 didn't get the message - good
+                vassert.testComplete();
+              });
+            });
+          });
         });
       });
     });
   }
 
-}
+};
 
-var console = require('vertx/console'), peer1, peer2;
 vertxStop = function() {
-  peer1 == null ? null : peer1.close();
-  peer2 == null ? null : peer2.close();
-}
+  if (peer1) { peer1.close(); }
+  if (peer2) { peer2.close(); }
+};
 
 vertxTest.startTests(DatagramTest);
