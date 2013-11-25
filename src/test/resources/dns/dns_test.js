@@ -18,21 +18,27 @@ var dns = require('vertx/dns');
 var vertxTest = require("vertx_tests");
 var vassert = vertxTest.vassert;
 
-var DnsServer = org.vertx.testtools.TestDnsServer
+var DnsServer = org.vertx.testtools.TestDnsServer;
 var server = null; // server instance set in prepareDns
 
 // Debugging
 var console = require('vertx/console');
 
 function prepareDns(srv, testFunc) {
-  server = srv
+  server = srv;
   server.start();
   testFunc( dns.createDnsClient( server.getTransports()[0].getAcceptor().getLocalAddress() ) );
 }
 
+function vertxStop() {
+  if (server) {
+    server.stop();
+  }
+}
+
 DNSTest = {
   testCreateDnsClient: function() {
-    var ip = '10.0.0.1'
+    var ip = '10.0.0.1';
     prepareDns(DnsServer.testResolveA(ip), function(client) {
       vassert.assertTrue("Can't create DnsClient", typeof client === 'object');
       vassert.testComplete();
@@ -40,7 +46,7 @@ DNSTest = {
   },
 
   testLookup: function() {
-    var ip = '10.0.0.1'
+    var ip = '10.0.0.1';
     prepareDns(DnsServer.testResolveA(ip), function(client) {
       client.lookup("vertx.io", function(err, address) {
         vassert.assertNotNull(address);
@@ -51,7 +57,7 @@ DNSTest = {
   },
 
   testLookup4: function() {
-    var ip = '10.0.0.1'
+    var ip = '10.0.0.1';
     prepareDns(DnsServer.testResolveA(ip), function(client) {
       client.lookup4("vertx.io", function(err, address) {
         vassert.assertNotNull(address);
@@ -82,7 +88,7 @@ DNSTest = {
   },
 
   testResolveNS: function() {
-    var ns = 'ns.vertx.io'
+    var ns = 'ns.vertx.io';
     prepareDns(DnsServer.testResolveNS(ns), function(client) {
       client.resolveNS("vertx.io", function(err, records) {
         vassert.assertTrue("Unexpected number of response records: " + records.length, 1 === records.length);
@@ -93,7 +99,7 @@ DNSTest = {
   },
 
   testResolveTxt: function() {
-    var txt = "vert.x is awesome"
+    var txt = "vert.x is awesome";
     prepareDns(DnsServer.testResolveTXT(txt), function(client) {
       client.resolveTXT("vertx.io", function(err, records) {
         vassert.assertTrue("Unexpected number of response records: " + records.length, 1 === records.length);
@@ -105,7 +111,7 @@ DNSTest = {
 
   testResolveMx: function() {
     var prio = 10,
-        name = "mail.vertx.io"
+        name = "mail.vertx.io";
     prepareDns(DnsServer.testResolveMX(prio, name), function(client) {
       client.resolveMX("vertx.io", function(err, records) {
         vassert.assertTrue("Unexpected result: " + records[0].priority, prio == records[0].priority);
@@ -116,7 +122,7 @@ DNSTest = {
   },
 
   testResolveA: function() {
-    var ip = '10.0.0.1'
+    var ip = '10.0.0.1';
     prepareDns(DnsServer.testResolveA(ip), function(client) {
       client.resolveA("vertx.io", function(err, records) {
         vassert.assertNotNull(records);
@@ -127,7 +133,7 @@ DNSTest = {
   },
 
   testResolveAAAA: function() {
-    var ip = '::1'
+    var ip = '::1';
     prepareDns(DnsServer.testResolveAAAA(ip), function(client) {
       client.resolveAAAA("vertx.io", function(err, records) {
         vassert.assertNotNull(records);
@@ -138,7 +144,7 @@ DNSTest = {
   },
 
   testResolveCNAME: function() {
-    var cname = "cname.vertx.io"
+    var cname = "cname.vertx.io";
     prepareDns(DnsServer.testResolveCNAME(cname), function(client) {
       client.resolveCNAME("vertx.io", function(err, records) {
         vassert.assertNotNull(records);
@@ -149,7 +155,7 @@ DNSTest = {
   },
 
   testResolvePTR: function() {
-    var ptr = "ptr.vertx.io"
+    var ptr = "ptr.vertx.io";
     prepareDns(DnsServer.testResolvePTR(ptr), function(client) {
       client.resolvePTR("10.0.0.1.in-addr.arpa", function(err, record) {
         vassert.assertNotNull(record);
@@ -163,7 +169,7 @@ DNSTest = {
     var prio = 10,
         weight = 1,
         port = 80,
-        target = 'vertx.io'
+        target = 'vertx.io';
     prepareDns(DnsServer.testResolveSRV(prio, weight, port, target), function(client) {
       client.resolveSRV("vertx.io", function(err, records) {
         vassert.assertNotNull(records);
@@ -200,6 +206,6 @@ DNSTest = {
     });
   },
 
-}
+};
 
 vertxTest.startTests(DNSTest);

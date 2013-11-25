@@ -15,7 +15,7 @@
  */
 
 if (typeof __vertxload === 'string') {
-  throw "Use require() to load Vert.x API modules"
+  throw "Use require() to load Vert.x API modules";
 }
 
 // handler wrapper
@@ -33,7 +33,7 @@ var dns = {
    */
   createDnsClient: function(servers) {
     if (typeof servers == 'undefined') {
-      servers = '8.8.8.8';
+      servers = '127.0.0.1';
     }
     return new dns.DnsClient(servers);
   },
@@ -53,7 +53,7 @@ dns.DnsClient = function(servers) {
       // TODO: Be smarter about what's passed in
       return [addresses];
     }
-  }
+  };
 
   var mappedHostAddressConverter = function(addresses) {
     var addrs = [];
@@ -61,7 +61,7 @@ dns.DnsClient = function(servers) {
       addrs[i] = addresses.get(i).getHostAddress();
     }
     return addrs;
-  }
+  };
 
   /** 
    * Represents a DNS MX record.
@@ -76,10 +76,10 @@ dns.DnsClient = function(servers) {
       recs[i] = {
         priority: records.get(i).priority(),
         name: records.get(i).name()
-      }
+      };
     }
     return recs;
-  }
+  };
 
   /** 
    * Represents a DNS SRV record
@@ -104,10 +104,10 @@ dns.DnsClient = function(servers) {
         protocol: record.protocol(),
         service: record.service(),
         target: record.target()
-      }
+      };
     }
     return recs;
-  }
+  };
 
   /**
    * Lookup a server address
@@ -129,9 +129,9 @@ dns.DnsClient = function(servers) {
    * }
    */
   this.lookup = function(name, handler) {
-    __jClient.lookup(name, adaptAsyncResultHandler(handler, function(address) { return address.getHostAddress() }));
+    __jClient.lookup(name, adaptAsyncResultHandler(handler, function(address) { return address.getHostAddress(); }));
     return that;
-  }
+  };
 
   /**
    * Look up the IPv4 address for name
@@ -141,9 +141,9 @@ dns.DnsClient = function(servers) {
    * @returns {module:vertx/dns.DnsClient}
    */
   this.lookup4 = function(name, handler) {
-    __jClient.lookup4(name, adaptAsyncResultHandler(handler, function(address) { return address.getHostAddress() }));
+    __jClient.lookup4(name, adaptAsyncResultHandler(handler, function(address) { return address.getHostAddress(); }));
     return that;
-  }
+  };
 
   /**
    * Look up the IPv6 address for name
@@ -153,9 +153,9 @@ dns.DnsClient = function(servers) {
    * @returns {module:vertx/dns.DnsClient}
    */
   this.lookup6 = function(name, handler) {
-    __jClient.lookup6(name, adaptAsyncResultHandler(handler, function(address) { return address.getHostAddress() }));
+    __jClient.lookup6(name, adaptAsyncResultHandler(handler, function(address) { return address.getHostAddress(); }));
     return that;
-  }
+  };
 
   /**
    * Try to resolve all NS records for the given name.
@@ -168,7 +168,7 @@ dns.DnsClient = function(servers) {
     console = require('vertx/console');
     __jClient.resolveNS(name, adaptAsyncResultHandler(handler, function(list) { return list.toArray(); }));
     return that;
-  }
+  };
 
   /**
    * Try to resolve all TXT records for the given name.
@@ -180,7 +180,7 @@ dns.DnsClient = function(servers) {
   this.resolveTXT = function(name, handler) {
     __jClient.resolveTXT(name, adaptAsyncResultHandler(handler, function(list) { return list.toArray(); }));
     return that;
-  }
+  };
 
   /**
    * Try to resolve all MX records for the given name.
@@ -192,7 +192,7 @@ dns.DnsClient = function(servers) {
   this.resolveMX = function(name, handler) {
     __jClient.resolveMX(name, adaptAsyncResultHandler(handler, mappedMxConverter));
     return that;
-  }
+  };
 
   /**
    * Try to resolve all A records for the given name.
@@ -204,7 +204,7 @@ dns.DnsClient = function(servers) {
   this.resolveA = function(name, handler) {
     __jClient.resolveA(name, adaptAsyncResultHandler(handler, mappedHostAddressConverter));
     return that;
-  }
+  };
 
   /**
    * Try to resolve all AAAA records for the given name.
@@ -216,7 +216,7 @@ dns.DnsClient = function(servers) {
   this.resolveAAAA = function(name, handler) {
     __jClient.resolveAAAA(name, adaptAsyncResultHandler(handler, mappedHostAddressConverter));
     return that;
-  }
+  };
 
   /**
    * Try to resolve all AAAA records for the given name.
@@ -228,7 +228,7 @@ dns.DnsClient = function(servers) {
   this.resolveCNAME = function(name, handler) {
     __jClient.resolveCNAME(name, adaptAsyncResultHandler(handler, function(list) { return list.toArray(); }));
     return that;
-  }
+  };
 
   /**
    * Try to resolve the PTR record for the given name.
@@ -240,7 +240,7 @@ dns.DnsClient = function(servers) {
   this.resolvePTR = function(name, handler) {
     __jClient.resolvePTR(name, adaptAsyncResultHandler(handler));
     return that;
-  }
+  };
 
   /**
    * Try to resolve all SRV records for the given name.
@@ -252,7 +252,7 @@ dns.DnsClient = function(servers) {
   this.resolveSRV = function(name, handler) {
     __jClient.resolveSRV(name, adaptAsyncResultHandler(handler, mappedSrvConverter));
     return that;
-  }
+  };
 
   /**
    * Try to do a reverse lookup of an ipaddress. This is basically the same as
@@ -264,12 +264,12 @@ dns.DnsClient = function(servers) {
    * @returns {module:vertx/dns.DnsClient}
    */
   this.reverseLookup = function(name, handler) {
-    __jClient.reverseLookup(name, adaptAsyncResultHandler(handler, function(address) { return address.getHostName() }));
+    __jClient.reverseLookup(name, adaptAsyncResultHandler(handler, function(address) { return address.getHostName(); }));
     return that;
-  }
+  };
 
   var __jClient = __jvertx.createDnsClient(wrapIpAddresses(servers));
-}
+};
 
 module.exports = dns;
 
