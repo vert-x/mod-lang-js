@@ -15,7 +15,7 @@
  */
 
 if (typeof __vertxload === 'string') {
-  throw "Use require() to load Vert.x API modules"
+  throw "Use require() to load Vert.x API modules";
 }
 
 
@@ -38,7 +38,6 @@ var jfs = __jvertx.fileSystem();
  */
 var fileSystem = {};
 
-var console = require('vertx/console');
 var streams = require('vertx/streams');
 
 load('vertx/helpers.js');
@@ -50,7 +49,7 @@ function wrapHandler(handler) {
     } else {
       handler(asyncResult.cause(), null);
     }
-  }
+  };
 }
 
 function wrapPropsHandler(handler) {
@@ -61,7 +60,7 @@ function wrapPropsHandler(handler) {
     } else {
       handler(asyncResult.cause(), null);
     }
-  }
+  };
 }
 
 function convertProps(j_props) {
@@ -743,7 +742,6 @@ fileSystem.AsyncFile = AsyncFile = function(jaf) {
   this.write = function(buffer, position, handler) {
     if (position == null || position == undefined) {
       // WriteStream interface
-      console.log("WRITING " + buffer.toString());
       jaf.write(buffer);
     } else {
       // AsyncFile interface

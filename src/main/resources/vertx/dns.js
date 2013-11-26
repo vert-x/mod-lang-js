@@ -165,7 +165,6 @@ dns.DnsClient = function(servers) {
    * @returns {module:vertx/dns.DnsClient}
    */
   this.resolveNS = function(name, handler) {
-    console = require('vertx/console');
     __jClient.resolveNS(name, adaptAsyncResultHandler(handler, function(list) { return list.toArray(); }));
     return that;
   };

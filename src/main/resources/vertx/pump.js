@@ -15,9 +15,8 @@
  */
 
 if (typeof __vertxload === 'string') {
-  throw "Use require() to load Vert.x API modules"
+  throw "Use require() to load Vert.x API modules";
 }
-var console = require('vertx/console');
 
 /** 
  * <p>
@@ -58,7 +57,7 @@ var Pump = function(rs, ws) {
   this.start = function() {
     _delegate.start();
     return _self;
-  }
+  };
 
   /**
    * Stop the Pump. The Pump can be started and stopped multiple times.
@@ -67,15 +66,15 @@ var Pump = function(rs, ws) {
   this.stop = function() {
     _delegate.stop();
     return _self;
-  }
+  };
 
   /**
    * Return the total number of bytes pumped by this pump.
    * @returns {number} the number of bytes pumped
    */
   this.bytesPumped = function() {
-    return _delegate.bytesPumped();;
-  }
+    return _delegate.bytesPumped();
+  };
 
   /**
    * Set the write queue max size to maxSize
@@ -85,7 +84,7 @@ var Pump = function(rs, ws) {
   this.setWriteQueueMaxSize = function(maxSize) {
     _delegate.setWriteQueueMaxSize();
     return _self;
-  }
+  };
 
   /** @private */
   _delegate = org.vertx.java.core.streams.Pump.createPump(rs._delegate(), ws._delegate());
@@ -93,7 +92,7 @@ var Pump = function(rs, ws) {
 
   /** @private */
   _self = this;
-}
+};
 
 /** @module vertx/pump */
 module.exports = Pump;

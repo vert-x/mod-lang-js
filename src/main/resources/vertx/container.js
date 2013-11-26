@@ -15,7 +15,7 @@
  */
 
 if (typeof __vertxload === 'string') {
-  throw "Use require() to load Vert.x API modules"
+  throw "Use require() to load Vert.x API modules";
 }
 
 /** 
@@ -44,12 +44,12 @@ function deploy(deployType, name, args) {
   var multiThreaded = getArgValue('boolean', args);
   var instances = getArgValue('number', args);
   var config = getArgValue('object', args);
-  if (config != null) {
+  if (config !== null) {
     // Convert to Java Json Object
     var str = JSON.stringify(config);
     config = new org.vertx.java.core.json.JsonObject(str);
   }
-  if (doneHandler != null) {
+  if (doneHandler !== null) {
     doneHandler = adaptAsyncResultHandler(doneHandler);
   }
   if (multiThreaded === null) {
@@ -58,8 +58,6 @@ function deploy(deployType, name, args) {
   if (instances === null) {
     instances = 1;
   }
-
-  //console.log("Deploying " + name + " config: " + config + " multi-threaded " + multiThreaded + " instances " + instances + " doneHandler " + doneHandler);
 
   switch (deployType) {
     case VERTICLE: {
@@ -85,7 +83,7 @@ container.deployVerticle = function(main) {
   var args = Array.prototype.slice.call(arguments);
   args.shift();
   deploy(VERTICLE, main, args);
-}
+};
 
 /**
  * Deploy a verticle. The actual deploy happens asynchronously
@@ -95,7 +93,7 @@ container.deployWorkerVerticle = function(main) {
   var args = Array.prototype.slice.call(arguments);
   args.shift();
   deploy(WORKER, main, args);
-}
+};
 
 /**
  * Deploy a module. The actual deploy happens asynchronously
@@ -106,7 +104,7 @@ container.deployModule = function(moduleName) {
   var args = Array.prototype.slice.call(arguments);
   args.shift();
   deploy(MODULE, moduleName, args);
-}
+};
 
 /**
  * Undeploy a verticle
@@ -121,7 +119,7 @@ container.undeployVerticle = function(name, doneHandler) {
     doneHandler = null;
   }
   __jcontainer.undeployVerticle(name, doneHandler);
-}
+};
 
 /**
  * Undeploy a module
@@ -136,16 +134,16 @@ container.undeployModule = function(name, doneHandler) {
     doneHandler = null;
   }
   __jcontainer.undeployModule(name, doneHandler);
-}
+};
 
 /**
  * Causes the container to exit. All running modules will be undeployed.
  */
 container.exit = function() {
   __jcontainer.exit();
-}
+};
 var j_conf = __jcontainer.config();
-container.config =  j_conf == null ? null : JSON.parse(j_conf.encode());
+container.config =  j_conf === null ? null : JSON.parse(j_conf.encode());
 
 /**
  * The container's environment variables
@@ -154,7 +152,7 @@ container.env = {
   get: function(key) {
     return this[key];
   }
-}
+};
 
 var envIter = __jcontainer.env().entrySet().iterator();
 while(envIter.hasNext()) {
