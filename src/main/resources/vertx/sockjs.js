@@ -62,7 +62,7 @@ sockJS.createSockJSServer = function(httpServer) {
   if (typeof httpServer._to_java_server !== 'function') {
     throw "Please construct a vertx.SockJSServer with an instance of vert.HttpServer"
   }
-  return new sockJS.SockJSServer();
+  return new sockJS.SockJSServer(httpServer);
 }
 
 /**
@@ -91,7 +91,7 @@ sockJS.createSockJSServer = function(httpServer) {
  *
  * @constructor
  */
-sockJS.SockJSServer = function() {
+sockJS.SockJSServer = function(httpServer) {
   var that    = this;
   var vertx   = __jvertx;
   var jserver = vertx.createSockJSServer(httpServer._to_java_server());
@@ -126,8 +126,13 @@ sockJS.SockJSServer = function() {
   this.bridge = function(config, inboundPermitted, outboundPermitted, bridgeConfig) {
     var jInboundPermitted = convertPermitted(inboundPermitted);
     var jOutboundPermitted = convertPermitted(outboundPermitted);
-    jserver.bridge(new org.vertx.java.core.json.JsonObject(JSON.stringify(config)),
-        jInboundPermitted, jOutboundPermitted, JSON.stringify(bridgeConfig));
+    if (!bridgeConfig) {
+      jserver.bridge(new org.vertx.java.core.json.JsonObject(JSON.stringify(config)),
+          jInboundPermitted, jOutboundPermitted);
+    } else {
+      jserver.bridge(new org.vertx.java.core.json.JsonObject(JSON.stringify(config)),
+          jInboundPermitted, jOutboundPermitted, JSON.stringify(bridgeConfig));
+    }
   }
 
   function convertPermitted(permitted) {
