@@ -15,7 +15,7 @@
  */
 
 if (typeof __vertxload === 'string') {
-  throw "Use require() to load Vert.x API modules"
+  throw "Use require() to load Vert.x API modules";
 }
 
 /**
@@ -60,10 +60,10 @@ var sockJS = {};
  */
 sockJS.createSockJSServer = function(httpServer) {
   if (typeof httpServer._to_java_server !== 'function') {
-    throw "Please construct a vertx.SockJSServer with an instance of vert.HttpServer"
+    throw "Please construct a vertx.SockJSServer with an instance of vert.HttpServer";
   }
   return new sockJS.SockJSServer(httpServer);
-}
+};
 
 /**
  * <p>
@@ -93,8 +93,7 @@ sockJS.createSockJSServer = function(httpServer) {
  */
 sockJS.SockJSServer = function(httpServer) {
   var that    = this;
-  var vertx   = __jvertx;
-  var jserver = vertx.createSockJSServer(httpServer._to_java_server());
+  var jserver = __jvertx.createSockJSServer(httpServer._to_java_server());
 
   /**
    * Install a SockJS application.
@@ -104,7 +103,10 @@ sockJS.SockJSServer = function(httpServer) {
    */
   this.installApp = function(config, handler) {
     jserver.installApp(new org.vertx.java.core.json.JsonObject(JSON.stringify(config)), handler);
-  }
+  };
+
+  this.hook = function(bridgeHook) {
+  };
 
   /**
    * Install an app which bridges the SockJS server to the event bus
@@ -133,7 +135,7 @@ sockJS.SockJSServer = function(httpServer) {
       jserver.bridge(new org.vertx.java.core.json.JsonObject(JSON.stringify(config)),
           jInboundPermitted, jOutboundPermitted, JSON.stringify(bridgeConfig));
     }
-  }
+  };
 
   function convertPermitted(permitted) {
     var json_arr = new org.vertx.java.core.json.JsonArray();
@@ -146,7 +148,7 @@ sockJS.SockJSServer = function(httpServer) {
     return json_arr;
   }
 
-}
+};
 
 /**
  * A <code>SockJSHandler</code> is a {@linkcode Handler} that responds to
