@@ -70,6 +70,16 @@ WebSocketTest = {
     echo(false);
   },
 
+  testHeaders: function() {
+    server.websocketHandler(function(ws) {
+      vassert.assertEquals("Upgrade", ws.headers().get("Connection"));
+      vassert.testComplete();
+    });
+    server.listen(8080, '0.0.0.0', function(srv) {
+      client.connectWebsocket('/path/to/ws', function(ws) {});
+    });
+  },
+
   testServerUri: function() {
     var path = '/path/to/websocket';
     server.websocketHandler(function(ws) {
