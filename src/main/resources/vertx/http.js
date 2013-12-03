@@ -698,6 +698,14 @@ http.WebSocket = function(jwebsocket, server) {
       }
       return headers;
     }
+
+    /**
+     * The URI the websocket handshake occured at
+     * @returns {string}
+     */
+    this.uri = function() {
+      return jwebsocket.uri();
+    }
   }
   streams.WriteStream.call(this, jwebsocket);
   streams.ReadStream.call(this, jwebsocket);
