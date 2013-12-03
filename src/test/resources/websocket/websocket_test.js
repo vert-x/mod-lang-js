@@ -58,7 +58,7 @@ var echo = function(binary) {
       }
     });
   });
-}
+};
 
 
 WebSocketTest = {
@@ -68,6 +68,17 @@ WebSocketTest = {
 
   testEchoText: function() {
     echo(false);
+  },
+
+  testServerUri: function() {
+    var path = '/path/to/websocket';
+    server.websocketHandler(function(ws) {
+      vassert.assertEquals(path, ws.uri());
+      vassert.testComplete();
+    });
+    server.listen(8080, '0.0.0.0', function(srv) {
+      client.connectWebsocket(path, function(ws) {});
+    });
   },
 
   testWriteFromConnectHandler: function() {
@@ -118,7 +129,7 @@ WebSocketTest = {
       });
     });
   }
-}
+};
 
 vertxTest.startTests(WebSocketTest);
 
