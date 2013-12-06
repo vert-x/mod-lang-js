@@ -50,15 +50,15 @@ var TestUtils = function() {
   }
 
   that.generateRandomBuffer = function(size) {
-    return jutils.generateRandomBuffer(size);
+    return org.vertx.java.testframework.TestUtils.generateRandomBuffer(size);
   }
 
   that.randomUnicodeString = function(size) {
-    return jutils.randomUnicodeString(size);
+    return org.vertx.java.testframework.TestUtils.randomUnicodeString(size);
   }
 
   that.buffersEqual = function(buff1, buff2) {
-    return jutils.buffersEqual(buff1, buff2);
+    return org.vertx.java.testframework.TestUtils.buffersEqual(buff1, buff2);
   }
 
 };

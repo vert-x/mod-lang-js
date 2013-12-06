@@ -35,7 +35,7 @@
     <maven.source.plugin.version>2.2.1</maven.source.plugin.version>
 
     <!-- dependency versions -->
-    <version.vertx>2.1M2-SNAPSHOT</version.vertx>
+    <version.vertx>2.1M3-SNAPSHOT</version.vertx>
     <version.vertx.testframework>2.0.0-final</version.vertx.testframework>
     <version.vertx.testtools>2.0.2-final</version.vertx.testtools>
   </properties>
@@ -300,6 +300,7 @@
               <goal>verify</goal>
             </goals>
           </execution>
+          <!--
           <execution>
             <id>DynJS</id>
             <configuration>
@@ -320,6 +321,28 @@
               <goal>verify</goal>
             </goals>
           </execution>
+           -->
+          <!--
+          <execution>
+            <id>Nashorn</id>
+            <configuration>
+              <systemPropertyVariables>
+                <vertx.langs..coffee>nashorn</vertx.langs..coffee>
+                <vertx.langs..js>nashorn</vertx.langs..js>
+                <vertx.mods>target/mods</vertx.mods>
+              </systemPropertyVariables>
+              <includes>
+                <include>**/integration/**</include>
+              </includes>
+              <summaryFile>target/failsafe-reports/failsafe-summary-nashorn.xml</summaryFile>
+              <reportNameSuffix>Nashorn</reportNameSuffix>
+            </configuration>
+            <goals>
+              <goal>integration-test</goal>
+              <goal>verify</goal>
+            </goals>
+          </execution>
+          -->
         </executions>
       </plugin>
       <plugin>

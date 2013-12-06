@@ -16,7 +16,7 @@
 
 var vertx = require('vertx');
 var vertxTest = require("vertx_tests");
-vassert = vertxTest.vassert;
+var vassert = vertxTest.vassert;
 
 load("script1.js");
 

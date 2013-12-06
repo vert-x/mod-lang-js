@@ -27,7 +27,7 @@ if (typeof __vertxload === 'string') {
  * @constructor
  * @param {org.vertx.java.core.MultiMap} multiMap the underlying Java MultiMap instance
  */
-MultiMap = function(j_map) {
+var MultiMap = function(j_map) {
 
   /**
    * Return the value for the given name
@@ -187,4 +187,5 @@ function _convertToArray(j_col) {
 /**
  * @module vertx/multi_map
  */
+
 module.exports.MultiMap = MultiMap;

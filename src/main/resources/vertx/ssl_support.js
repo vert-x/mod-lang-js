@@ -64,7 +64,7 @@ if (typeof __vertxload === 'string') {
  * @constructor
  * @param {external:SSLSupport} delegate The Java delegate for most functions
  */
-SSLSupport = function(delegate) {
+var SSLSupport = function(delegate) {
   /**
    * Get or set the current SSL support for this object.
    * @param {boolean} [ssl] If provided, sets whether this object supports SSL
@@ -143,7 +143,7 @@ SSLSupport = function(delegate) {
  * @constructor
  * @param {external:ServerSSLSupport} delegate The Java delegate for most functions
  */
-ServerSSLSupport = function(delegate) {
+var ServerSSLSupport = function(delegate) {
   /**
    * Get or set whether client authorization is required
    * @param {boolean} [required] If provided, sets whether client authorization is required
@@ -166,7 +166,7 @@ ServerSSLSupport = function(delegate) {
  * @constructor
  * @param {external:ServerSSLSupport} delegate The Java delegate for most functions
  */
-ClientSSLSupport = function(delegate) {
+var ClientSSLSupport = function(delegate) {
   /**
    * Get or set the trustAll SSL attribute
    * @param {boolean} [all] If provided, sets the trustAll attribute

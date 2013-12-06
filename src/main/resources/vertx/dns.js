@@ -36,7 +36,7 @@ var dns = {
       servers = '127.0.0.1';
     }
     return new dns.DnsClient(servers);
-  },
+  }
 };
 
 /**

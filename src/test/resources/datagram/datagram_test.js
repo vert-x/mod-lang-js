@@ -38,7 +38,7 @@ DatagramTest = {
       vassert.assertTrue("Unexpected result: " + result, peer2 === result);
       buffer = tu.generateRandomBuffer(128);
       peer2.dataHandler( function(packet) {
-        vassert.assertTrue( tu.buffersEqual(packet.data, buffer) );
+        vassert.assertTrue( tu.buffersEqual(packet.data(), buffer) );
         vassert.testComplete();
       });
 
@@ -105,9 +105,9 @@ DatagramTest = {
       buffer = tu.generateRandomBuffer(128);
 
       peer2.dataHandler(function(packet) {
-        vassert.assertTrue("Unexpected data received: " + packet, tu.buffersEqual(buffer, packet.data));
+        vassert.assertTrue("Unexpected data received: " + packet, tu.buffersEqual(buffer, packet.data()));
 
-        peer2.send(packet.sender.host, packet.sender.port, buffer, function(err, result) {
+        peer2.send(packet.sender().host, packet.sender().port, buffer, function(err, result) {
           vassert.assertTrue("Error: " + err, err === null);
           vassert.assertTrue("Unexpected result: " + result, result == peer2);
         });
@@ -115,7 +115,7 @@ DatagramTest = {
 
       peer1.listen(1235, '127.0.0.1', function(err, result) {
         peer1.dataHandler(function(packet) {
-          vassert.assertTrue("Unexpected data received: " + packet, tu.buffersEqual(buffer, packet.data));
+          vassert.assertTrue("Unexpected data received: " + packet, tu.buffersEqual(buffer, packet.data()));
           vassert.testComplete();
         });
       });
@@ -161,7 +161,7 @@ DatagramTest = {
       buffer = tu.generateRandomBuffer(128);
 
       peer2.dataHandler(function(packet) {
-        vassert.assertTrue("Unexpected data: " + packet.data, tu.buffersEqual(packet.data, buffer));
+        vassert.assertTrue("Unexpected data: " + packet.data(), tu.buffersEqual(packet.data(), buffer));
         vassert.testComplete();
       });
 
@@ -251,7 +251,7 @@ DatagramTest = {
     peer2 = new udp.DatagramSocket();
 
     peer2.dataHandler(function(packet) {
-      vassert.assertTrue(tu.buffersEqual(buffer, packet.data));
+      vassert.assertTrue(tu.buffersEqual(buffer, packet.data()));
 
     });
 
@@ -297,7 +297,7 @@ DatagramTest = {
 
 };
 
-vertxStop = function() {
+function vertxStop() {
   if (peer1) { peer1.close(); }
   if (peer2) { peer2.close(); }
 };

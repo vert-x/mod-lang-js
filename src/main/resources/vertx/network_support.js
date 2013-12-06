@@ -45,7 +45,7 @@ if (typeof __vertxload === 'string') {
  * @constructor
  * @param {external:NetworkSupport} delegate The Java delegate for most functions
  */
-NetworkSupport = function(delegate) {
+var NetworkSupport = function(delegate) {
 
   /**
    * Set or get the send buffer size

@@ -46,7 +46,7 @@ var NetworkSupport = require('vertx/network_support');
  * @constructor
  * @param {external:TCPSupport} delegate The Java delegate for most functions
  */
-TCPSupport = function(delegate) {
+var TCPSupport = function(delegate) {
 
   // inherits common NetworkSupport functions
   NetworkSupport.call(this, delegate);
@@ -126,7 +126,7 @@ TCPSupport = function(delegate) {
  * @constructor
  * @param {external:TCPSupport} delegate The Java delegate for most functions
  */
-ServerTCPSupport = function(delegate) {
+var ServerTCPSupport = function(delegate) {
   /**
    * Set or get the server's accept backlog
    * @param {number} [backlog] If provided, set the value; if not, returns the current value.

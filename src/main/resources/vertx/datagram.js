@@ -19,6 +19,8 @@ if (typeof __vertxload === 'string') {
 }
 
 
+var console = require("vertx/console");
+
 /**
  * This module provides classes for UDP networking.
  *
@@ -49,7 +51,7 @@ load("vertx/helpers.js");
  * @param {boolean} ipv4 If true, use IPv4 addresses, if false use IPv6 addresses,
  * if undefined, use the operating system default.
  */
-DatagramSocket = function(ipv4) {
+var DatagramSocket = function(ipv4) {
   var family = null;
     family = org.vertx.java.core.datagram.InternetProtocolFamily.IPv4;
   if(ipv4 === true) {
@@ -271,27 +273,29 @@ DatagramSocket = function(ipv4) {
  * @property {number} sender.port The packet sender's port number
  * @property {module:vertx/buffer} data The packet data that was sent
  */
-DatagramPacket = function(_delegate) {
+var DatagramPacket = function(_delegate) {
+
   var _sender = null;
   var _data   = null;
 
-  this.__defineGetter__('sender', function() {
+  this.sender = function() {
     if (_sender === null) {
-      _sender = { 
+      _sender = {
         host: _delegate.sender().getAddress().getHostAddress(),
         port: _delegate.sender().getPort()
       };
     }
     return _sender;
-  });
+  }
 
-  this.__defineGetter__('data', function() {
+  this.data = function() {
     if (_data === null) {
       _data = _delegate.data();
     }
     return _data;
-  });
+  }
 };
+
 
 module.exports.DatagramSocket = DatagramSocket;
 module.exports.DatagramPacket = DatagramPacket;

@@ -76,7 +76,7 @@ if (typeof __vertxload === 'string') {
  * @param {external:org.vertx.java.core.streams.WriteStream} delegate The Java delegate
  * @class
  */
-DrainSupport = function(delegate) {
+var DrainSupport = function(delegate) {
   /**
    * Set the maximum size of the write queue to <code>maxSize</code>. You
    * will still be able to write to the stream even if there is more than
@@ -125,7 +125,7 @@ DrainSupport = function(delegate) {
  * @augments module:vertx/streams~DrainSupport
  * @class
  */
-WriteStream = function(delegate) {
+var WriteStream = function(delegate) {
   /**
    * Write some data to the stream. The data is put on an internal write
    * queue, and the write actually happens asynchronously. To avoid running
@@ -156,7 +156,7 @@ WriteStream = function(delegate) {
  * @param {external:ReadStream} delegate The Java delegate
  * @class
  */
-ReadSupport = function(delegate) {
+var ReadSupport = function(delegate) {
   /**
    * Set a data handler. As data is read, the handler will be called with 
    * a Buffer containing the data read.
@@ -202,7 +202,7 @@ ReadSupport = function(delegate) {
  * @augments module:vertx/streams~ReadSupport
  * @class
  */
-ReadStream = function(delegate) {
+var ReadStream = function(delegate) {
   /**
    * Set an end handler. Once the stream has ended, and there is no more data
    * to be read, the handler will be called.

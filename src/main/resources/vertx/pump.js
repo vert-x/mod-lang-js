@@ -18,6 +18,8 @@ if (typeof __vertxload === 'string') {
   throw "Use require() to load Vert.x API modules";
 }
 
+var console = require("vertx/console");
+
 /** 
  * <p>
  * Pumps data from a {@linkcode ReadStream} to a 
@@ -48,7 +50,15 @@ if (typeof __vertxload === 'string') {
  * @param {module:vertx/streams~ReadStream} readStream a ReadStream
  * @param {module:vertx/streams~WriteStream} writeStream a WriteStream
  * */
-var Pump = function(rs, ws) {
+
+
+ var Pump = function(rs, ws) {
+
+  /** @private */
+  var _delegate = org.vertx.java.core.streams.Pump.createPump(rs._delegate(), ws._delegate());
+
+  /** @private */
+  var _self = this;
 
   /**
    * Start the Pump. The Pump can be started and stopped multiple times.
@@ -86,12 +96,7 @@ var Pump = function(rs, ws) {
     return _self;
   };
 
-  /** @private */
-  _delegate = org.vertx.java.core.streams.Pump.createPump(rs._delegate(), ws._delegate());
 
-
-  /** @private */
-  _self = this;
 };
 
 /** @module vertx/pump */

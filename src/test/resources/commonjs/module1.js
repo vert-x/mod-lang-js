@@ -17,7 +17,7 @@
 var tu = require('test_utils');
 
 module.exports = function() {
-  func2 = require('module2');
+  var func2 = require('module2');
   tu.azzert(func2() === 'bar');
   return "foo";
 };

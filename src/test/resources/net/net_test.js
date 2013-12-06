@@ -57,11 +57,12 @@ NetTest = {
 
   testNoConnect: function() {
     client = vertx.net.createNetClient();
-    client.connect(1234, 'not-exists', function(err, sock) {
+    client.connect(1234, '127.0.0.2', function(err, sock) {
       vassert.assertTrue(err != null);
       vassert.testComplete();
     });
   }
+
 }
 
 vertxTest.startTests(NetTest);

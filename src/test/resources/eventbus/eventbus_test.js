@@ -67,7 +67,6 @@ var echo = function(msg) {
 var NoopHandler = function(msg, replier) {
 }
 var timeout = 500;
-var console = require('vertx/console');
 var timers  = require('vertx/timer');
 
 var EventBusTest = {
