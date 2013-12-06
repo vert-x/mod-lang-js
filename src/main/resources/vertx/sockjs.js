@@ -52,6 +52,9 @@ if (typeof __vertxload === 'string') {
  * @exports vertx/sockjs
  */
 var sockJS = {};
+var JsonObject   = org.vertx.java.core.json.JsonObject;
+var JsonArray    = org.vertx.java.core.json.JsonArray;
+var EventBusHook = org.vertx.java.core.sockjs.EventBusBridgeHook;
 
 /**
  * Create a new SockJSServer
@@ -92,8 +95,38 @@ sockJS.createSockJSServer = function(httpServer) {
  * @constructor
  */
 sockJS.SockJSServer = function(httpServer) {
-  var that    = this;
   var jserver = __jvertx.createSockJSServer(httpServer._to_java_server());
+  var hooks   = {};
+
+  /**
+   * Specify a function to call on the given event. All functions take a
+   * SockJSSocket as the first (and perhaps only) parameter.
+   *
+   *   - socket-created - Called when a new socket is created. Use this to do things like
+   *     check the origin header on the socket before accepting it.
+   *   - socket-closed - Called when the socket has been closed
+   *   - send-or-pub - Called when a client is sending or publishing on the socket.
+   *     Takes the following parameters in addition to the SockJSSocket:
+   *     * {boolean} send True if client is sending, false if publishing
+   *     * {JSON} message The message being sent
+   *     * {string} address The address the message is being sent to
+   *   - pre-register - Called before a client registers a handler. In addition to the
+   *     SockJSSocket parameter, this also is given a string address as the second parameter.
+   *   - post-register - Called after a client registers a handler. In addition to the
+   *     SockJSSocket parameter, this also is given a string address as the second parameter.
+   *   - unregister - Client is unregistering a handler. In addition to the SockJSSocket
+   *     parameter, this is also given a string address as the second parameter.
+   *   - authorize - Called before authorization. This function does not receive a SockJSSocket
+   *     as its first parameter. The full list of parameters is:
+   *     * {JSON} message The auth message
+   *     * {string} sessionID The session ID
+   *     * {ResultHandler} handler To be called when authorization is complete
+   * @param {string} evt The name of the event as a string
+   * @param {function} func The function to call
+   */
+  this.on = function(evt, func) {
+    hooks[evt] = func;
+  };
 
   /**
    * Install a SockJS application.
@@ -102,10 +135,7 @@ sockJS.SockJSServer = function(httpServer) {
    * @return {module:vertx/sockjs.SockJSServer} this
    */
   this.installApp = function(config, handler) {
-    jserver.installApp(new org.vertx.java.core.json.JsonObject(JSON.stringify(config)), handler);
-  };
-
-  this.hook = function(bridgeHook) {
+    jserver.installApp(new JsonObject(JSON.stringify(config)), handler);
   };
 
   /**
@@ -128,24 +158,48 @@ sockJS.SockJSServer = function(httpServer) {
   this.bridge = function(config, inboundPermitted, outboundPermitted, bridgeConfig) {
     var jInboundPermitted = convertPermitted(inboundPermitted);
     var jOutboundPermitted = convertPermitted(outboundPermitted);
-    if (!bridgeConfig) {
-      jserver.bridge(new org.vertx.java.core.json.JsonObject(JSON.stringify(config)),
-          jInboundPermitted, jOutboundPermitted);
+
+    var console = require('vertx/console');
+    console.log(">>>>>>>>>>>> SETTING HOOK");
+    jserver.setHook( new EventBusHook({
+      handleSocketCreated: lookup('socket-created', true),
+      handleSendOrPub:     lookup('send-or-pub',    true),
+      handlePreRegister:   lookup('pre-register',   true),
+      handleUnRegister:    lookup('unregister',     true),
+      handleAuthorize:     lookup('authorize',      false),
+      handlePostRegister:  lookup('post-register'),
+      handleSocketClosed:  lookup('socket-closed'),
+    }) );
+    console.log(">>>>>>>>>>>> SET HOOK");
+
+    if (bridgeConfig) {
+      jserver.bridge(new JsonObject(JSON.stringify(config)),
+            jInboundPermitted, jOutboundPermitted, bridgeConfig);
     } else {
-      jserver.bridge(new org.vertx.java.core.json.JsonObject(JSON.stringify(config)),
-          jInboundPermitted, jOutboundPermitted, JSON.stringify(bridgeConfig));
+      jserver.bridge(new JsonObject(JSON.stringify(config)),
+            jInboundPermitted, jOutboundPermitted);
     }
   };
 
   function convertPermitted(permitted) {
-    var json_arr = new org.vertx.java.core.json.JsonArray();
+    var json_arr = new JsonArray();
     for (var i = 0; i < permitted.length; i++) {
-      var match = permitted[i];
-      var json_str = JSON.stringify(match);
-      var jJson = new org.vertx.java.core.json.JsonObject(json_str);
-      json_arr.add(jJson);
+      json_arr.add(new JsonObject(JSON.stringify(permitted[i])));
     }
     return json_arr;
+  }
+
+  /**
+   * Looks up the event bus bridge hook function for the given event
+   * and if a function for the event does not exist, returns a default
+   * @param {string} evt The event name, e.g. 'socket-created'
+   * @param {object} [defaultReturn] The default return value if a function is not found
+   * @private
+   */
+  function lookup(evt, defaultReturn) {
+    return function(/* arguments */ ) {
+      return (hooks[evt] ? hooks[evt].call(arguments) : defaultReturn);
+    };
   }
 
 };
