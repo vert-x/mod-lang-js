@@ -300,7 +300,6 @@
               <goal>verify</goal>
             </goals>
           </execution>
-          <!--
           <execution>
             <id>DynJS</id>
             <configuration>
@@ -321,7 +320,6 @@
               <goal>verify</goal>
             </goals>
           </execution>
-           -->
           <execution>
             <id>Nashorn</id>
             <configuration>
