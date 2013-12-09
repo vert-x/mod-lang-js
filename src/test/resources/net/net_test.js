@@ -23,10 +23,10 @@ NetTest = {
     var server = vertx.net.createNetServer();
 
     server.connectHandler(function(sock) {
-      vassert.assertTrue(sock.localAddress().ipaddress != null)
-      vassert.assertTrue(sock.localAddress().port > -1)
-      vassert.assertTrue(sock.remoteAddress().ipaddress != null)
-      vassert.assertTrue(sock.remoteAddress().port > -1)
+      vassert.assertTrue(sock.localAddress().ipaddress !== null);
+      vassert.assertTrue(sock.localAddress().port > -1);
+      vassert.assertTrue(sock.remoteAddress().ipaddress !== null);
+      vassert.assertTrue(sock.remoteAddress().port > -1);
       sock.dataHandler(function(data) {
         sock.write(data);
       });
@@ -38,13 +38,13 @@ NetTest = {
       client = vertx.net.createNetClient();
       client.connect(1234, 'localhost', function(err, sock) {
         vassert.assertTrue(err === null);
-        vassert.assertTrue(sock != null);
+        vassert.assertTrue(sock !== null);
         vassert.assertTrue(err === null);
-        vassert.assertTrue(sock != null);
-        vassert.assertTrue(sock.localAddress().ipaddress != null)
-        vassert.assertTrue(sock.localAddress().port > -1)
-        vassert.assertTrue(sock.remoteAddress().ipaddress != null)
-        vassert.assertTrue(sock.remoteAddress().port > -1)
+        vassert.assertTrue(sock !== null);
+        vassert.assertTrue(sock.localAddress().ipaddress !== null);
+        vassert.assertTrue(sock.localAddress().port > -1);
+        vassert.assertTrue(sock.remoteAddress().ipaddress !== null);
+        vassert.assertTrue(sock.remoteAddress().port > -1);
 
         sock.dataHandler(function(data) {
           vassert.testComplete();
@@ -57,13 +57,14 @@ NetTest = {
 
   testNoConnect: function() {
     client = vertx.net.createNetClient();
+    client.connectTimeout(500);
     client.connect(1234, '127.0.0.2', function(err, sock) {
-      vassert.assertTrue(err != null);
+      vassert.assertTrue(err !== null);
       vassert.testComplete();
     });
   }
 
-}
+};
 
 vertxTest.startTests(NetTest);
 
