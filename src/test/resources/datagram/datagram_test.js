@@ -199,7 +199,7 @@ DatagramTest = {
     peer1.multicastLoopbackMode(false);
     vassert.assertTrue("Change to multicast loopback mode failed", !peer1.multicastLoopbackMode());
 
-    vassert.assertTrue("Incorrect default for multicast network interface", peer1.multicastNetworkInterface() == null);
+    vassert.assertTrue("Incorrect default for multicast network interface: " + peer1.multicastNetworkInterface(), peer1.multicastNetworkInterface() === null);
     var iface = null;
     ifaces = java.net.NetworkInterface.getNetworkInterfaces();
     while(ifaces.hasMoreElements()) {
@@ -212,7 +212,7 @@ DatagramTest = {
               iface = networkInterface;
             }
           }
-          if (iface != null) {
+          if (iface !== null) {
             peer1.multicastNetworkInterface(iface.getName());
             vassert.assertTrue("Change to multicast network interface failed", peer1.multicastNetworkInterface() == iface.getName());
           }
@@ -250,12 +250,38 @@ DatagramTest = {
     peer1 = new udp.DatagramSocket();
     peer2 = new udp.DatagramSocket();
 
+    var addr  = java.net.InetAddress.getByName("127.0.0.1");
+    var iface = java.net.NetworkInterface.getByInetAddress(addr).getName();
+    peer1.multicastNetworkInterface(iface);
+    peer2.multicastNetworkInterface(iface);
+
     peer2.dataHandler(function(packet) {
       vassert.assertTrue(tu.buffersEqual(buffer, packet.data()));
 
+      // leave the group
+      peer2.unlistenMulticastGroup(groupAddress, function(err, socket) {
+        vassert.assertTrue("Unexpected error: " + err, err === null);
+        vassert.assertTrue("Unexpected result: " + socket, socket === peer2);
+
+        // set a data handler that shouldn't be called
+        peer2.dataHandler(function(packet) {
+          vassert.fail("Should not have received a packet after leaving the multicast group. " + packet);
+        });
+
+        // now send another message, and wait to see if peer2 gets it
+        peer1.send(groupAddress, 1234, buffer, function(err, socket) {
+          vassert.assertTrue("Unexpected error: " + err, err === null);
+          vassert.assertTrue("Unexpected result: " + socket, socket === peer1);
+
+          timer.setTimer(1000, function() {
+            // peer2 didn't get the message - good
+            vassert.testComplete();
+          });
+        });
+      }, null, iface);
     });
 
-    peer2.listen(1234, '127.0.0.1', function(err, peer) {
+    peer2.listen(1234, function(err, peer) {
       vassert.assertTrue("Unexpected error: " + err, err === null);
       vassert.assertTrue("Unexpected result: " + peer, peer === peer2);
 
@@ -268,30 +294,8 @@ DatagramTest = {
         peer1.send(groupAddress, 1234, buffer, function(err, socket) {
           vassert.assertTrue("Unexpected error: " + err, err === null);
           vassert.assertTrue("Unexpected result: " + socket, socket === peer1);
-
-          // leave the group
-          peer2.unlistenMulticastGroup(groupAddress, function(err, socket) {
-            vassert.assertTrue("Unexpected error: " + err, err === null);
-            vassert.assertTrue("Unexpected result: " + socket, socket === peer2);
-
-            // set a data handler that shouldn't be called
-            peer2.dataHandler(function(packet) {
-              vassert.fail("Should not have received a packet after leaving the multicast group. " + packet);
-            });
-
-            // now send another message, and wait to see if peer2 gets it
-            peer1.send(groupAddress, 1234, buffer, function(err, socket) {
-              vassert.assertTrue("Unexpected error: " + err, err === null);
-              vassert.assertTrue("Unexpected result: " + socket, socket === peer1);
-
-              timer.setTimer(1000, function() {
-                // peer2 didn't get the message - good
-                vassert.testComplete();
-              });
-            });
-          });
         });
-      });
+      }, null, iface);
     });
   }
 
@@ -300,6 +304,6 @@ DatagramTest = {
 function vertxStop() {
   if (peer1) { peer1.close(); }
   if (peer2) { peer2.close(); }
-};
+}
 
 vertxTest.startTests(DatagramTest);

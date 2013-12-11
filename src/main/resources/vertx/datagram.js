@@ -142,7 +142,8 @@ var DatagramSocket = function(ipv4) {
       _delegate.setMulticastNetworkInterface(value);
       return this;
     }
-    return _delegate.getMulticastNetworkInterface();
+    var iface = _delegate.getMulticastNetworkInterface();
+    return iface ? iface : null;
   };
 
   /**
@@ -176,7 +177,7 @@ var DatagramSocket = function(ipv4) {
    * @return {module:vertx/datagram~DatagramSocket} this
    */
   this.listenMulticastGroup = function(address, handler, source, networkInterface) {
-    if (networkInterface && source) {
+    if (networkInterface) {
       _delegate.listenMulticastGroup(address, networkInterface, source, adaptAsyncResultHandler(handler, function() { return _that; }));
     } else {
       _delegate.listenMulticastGroup(address, adaptAsyncResultHandler(handler, function() { return _that; }));
@@ -195,7 +196,7 @@ var DatagramSocket = function(ipv4) {
    * @return {module:vertx/datagram~DatagramSocket} this
    */
   this.unlistenMulticastGroup = function(address, handler, source, networkInterface) {
-    if (networkInterface && source) {
+    if (networkInterface) {
       _delegate.unlistenMulticastGroup(address, networkInterface, source, adaptAsyncResultHandler(handler, function() { return _that; }));
     } else {
       _delegate.unlistenMulticastGroup(address, adaptAsyncResultHandler(handler, function() { return _that; }));
@@ -286,14 +287,14 @@ var DatagramPacket = function(_delegate) {
       };
     }
     return _sender;
-  }
+  };
 
   this.data = function() {
     if (_data === null) {
       _data = _delegate.data();
     }
     return _data;
-  }
+  };
 };
 
 
