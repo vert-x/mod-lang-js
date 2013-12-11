@@ -52,6 +52,9 @@ if (typeof __vertxload === 'string') {
  * @exports vertx/sockjs
  */
 var sockJS = {};
+var JsonObject   = org.vertx.java.core.json.JsonObject;
+var JsonArray    = org.vertx.java.core.json.JsonArray;
+var EventBusHook = org.vertx.java.core.sockjs.EventBusBridgeHook;
 
 /**
  * Create a new SockJSServer
@@ -92,8 +95,21 @@ sockJS.createSockJSServer = function(httpServer) {
  * @constructor
  */
 sockJS.SockJSServer = function(httpServer) {
-  var that    = this;
   var jserver = __jvertx.createSockJSServer(httpServer._to_java_server());
+  var hooks   = {};
+
+  /**
+   *  Specify a function to call on the given event. All functions take a
+   *  SockJSSocket as the first (and perhaps only) parameter.
+   *
+   *  <ul>
+   *    <li>socket-created - Called when a new socket is created. Use this to
+   *        do things like check the origin header on the socket before accepting it.</li>
+   *  </ul>
+   */
+  this.on = function(evt, func) {
+    hooks[evt] = func;
+  };
 
   /**
    * Install a SockJS application.
@@ -102,10 +118,7 @@ sockJS.SockJSServer = function(httpServer) {
    * @return {module:vertx/sockjs.SockJSServer} this
    */
   this.installApp = function(config, handler) {
-    jserver.installApp(new org.vertx.java.core.json.JsonObject(JSON.stringify(config)), handler);
-  };
-
-  this.hook = function(bridgeHook) {
+    jserver.installApp(new JsonObject(JSON.stringify(config)), handler);
   };
 
   /**
@@ -128,24 +141,40 @@ sockJS.SockJSServer = function(httpServer) {
   this.bridge = function(config, inboundPermitted, outboundPermitted, bridgeConfig) {
     var jInboundPermitted = convertPermitted(inboundPermitted);
     var jOutboundPermitted = convertPermitted(outboundPermitted);
-    if (!bridgeConfig) {
-      jserver.bridge(new org.vertx.java.core.json.JsonObject(JSON.stringify(config)),
-          jInboundPermitted, jOutboundPermitted);
+
+//    jserver.setHook( new EventBusHook({
+//      handleSendOrPub    : lookup('send-or-pub',    true),
+//      handleSocketCreated: lookup('socket-created', true),
+//      handlePreRegister  : lookup('pre-register',   true),
+//      handleUnRegister   : lookup('unregister',     true),
+//      handleAuthorize    : lookup('authorize',      true),
+//      handlePostRegister : lookup('post-register',  true),
+//      handleSocketClosed : lookup('socket-closed',  true),
+//    }));
+    if (bridgeConfig) {
+      jserver.bridge(new JsonObject(JSON.stringify(config)),
+          jInboundPermitted, jOutboundPermitted, bridgeConfig);
     } else {
-      jserver.bridge(new org.vertx.java.core.json.JsonObject(JSON.stringify(config)),
-          jInboundPermitted, jOutboundPermitted, JSON.stringify(bridgeConfig));
+      jserver.bridge(new JsonObject(JSON.stringify(config)),
+          jInboundPermitted, jOutboundPermitted);
     }
   };
 
   function convertPermitted(permitted) {
-    var json_arr = new org.vertx.java.core.json.JsonArray();
+    var json_arr = new JsonArray();
     for (var i = 0; i < permitted.length; i++) {
       var match = permitted[i];
       var json_str = JSON.stringify(match);
-      var jJson = new org.vertx.java.core.json.JsonObject(json_str);
+      var jJson = new JsonObject(json_str);
       json_arr.add(jJson);
     }
     return json_arr;
+  }
+
+  function lookup(evt, defaultReturn) {
+    return function( /* arguments */ ) {
+      return (hooks[evt] ? hooks[evt].call(arguments) : defaultReturn);
+    };
   }
 
 };
