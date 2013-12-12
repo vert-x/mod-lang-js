@@ -25,7 +25,7 @@ var timer = require('vertx/timer');
 
 var fileDir = "js-test-output";
 
-FsTest = {
+var fsTest = {
 
   testReadWriteFile: function() {
     var file = fileDir + "/beers.tmp";
@@ -122,7 +122,7 @@ FsTest = {
     fs.writeFile(file1, content, function() {
       fs.writeFile(file2, content, function() {
         fs.writeFile(file3, content, function() {
-          files = fs.readDirSync(fileDir);
+          var files = fs.readDirSync(fileDir);
           vassert.assertTrue("Expected 3, got : " + files.length, files.length === 3);
           vassert.testComplete();
         });
@@ -138,7 +138,7 @@ FsTest = {
     fs.writeFile(file1, content, function() {
       fs.writeFile(file2, content, function() {
         fs.writeFile(file3, content, function() {
-          files = fs.readDirSync(fileDir, 'ba.\.tmp');
+          var files = fs.readDirSync(fileDir, 'ba.\.tmp');
           vassert.assertTrue("Expected 2, got : " + files.length, files.length === 2);
           vassert.testComplete();
         });
@@ -209,7 +209,7 @@ function setup(doneHandler) {
 
 
 setup(function() {
-  vertxTest.startTests(FsTest);
+  vertxTest.startTests(fsTest);
 });
 
 function vertxStop() {

@@ -29,7 +29,7 @@ var testFile = fileDir + "/writeFile.txt";
 
 
 
-AsyncFileTest = {
+var asyncFileTest = {
   testWrite: function() {
     fs.open(testFile, function(err, asyncFile) {
       if (err) {
@@ -132,7 +132,7 @@ function setup(doneHandler) {
 
 
 setup(function() {
-  vertxTest.startTests(AsyncFileTest);
+  vertxTest.startTests(asyncFileTest);
 });
 
 function vertxStop() {

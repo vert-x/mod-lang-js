@@ -27,8 +27,7 @@ var net = {};
 var streams = require('vertx/streams');
 var tcp_support = require('vertx/tcp_support');
 var ssl_support = require('vertx/ssl_support');
-
-load("vertx/helpers.js");
+var helpers = require("vertx/helpers.js");
 
 
 /**
@@ -107,11 +106,11 @@ net.NetServer = function() {
    */
   this.listen = function() {
     var args = Array.prototype.slice.call(arguments);
-    var handler = getArgValue('function', args);
-    var host = getArgValue('string', args);
-    var port = getArgValue('number', args);
+    var handler = helpers.getArgValue('function', args);
+    var host = helpers.getArgValue('string', args);
+    var port = helpers.getArgValue('number', args);
     if (handler != null) {
-      handler = adaptAsyncResultHandler(handler);
+      handler = helpers.adaptAsyncResultHandler(handler);
     }
     if (host == null) {
       host = "0.0.0.0";
@@ -128,7 +127,7 @@ net.NetServer = function() {
     if (handler === undefined) {
       jserver.close();
     } else {
-      jserver.close(adaptAsyncResultHandler(handler));
+      jserver.close(helpers.adaptAsyncResultHandler(handler));
     }
   }
 
@@ -195,7 +194,7 @@ net.NetClient = function() {
       host = arg1;
       handler = arg2;
     }
-    jclient.connect(port, host, adaptAsyncResultHandler(handler, function(result) {
+    jclient.connect(port, host, helpers.adaptAsyncResultHandler(handler, function(result) {
       return new net.NetSocket(result);
     }));
     return that;

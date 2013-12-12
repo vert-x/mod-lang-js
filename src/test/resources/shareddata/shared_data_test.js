@@ -18,7 +18,7 @@ var vertx = require('vertx');
 var vertxTest = require("vertx_tests");
 var vassert = vertxTest.vassert;
 
-SharedDataTest = {
+var sharedDataTest = {
   testMap: function() {
     var map1 = vertx.sharedData.getMap("foo");
     vassert.assertTrue(typeof map1 != undefined);
@@ -109,4 +109,4 @@ SharedDataTest = {
   }
 }
 
-vertxTest.startTests(SharedDataTest);
+vertxTest.startTests(sharedDataTest);

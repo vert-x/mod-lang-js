@@ -20,7 +20,7 @@ var vassert = vertxTest.vassert;
 
 var tu = require('test_utils');
 
-ParseToolsTest = {
+var parseToolsTest = {
   testDelimited: function() {
     var lineCount = 0;
     var numLines = 3;
@@ -57,5 +57,5 @@ ParseToolsTest = {
   }
 }
 
-vertxTest.startTests(ParseToolsTest);
+vertxTest.startTests(parseToolsTest);
 

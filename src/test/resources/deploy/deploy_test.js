@@ -18,7 +18,7 @@ var container = require('vertx/container');
 var vertxTest = require('vertx_tests');
 var vassert = vertxTest.vassert;
 
-DeployTest = {
+var deployTest = {
   testSimpleDeploy: function() {
     container.deployVerticle("child.js", function(err, deployId) {
       vassert.assertTrue(null === err);
@@ -91,4 +91,4 @@ DeployTest = {
 
 }
 
-vertxTest.startTests(DeployTest);
+vertxTest.startTests(deployTest);

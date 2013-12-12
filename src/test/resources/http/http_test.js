@@ -25,7 +25,7 @@ var server = vertx.http.createHttpServer();
 var client = vertx.http.createHttpClient().port(port);
 var print  = require('vertx/console').log;
 
-HttpTest = {
+var httpTest = {
 
   testServerCompressionSupportedProperty: function() {
     vassert.assertTrue("HTTP server should default to no compression", !server.compressionSupported());
@@ -60,11 +60,11 @@ HttpTest = {
   testHttpServerLocalRemoteAddress: function() {
     server.requestHandler(function(req) {
 
-      local = req.localAddress();
+      var local = req.localAddress();
       vassert.assertTrue(local.getPort() > 0);
       vassert.assertTrue(local.getHostString() !== null);
 
-      remote = req.remoteAddress();
+      var remote = req.remoteAddress();
       vassert.assertTrue(remote.getPort() > 0);
       vassert.assertTrue(remote.getHostString() !== null);
 
@@ -462,7 +462,7 @@ function httpMethod(ssl, method, chunked) {
   });
 }
 
-vertxTest.startTests(HttpTest);
+vertxTest.startTests(httpTest);
 
 function vertxStop() {
   client.close();

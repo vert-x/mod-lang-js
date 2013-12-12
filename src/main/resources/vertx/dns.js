@@ -19,7 +19,7 @@ if (typeof __vertxload === 'string') {
 }
 
 // handler wrapper
-load("vertx/helpers.js");
+var helpers = require("vertx/helpers.js");
 
 /**
  * @exports vertx/dns
@@ -129,7 +129,7 @@ dns.DnsClient = function(servers) {
    * }
    */
   this.lookup = function(name, handler) {
-    __jClient.lookup(name, adaptAsyncResultHandler(handler, function(address) { return address.getHostAddress(); }));
+    __jClient.lookup(name, helpers.adaptAsyncResultHandler(handler, function(address) { return address.getHostAddress(); }));
     return that;
   };
 
@@ -141,7 +141,7 @@ dns.DnsClient = function(servers) {
    * @returns {module:vertx/dns.DnsClient}
    */
   this.lookup4 = function(name, handler) {
-    __jClient.lookup4(name, adaptAsyncResultHandler(handler, function(address) { return address.getHostAddress(); }));
+    __jClient.lookup4(name, helpers.adaptAsyncResultHandler(handler, function(address) { return address.getHostAddress(); }));
     return that;
   };
 
@@ -153,7 +153,7 @@ dns.DnsClient = function(servers) {
    * @returns {module:vertx/dns.DnsClient}
    */
   this.lookup6 = function(name, handler) {
-    __jClient.lookup6(name, adaptAsyncResultHandler(handler, function(address) { return address.getHostAddress(); }));
+    __jClient.lookup6(name, helpers.adaptAsyncResultHandler(handler, function(address) { return address.getHostAddress(); }));
     return that;
   };
 
@@ -165,7 +165,7 @@ dns.DnsClient = function(servers) {
    * @returns {module:vertx/dns.DnsClient}
    */
   this.resolveNS = function(name, handler) {
-    __jClient.resolveNS(name, adaptAsyncResultHandler(handler, function(list) { return list.toArray(); }));
+    __jClient.resolveNS(name, helpers.adaptAsyncResultHandler(handler, function(list) { return list.toArray(); }));
     return that;
   };
 
@@ -177,7 +177,7 @@ dns.DnsClient = function(servers) {
    * @returns {module:vertx/dns.DnsClient}
    */
   this.resolveTXT = function(name, handler) {
-    __jClient.resolveTXT(name, adaptAsyncResultHandler(handler, function(list) { return list.toArray(); }));
+    __jClient.resolveTXT(name, helpers.adaptAsyncResultHandler(handler, function(list) { return list.toArray(); }));
     return that;
   };
 
@@ -189,7 +189,7 @@ dns.DnsClient = function(servers) {
    * @returns {module:vertx/dns.DnsClient}
    */
   this.resolveMX = function(name, handler) {
-    __jClient.resolveMX(name, adaptAsyncResultHandler(handler, mappedMxConverter));
+    __jClient.resolveMX(name, helpers.adaptAsyncResultHandler(handler, mappedMxConverter));
     return that;
   };
 
@@ -201,7 +201,7 @@ dns.DnsClient = function(servers) {
    * @returns {module:vertx/dns.DnsClient}
    */
   this.resolveA = function(name, handler) {
-    __jClient.resolveA(name, adaptAsyncResultHandler(handler, mappedHostAddressConverter));
+    __jClient.resolveA(name, helpers.adaptAsyncResultHandler(handler, mappedHostAddressConverter));
     return that;
   };
 
@@ -213,7 +213,7 @@ dns.DnsClient = function(servers) {
    * @returns {module:vertx/dns.DnsClient}
    */
   this.resolveAAAA = function(name, handler) {
-    __jClient.resolveAAAA(name, adaptAsyncResultHandler(handler, mappedHostAddressConverter));
+    __jClient.resolveAAAA(name, helpers.adaptAsyncResultHandler(handler, mappedHostAddressConverter));
     return that;
   };
 
@@ -225,7 +225,7 @@ dns.DnsClient = function(servers) {
    * @returns {module:vertx/dns.DnsClient}
    */
   this.resolveCNAME = function(name, handler) {
-    __jClient.resolveCNAME(name, adaptAsyncResultHandler(handler, function(list) { return list.toArray(); }));
+    __jClient.resolveCNAME(name, helpers.adaptAsyncResultHandler(handler, function(list) { return list.toArray(); }));
     return that;
   };
 
@@ -237,7 +237,7 @@ dns.DnsClient = function(servers) {
    * @returns {module:vertx/dns.DnsClient}
    */
   this.resolvePTR = function(name, handler) {
-    __jClient.resolvePTR(name, adaptAsyncResultHandler(handler));
+    __jClient.resolvePTR(name, helpers.adaptAsyncResultHandler(handler));
     return that;
   };
 
@@ -249,7 +249,7 @@ dns.DnsClient = function(servers) {
    * @returns {module:vertx/dns.DnsClient}
    */
   this.resolveSRV = function(name, handler) {
-    __jClient.resolveSRV(name, adaptAsyncResultHandler(handler, mappedSrvConverter));
+    __jClient.resolveSRV(name, helpers.adaptAsyncResultHandler(handler, mappedSrvConverter));
     return that;
   };
 
@@ -263,7 +263,7 @@ dns.DnsClient = function(servers) {
    * @returns {module:vertx/dns.DnsClient}
    */
   this.reverseLookup = function(name, handler) {
-    __jClient.reverseLookup(name, adaptAsyncResultHandler(handler, function(address) { return address.getHostName(); }));
+    __jClient.reverseLookup(name, helpers.adaptAsyncResultHandler(handler, function(address) { return address.getHostName(); }));
     return that;
   };
 

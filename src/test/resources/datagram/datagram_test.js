@@ -23,7 +23,7 @@ var vassert   = vertxTest.vassert;
 
 var peer1, peer2;
 
-DatagramTest = {
+var datagramTest = {
 
   testSendReceive: function() {
     peer1 = new udp.DatagramSocket();
@@ -36,7 +36,7 @@ DatagramTest = {
     peer2.listen(1234, '127.0.0.1', function(err, result) {
       vassert.assertTrue("Error: " + err, err === null);
       vassert.assertTrue("Unexpected result: " + result, peer2 === result);
-      buffer = tu.generateRandomBuffer(128);
+      var buffer = tu.generateRandomBuffer(128);
       peer2.dataHandler( function(packet) {
         vassert.assertTrue( tu.buffersEqual(packet.data(), buffer) );
         vassert.testComplete();
@@ -50,7 +50,7 @@ DatagramTest = {
   },
 
   testListenHostPort: function() {
-    socket = new udp.DatagramSocket();
+    var socket = new udp.DatagramSocket();
     socket.listen(1234, '127.0.0.1', function(err, result) {
       vassert.assertTrue("Error: " + err, err === null);
       vassert.assertTrue("Unexpected result: " + result, socket == result);
@@ -61,7 +61,7 @@ DatagramTest = {
   },
 
   testListenPort: function() {
-    socket = new udp.DatagramSocket();
+    var socket = new udp.DatagramSocket();
     socket.listen(1234, function(err, result) {
       vassert.assertTrue("Error: " + err, err === null);
       vassert.assertTrue("Unexpected result: " + result, socket == result);
@@ -102,7 +102,7 @@ DatagramTest = {
     peer2.listen(1234, '127.0.0.1', function(err, result) {
       vassert.assertTrue("Unexpected error: " + err, err === null);
       vassert.assertTrue("Unexpected result: " + result, result == peer2);
-      buffer = tu.generateRandomBuffer(128);
+      var buffer = tu.generateRandomBuffer(128);
 
       peer2.dataHandler(function(packet) {
         vassert.assertTrue("Unexpected data received: " + packet, tu.buffersEqual(buffer, packet.data()));
@@ -158,7 +158,7 @@ DatagramTest = {
       vassert.assertTrue("Unexpected error: " + err, err === null);
       vassert.assertTrue("Unexpected result: " + result, result == peer2);
 
-      buffer = tu.generateRandomBuffer(128);
+      var buffer = tu.generateRandomBuffer(128);
 
       peer2.dataHandler(function(packet) {
         vassert.assertTrue("Unexpected data: " + packet.data(), tu.buffersEqual(packet.data(), buffer));
@@ -173,7 +173,7 @@ DatagramTest = {
   },
 
   testLocalAddress: function() {
-    socket = new udp.DatagramSocket(true);
+    var socket = new udp.DatagramSocket(true);
     // address is not set until we start listening on the socket
     vassert.assertTrue(socket.localAddress() === undefined);
     socket.listen(54321, function(err, result) {
@@ -201,7 +201,7 @@ DatagramTest = {
 
     vassert.assertTrue("Incorrect default for multicast network interface: " + peer1.multicastNetworkInterface(), peer1.multicastNetworkInterface() === null);
     var iface = null;
-    ifaces = java.net.NetworkInterface.getNetworkInterfaces();
+    var ifaces = java.net.NetworkInterface.getNetworkInterfaces();
     while(ifaces.hasMoreElements()) {
       var networkInterface = ifaces.nextElement();
       try {
@@ -243,9 +243,9 @@ DatagramTest = {
   },
 
   testMulticastJoinLeave: function() {
-    buffer = tu.generateRandomBuffer(128);
-    groupAddress = '230.0.0.1';
-    received = false;
+    var buffer = tu.generateRandomBuffer(128);
+    var groupAddress = '230.0.0.1';
+    var received = false;
 
     peer1 = new udp.DatagramSocket();
     peer2 = new udp.DatagramSocket();
@@ -306,4 +306,4 @@ function vertxStop() {
   if (peer2) { peer2.close(); }
 }
 
-vertxTest.startTests(DatagramTest);
+vertxTest.startTests(datagramTest);

@@ -37,20 +37,20 @@ var VERTICLE = 0;
 var WORKER = 1;
 var MODULE = 2;
 
-load("vertx/helpers.js");
+var helpers = require("vertx/helpers.js");
 
 function deploy(deployType, name, args) {
-  var doneHandler = getArgValue('function', args);
-  var multiThreaded = getArgValue('boolean', args);
-  var instances = getArgValue('number', args);
-  var config = getArgValue('object', args);
+  var doneHandler = helpers.getArgValue('function', args);
+  var multiThreaded = helpers.getArgValue('boolean', args);
+  var instances = helpers.getArgValue('number', args);
+  var config = helpers.getArgValue('object', args);
   if (config !== null) {
     // Convert to Java Json Object
     var str = JSON.stringify(config);
     config = new org.vertx.java.core.json.JsonObject(str);
   }
   if (doneHandler !== null) {
-    doneHandler = adaptAsyncResultHandler(doneHandler);
+    doneHandler = helpers.adaptAsyncResultHandler(doneHandler);
   }
   if (multiThreaded === null) {
     multiThreaded = false;
@@ -114,7 +114,7 @@ container.deployModule = function(moduleName) {
  */
 container.undeployVerticle = function(name, doneHandler) {
   if (doneHandler) {
-    doneHandler = adaptAsyncResultHandler(doneHandler);
+    doneHandler = helpers.adaptAsyncResultHandler(doneHandler);
   } else {
     doneHandler = null;
   }
@@ -129,7 +129,7 @@ container.undeployVerticle = function(name, doneHandler) {
  */
 container.undeployModule = function(name, doneHandler) {
   if (doneHandler) {
-    doneHandler = adaptAsyncResultHandler(doneHandler);
+    doneHandler = helpers.adaptAsyncResultHandler(doneHandler);
   } else {
     doneHandler = null;
   }

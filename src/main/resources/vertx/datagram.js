@@ -30,8 +30,7 @@ var console = require("vertx/console");
 
 var streams        = require('vertx/streams');
 var NetworkSupport = require('vertx/network_support');
-
-load("vertx/helpers.js");
+var helpers        = require("vertx/helpers.js");
 
 /**
  * <p>
@@ -86,9 +85,9 @@ var DatagramSocket = function(ipv4) {
    */
   this.send = function(host, port, packet, handler, encoding) {
     if (encoding !== undefined) {
-      _delegate.send(packet.toString(), encoding, host, port, adaptAsyncResultHandler(handler, function() { return _that; }));
+      _delegate.send(packet.toString(), encoding, host, port, helpers.adaptAsyncResultHandler(handler, function() { return _that; }));
     } else {
-      _delegate.send(packet, host, port, adaptAsyncResultHandler(handler, function() { return _that; }));
+      _delegate.send(packet, host, port, helpers.adaptAsyncResultHandler(handler, function() { return _that; }));
     }
     return this;
   };
@@ -152,7 +151,7 @@ var DatagramSocket = function(ipv4) {
    * @param {ResultHandler} handler the handler to notify when close() has completed.
    */
   this.close = function(handler) {
-    _delegate.close(adaptAsyncResultHandler(handler));
+    _delegate.close(helpers.adaptAsyncResultHandler(handler));
   };
 
   /** 
@@ -178,9 +177,9 @@ var DatagramSocket = function(ipv4) {
    */
   this.listenMulticastGroup = function(address, handler, source, networkInterface) {
     if (networkInterface) {
-      _delegate.listenMulticastGroup(address, networkInterface, source, adaptAsyncResultHandler(handler, function() { return _that; }));
+      _delegate.listenMulticastGroup(address, networkInterface, source, helpers.adaptAsyncResultHandler(handler, function() { return _that; }));
     } else {
-      _delegate.listenMulticastGroup(address, adaptAsyncResultHandler(handler, function() { return _that; }));
+      _delegate.listenMulticastGroup(address, helpers.adaptAsyncResultHandler(handler, function() { return _that; }));
     }
     return this;
   };
@@ -197,9 +196,9 @@ var DatagramSocket = function(ipv4) {
    */
   this.unlistenMulticastGroup = function(address, handler, source, networkInterface) {
     if (networkInterface) {
-      _delegate.unlistenMulticastGroup(address, networkInterface, source, adaptAsyncResultHandler(handler, function() { return _that; }));
+      _delegate.unlistenMulticastGroup(address, networkInterface, source, helpers.adaptAsyncResultHandler(handler, function() { return _that; }));
     } else {
-      _delegate.unlistenMulticastGroup(address, adaptAsyncResultHandler(handler, function() { return _that; }));
+      _delegate.unlistenMulticastGroup(address, helpers.adaptAsyncResultHandler(handler, function() { return _that; }));
     }
     return this;
   };
@@ -216,9 +215,9 @@ var DatagramSocket = function(ipv4) {
    */
   this.blockMulticastGroup = function(address, handler, networkInterface, source) {
     if (networkInterface && source) {
-      _delegate.blockMulticastGroup(address, networkInterface, source, adaptAsyncResultHandler(handler, function() { return _that; }));
+      _delegate.blockMulticastGroup(address, networkInterface, source, helpers.adaptAsyncResultHandler(handler, function() { return _that; }));
     } else {
-      _delegate.blockMulticastGroup(address, adaptAsyncResultHandler(handler, function() { return _that; }));
+      _delegate.blockMulticastGroup(address, helpers.adaptAsyncResultHandler(handler, function() { return _that; }));
     }
     return this;
   };
@@ -236,7 +235,7 @@ var DatagramSocket = function(ipv4) {
       handler = host;
       host = '0.0.0.0';
     }
-    _delegate.listen(host, port, adaptAsyncResultHandler(handler, function() { 
+    _delegate.listen(host, port, helpers.adaptAsyncResultHandler(handler, function() {
       _localAddress = _delegate.localAddress();
       _address.address = _localAddress.getHostString();
       _address.port = _localAddress.getPort();

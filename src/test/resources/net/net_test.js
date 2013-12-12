@@ -18,7 +18,7 @@ var vertx = require('vertx');
 var vertxTest = require('vertx_tests');
 var vassert = vertxTest.vassert;
 
-NetTest = {
+var netTest = {
   testConnect: function() {
     var server = vertx.net.createNetServer();
 
@@ -35,7 +35,7 @@ NetTest = {
     server.listen(1234, 'localhost', function(err, server) {
       vassert.assertTrue(err === null);
 
-      client = vertx.net.createNetClient();
+      var client = vertx.net.createNetClient();
       client.connect(1234, 'localhost', function(err, sock) {
         vassert.assertTrue(err === null);
         vassert.assertTrue(sock !== null);
@@ -56,7 +56,7 @@ NetTest = {
   },
 
   testNoConnect: function() {
-    client = vertx.net.createNetClient();
+    var client = vertx.net.createNetClient();
     client.connectTimeout(500);
     client.connect(1234, '127.0.0.2', function(err, sock) {
       vassert.assertTrue(err !== null);
@@ -66,5 +66,5 @@ NetTest = {
 
 };
 
-vertxTest.startTests(NetTest);
+vertxTest.startTests(netTest);
 

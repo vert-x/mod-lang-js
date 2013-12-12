@@ -55,7 +55,7 @@ var echo = function(msg) {
   ebus = eb.send(address, msg, function (reply){
 
   if (msg != null) {
-    for (field in reply) {
+    for (var field in reply) {
       vassert.assertEquals(msg.field, reply.field);
     }
   }
@@ -110,7 +110,7 @@ var EventBusTest = {
   },
 
   testSendWithTimeoutReplyTimesOut: function() {
-    replied = false;
+    var replied = false;
     eb.registerHandler("some-address", function(msg, replier) {
       timers.setTimer(timeout*2, function() {
         replier("too late");
@@ -192,7 +192,7 @@ var EventBusTest = {
 
   testReplyRecipientFailure: function() {
     address = "some-address";
-    message = "the bottom fell out";
+    var message = "the bottom fell out";
     eb.registerHandler(address, function(msg, replier, meta) {
       meta.fail(23, message);
     }, function() /* registration completion handler */ {
@@ -209,7 +209,7 @@ var EventBusTest = {
 
   testReplyRecipientFailureStandardHandler: function() {
     address = "some-address";
-    message = "the bottom fell out";
+    var message = "the bottom fell out";
     eb.registerHandler(address, function(msg, replier, meta) {
       meta.fail(23, message);
     }, function() /* registration completion handler */ {

@@ -28,7 +28,7 @@ var params = { "name" : "foo", "version" : "v0.1"};
 var re_params = { "param0" : "foo", "param1" :"v0.1"};
 var regex = "\\/([^\\/]+)\\/([^\\/]+)";
 
-RouteMatcherTest = {
+var routeMatcherTest = {
   testGetWithPattern: function() {
     route('get', false, "/:name/:version", params, "/foo/v0.1")
   },
@@ -210,7 +210,7 @@ function route(method, regex, pattern, params, uri) {
   var handler = function(req) {
     var console = require('vertx/console');
     var print = console.log;
-    for (k in req.params()) {
+    for (var k in req.params()) {
       vassert.assertTrue(params[k] === req.params().get(k));
     }
     req.response.end();
@@ -234,7 +234,7 @@ function route(method, regex, pattern, params, uri) {
   });
 }
 
-vertxTest.startTests(RouteMatcherTest);
+vertxTest.startTests(routeMatcherTest);
 
 function vertxStop() {
   server.close();

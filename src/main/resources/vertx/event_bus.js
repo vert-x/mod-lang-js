@@ -18,7 +18,7 @@ if (typeof __vertxload === 'string') {
   throw "Use require() to load Vert.x API modules"
 }
 
-load('vertx/helpers.js');
+var helpers = require('vertx/helpers.js');
 
 /**
  * While JSON is the preferred messaging on the event bus,
@@ -269,7 +269,7 @@ function wrappedHandler(handler) {
         reply = convertMessage(reply);
         if (replyHandler) {
           if (timeout) {
-            jMsg.replyWithTimeout(reply, timeout, adaptAsyncResultHandler(replyHandler, resultConverter));
+            jMsg.replyWithTimeout(reply, timeout, helpers.adaptAsyncResultHandler(replyHandler, resultConverter));
           } else {
             jMsg.reply(reply, wrappedHandler(replyHandler));
           }
@@ -366,7 +366,7 @@ function sendWithTimeout(address, message, replyHandler, timeout) {
   if (replyHandler && typeof replyHandler !== "function") {
     throw "replyHandler must be a function";
   }
-  jEventBus.sendWithTimeout(address, convertMessage(message), timeout, adaptAsyncResultHandler(replyHandler, resultConverter));
+  jEventBus.sendWithTimeout(address, convertMessage(message), timeout, helpers.adaptAsyncResultHandler(replyHandler, resultConverter));
   return eventBus;
 }
 

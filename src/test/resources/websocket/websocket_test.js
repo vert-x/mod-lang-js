@@ -61,7 +61,7 @@ var echo = function(binary) {
 };
 
 
-WebSocketTest = {
+var webSocketTest = {
   testEchoBinary: function() {
     echo(true);
   },
@@ -141,5 +141,5 @@ WebSocketTest = {
   }
 };
 
-vertxTest.startTests(WebSocketTest);
+vertxTest.startTests(webSocketTest);
 

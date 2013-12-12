@@ -14,4 +14,3 @@ vertxTests.startTests = function (top) {
 };
 
 module.exports = vertxTests;
-

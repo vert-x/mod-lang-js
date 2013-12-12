@@ -27,7 +27,7 @@ var sockjs    = SockJS.createSockJSServer(server);
 server.listen(8080);
 client.port(8080);
 
-SockJSTest = {
+var sockJSTest = {
   testSocketCreated: function() {
     sockjs.bridge({prefix: '/bus'}, [{}], [{}]);
     client.connectWebsocket('/bus/echo/websocket', function(websocket) {
@@ -37,4 +37,4 @@ SockJSTest = {
   }
 };
 
-vertxTest.startTests(SockJSTest);
+vertxTest.startTests(sockJSTest);

@@ -36,7 +36,7 @@ function vertxStop() {
   }
 }
 
-DNSTest = {
+var dnsTest = {
   testCreateDnsClient: function() {
     var ip = '10.0.0.1';
     prepareDns(DnsServer.testResolveA(ip), function(client) {
@@ -173,7 +173,7 @@ DNSTest = {
     prepareDns(DnsServer.testResolveSRV(prio, weight, port, target), function(client) {
       client.resolveSRV("vertx.io", function(err, records) {
         vassert.assertNotNull(records);
-        record = records[0];
+        var record = records[0];
         vassert.assertTrue("Unexpected value: " + record.priority, prio == record.priority);
         vassert.assertTrue("Unexpected value: " + record.weight, weight == record.weight);
         vassert.assertTrue("Unexpected value: " + record.port, port == record.port);
@@ -208,4 +208,4 @@ DNSTest = {
 
 };
 
-vertxTest.startTests(DNSTest);
+vertxTest.startTests(dnsTest);

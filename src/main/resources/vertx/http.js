@@ -29,8 +29,7 @@ var MultiMap = require('vertx/multi_map').MultiMap;
 var streams = require('vertx/streams');
 var tcp_support = require('vertx/tcp_support');
 var ssl_support = require('vertx/ssl_support');
-
-load("vertx/helpers.js");
+var helpers = require("vertx/helpers.js");
 
 /**
  * A <code>BodyHandler</code> is a {@linkcode Handler} that accepts a
@@ -831,11 +830,11 @@ http.HttpServer = function() {
    */
   this.listen = function() {
     var args = Array.prototype.slice.call(arguments);
-    var handler = getArgValue('function', args);
-    var host = getArgValue('string', args);
-    var port = getArgValue('number', args);
+    var handler = helpers.getArgValue('function', args);
+    var host = helpers.getArgValue('string', args);
+    var port = helpers.getArgValue('number', args);
     if (handler) {
-      handler = adaptAsyncResultHandler(handler);
+      handler = helpers.adaptAsyncResultHandler(handler);
     }
     if (host == null) {
       host = "0.0.0.0";

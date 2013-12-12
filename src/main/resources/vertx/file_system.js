@@ -40,7 +40,7 @@ var fileSystem = {};
 
 var streams = require('vertx/streams');
 
-load('vertx/helpers.js');
+var helpers = require('vertx/helpers.js');
 
 function wrapHandler(handler) {
   return function(asyncResult) {
@@ -714,7 +714,7 @@ fileSystem.open = function(path, arg1, arg2, arg3, arg4) {
  * @augments module:vertx/streams~ReadStream
  * @augments module:vertx/streams~WriteStream
  */
-fileSystem.AsyncFile = AsyncFile = function(jaf) {
+fileSystem.AsyncFile = function(jaf) {
   var that = this;
 
   streams.WriteStream.call(this, jaf);
