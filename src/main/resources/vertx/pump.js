@@ -92,7 +92,7 @@ var console = require("vertx/console");
    * @returns {module:vertx/pump~Pump}
    */
   this.setWriteQueueMaxSize = function(maxSize) {
-    _delegate.setWriteQueueMaxSize();
+    _delegate.setWriteQueueMaxSize(maxSize);
     return _self;
   };
 

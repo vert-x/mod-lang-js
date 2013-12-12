@@ -28,6 +28,7 @@ var streams = require('vertx/streams');
 var tcp_support = require('vertx/tcp_support');
 var ssl_support = require('vertx/ssl_support');
 var helpers = require("vertx/helpers.js");
+var Buffer = require('vertx/buffer');
 
 
 /**
@@ -301,7 +302,11 @@ net.NetSocket = function(jNetSocket) {
    */
   this.write = function(arg0, arg1) {
     if (arg1 === undefined) {
-      jNetSocket.write(arg0);
+      if (arg0 instanceof Buffer) {
+        jNetSocket.write(arg0._to_java_buffer());
+      } else {
+        jNetSocket.write(arg0);
+      }
     } else {
       jNetSocket.write(arg0, arg1);
     }

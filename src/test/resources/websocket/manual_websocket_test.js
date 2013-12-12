@@ -30,7 +30,7 @@ var client = vertx.http.createHttpClient().port(8080);
 var sha1 = function(s) {
   b = new vertx.Buffer(s, "UTF-8");
   md = java.security.MessageDigest.getInstance("SHA1");
-  bytes = md.digest(b.getBytes());
+  bytes = md.digest(b._to_java_buffer().getBytes());
   return org.vertx.java.core.json.impl.Base64.encodeBytes(bytes);
 }
 

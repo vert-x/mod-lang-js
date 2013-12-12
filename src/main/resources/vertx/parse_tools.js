@@ -18,6 +18,8 @@ if (typeof __vertxload === 'string') {
   throw "Use require() to load Vert.x API modules"
 }
 
+var Buffer = require('vertx/buffer');
+
 /** 
  * <p>
  * A helper class which allows you to easily parse protocols which are
@@ -66,12 +68,14 @@ var parseTools = {};
  * mode, and where the delimiter can be represented by <code>delim</code>.
  * <code>output</code> will receive whole records which have been parsed.
  * @param {string} delim The record delimiter
- * @param {module:vertx/buffer~Buffer} output The output buffer
- * @returns {org.vertx.java.core.parsetools.RecordParser} A delimited record parser
+ * @param {Function} output The function to call once more data is ready
+ * @returns {module:vertx/parseTools.RecordParser} A delimited record parser
  */
 parseTools.createDelimitedParser = function(delim, output) {
-  return org.vertx.java.core.parsetools.RecordParser.newDelimited(delim, output);
-}
+  return new parseTools.RecordParser(org.vertx.java.core.parsetools.RecordParser.newDelimited(delim, function(buf) {
+    output(new Buffer(buf));
+  }));
+};
 
 /**
  * Create a new <code>RecordParser</code> instance, initially in fixed size
@@ -79,12 +83,55 @@ parseTools.createDelimitedParser = function(delim, output) {
  * parameter.  <code>output</code> will receive whole records which have been
  * parsed.
  * @param {number} size The record size
- * @param {module:vertx/buffer~Buffer} output The output buffer
- * @returns {org.vertx.java.core.parsetools.RecordParser} A fixed size record parser
+ * @param {Function} The function to call once more data is ready
+ * @returns {module:vertx/parseTools.RecordParser} A fixed size record parser
  */
 parseTools.createFixedParser = function(size, output) {
-  return org.vertx.java.core.parsetools.RecordParser.newFixed(size, output);
-}
+  return new parseTools.RecordParser(org.vertx.java.core.parsetools.RecordParser.newFixed(size, function(buf) {
+    output(new Buffer(buf));
+  }));
+};
+
+/**
+ *
+ * @param parser
+ * @constructor
+ */
+parseTools.RecordParser = function(parser) {
+  var _jparser = parser;
+
+  /**
+   * Flip the parser into delimited mode, and where the delimiter can be represented
+   * by the String delim encoded in latin-1 . Don't use this if your String contains other than latin-1 characters.<p>
+   *
+   * This method can be called multiple times with different values of delim while data is being parsed.
+   * @param delim
+   */
+  this.delimitedMode = function(delim) {
+    _jparser.delimitedMode(delim);
+  };
+
+  /**
+   /**
+   * Flip the parser into fixed size mode, where the record size is specified by size in bytes.<p>
+   * This method can be called multiple times with different values of size while data is being parsed.
+   *
+   * @param {number} size
+   */
+  this.fixedSizeMode = function(size) {
+    _jparser.fixedSizeMode(size);
+  };
+
+  /**
+   *
+   * @returns {Function} a function you should pass in as function to {module:vertx/streams~ReadStream} dataHandler.
+   */
+  this.dataHandler = function() {
+    return function(buf) {
+      _jparser.handle(buf._to_java_buffer());
+    };
+  }
+};
 
 module.exports = parseTools;
 
