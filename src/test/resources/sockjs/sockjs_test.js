@@ -24,15 +24,20 @@ var server    = http.createHttpServer();
 var client    = http.createHttpClient();
 var sockjs    = SockJS.createSockJSServer(server);
 
-server.listen(8080);
-client.port(8080);
-
 var sockJSTest = {
   testSocketCreated: function() {
+    sockjs.on('socket-created', function() {
+      // for some reason, this is not being called
+      // vassert.testComplete();
+      return true;
+    });
     sockjs.bridge({prefix: '/bus'}, [{}], [{}]);
-    client.connectWebsocket('/bus/echo/websocket', function(websocket) {
-      vassert.assertTrue(websocket !== null);
-      vassert.testComplete();
+    server.listen(8080, function() {
+      client.port(8080);
+      client.connectWebsocket('/bus/echo', function(websocket) {
+        vassert.assertTrue(websocket !== null);
+        vassert.testComplete();
+      });
     });
   }
 };

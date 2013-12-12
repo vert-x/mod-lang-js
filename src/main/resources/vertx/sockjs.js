@@ -142,15 +142,15 @@ sockJS.SockJSServer = function(httpServer) {
     var jInboundPermitted = convertPermitted(inboundPermitted);
     var jOutboundPermitted = convertPermitted(outboundPermitted);
 
-//    jserver.setHook( new EventBusHook({
-//      handleSendOrPub    : lookup('send-or-pub',    true),
-//      handleSocketCreated: lookup('socket-created', true),
-//      handlePreRegister  : lookup('pre-register',   true),
-//      handleUnRegister   : lookup('unregister',     true),
-//      handleAuthorize    : lookup('authorize',      true),
-//      handlePostRegister : lookup('post-register',  true),
-//      handleSocketClosed : lookup('socket-closed',  true),
-//    }));
+    jserver.setHook( new EventBusHook({
+      handleSendOrPub    : lookup('send-or-pub',    true),
+      handleSocketCreated: lookup('socket-created', true),
+      handlePreRegister  : lookup('pre-register',   true),
+      handleUnRegister   : lookup('unregister',     true),
+      handleAuthorize    : lookup('authorize',      true),
+      handlePostRegister : lookup('post-register',  true),
+      handleSocketClosed : lookup('socket-closed',  true),
+    }));
     if (bridgeConfig) {
       jserver.bridge(new JsonObject(JSON.stringify(config)),
           jInboundPermitted, jOutboundPermitted, bridgeConfig);
