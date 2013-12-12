@@ -5,7 +5,7 @@ branches:
   only:
     - master
 jdk:
-  - oraclejdk7
+  - oraclejdk8
 notifications:
   irc:
     - "irc.freenode.org#dynjs"
