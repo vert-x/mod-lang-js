@@ -33,7 +33,7 @@ var parseToolsTest = {
     var rp = vertx.parseTools.createDelimitedParser('\n', output);
     var input = "qwdqwdline1\nijijiline2\njline3\n";
     var buffer = new vertx.Buffer(input);
-    rp.handle(buffer);
+    rp.dataHandler()(buffer);
   },
 
   testFixed: function() {
@@ -53,7 +53,7 @@ var parseToolsTest = {
       var buff = tu.generateRandomBuffer(chunkSize);
       input.appendBuffer(buff);
     }
-    rp.handle(input);
+    rp.dataHandler()(input);
   }
 }
 

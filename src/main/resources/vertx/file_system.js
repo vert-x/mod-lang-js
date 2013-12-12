@@ -542,6 +542,8 @@ fileSystem.readFileSync = function(path) {
 fileSystem.writeFile = function(path, data, handler) {
   if (typeof data === 'string') {
     data = new org.vertx.java.core.buffer.Buffer(data);
+  } else {
+    data = data._to_java_buffer();
   }
   jfs.writeFile(path, data, wrapHandler(handler));
   return fileSystem;
@@ -742,10 +744,10 @@ fileSystem.AsyncFile = function(jaf) {
   this.write = function(buffer, position, handler) {
     if (position == null || position == undefined) {
       // WriteStream interface
-      jaf.write(buffer);
+      jaf.write(buffer._to_java_buffer());
     } else {
       // AsyncFile interface
-      jaf.write(buffer, position, wrapHandler(handler));
+      jaf.write(buffer._to_java_buffer(), position, wrapHandler(handler));
     }
     return that;
   }
@@ -760,7 +762,7 @@ fileSystem.AsyncFile = function(jaf) {
    *        be provided the filled Buffer as a parameter
    */
   this.read = function(buffer, offset, position, length, handler) {
-    jaf.read(buffer, offset, position, length, wrapHandler(handler));
+    jaf.read(buffer._to_java_buffer(), offset, position, length, wrapHandler(handler));
     return that;
   }
 

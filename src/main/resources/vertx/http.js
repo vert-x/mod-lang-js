@@ -30,6 +30,7 @@ var streams = require('vertx/streams');
 var tcp_support = require('vertx/tcp_support');
 var ssl_support = require('vertx/ssl_support');
 var helpers = require("vertx/helpers.js");
+var Buffer = require('vertx/buffer');
 
 /**
  * A <code>BodyHandler</code> is a {@linkcode Handler} that accepts a
@@ -633,7 +634,7 @@ http.WebSocket = function(jwebsocket, server) {
    * @param {module:vertx/buffer~Buffer} data
    */
   this.writeBinaryFrame = function(data) {
-    jwebsocket.writeBinaryFrame(data);
+    jwebsocket.writeBinaryFrame(data._to_java_buffer());
   };
 
   /**
@@ -1437,7 +1438,9 @@ http.HttpClientResponse = function(jresp) {
    * @returns {module:vertx/http.HttpClientResponse}
    */
   this.bodyHandler = function(handler) {
-    jresp.bodyHandler(handler);
+    jresp.bodyHandler(function(buffer) {
+      handler(new Buffer(buffer));
+    });
     return that;
   }
   streams.ReadStream.call(this, jresp);
