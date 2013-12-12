@@ -1,4 +1,6 @@
 
+var vertx = require('vertx');
+
 var TestUtils = function() {
 
   var that = this;
@@ -50,7 +52,7 @@ var TestUtils = function() {
   }
 
   that.generateRandomBuffer = function(size) {
-    return org.vertx.java.testframework.TestUtils.generateRandomBuffer(size);
+    return new vertx.Buffer(org.vertx.java.testframework.TestUtils.generateRandomBuffer(size));
   }
 
   that.randomUnicodeString = function(size) {
@@ -58,6 +60,12 @@ var TestUtils = function() {
   }
 
   that.buffersEqual = function(buff1, buff2) {
+    if (buff1 instanceof vertx.Buffer) {
+      buff1 = buff1._to_java_buffer();
+    }
+    if (buff2 instanceof vertx.Buffer) {
+      buff2 = buff2._to_java_buffer();
+    }
     return org.vertx.java.testframework.TestUtils.buffersEqual(buff1, buff2);
   }
 

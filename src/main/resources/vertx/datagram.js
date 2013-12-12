@@ -31,6 +31,7 @@ var console = require("vertx/console");
 var streams        = require('vertx/streams');
 var NetworkSupport = require('vertx/network_support');
 var helpers        = require("vertx/helpers.js");
+var Buffer         = require('vertx/buffer');
 
 /**
  * <p>
@@ -87,6 +88,9 @@ var DatagramSocket = function(ipv4) {
     if (encoding !== undefined) {
       _delegate.send(packet.toString(), encoding, host, port, helpers.adaptAsyncResultHandler(handler, function() { return _that; }));
     } else {
+      if (packet instanceof Buffer) {
+        packet = packet._to_java_buffer();
+      }
       _delegate.send(packet, host, port, helpers.adaptAsyncResultHandler(handler, function() { return _that; }));
     }
     return this;
@@ -290,7 +294,7 @@ var DatagramPacket = function(_delegate) {
 
   this.data = function() {
     if (_data === null) {
-      _data = _delegate.data();
+      _data = new Buffer(_delegate.data());
     }
     return _data;
   };

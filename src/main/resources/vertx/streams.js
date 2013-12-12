@@ -18,6 +18,9 @@ if (typeof __vertxload === 'string') {
   throw "Use require() to load Vert.x API modules"
 }
 
+var Buffer = require('vertx/buffer');
+var parseTools = require('vertx/parse_tools');
+
 /**
  * <p>
  * There are several objects in vert.x that allow data to be read from and
@@ -136,7 +139,7 @@ var WriteStream = function(delegate) {
    * @param {module:vertx/buffer~Buffer} data the data to write
    */
   this.write = function(data) {
-    delegate.write(data);
+    delegate.write(data._to_java_buffer());
     return this;
   }
 
@@ -163,7 +166,9 @@ var ReadSupport = function(delegate) {
    * @param {BodyHandler} handler the handler to call
    */
   this.dataHandler = function(handler) {
-    delegate.dataHandler(handler);
+    delegate.dataHandler(function(buf) {
+      handler(new Buffer(buf))
+    });
     return this;
   }
   /**
