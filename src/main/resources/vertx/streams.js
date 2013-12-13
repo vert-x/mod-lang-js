@@ -15,7 +15,7 @@
  */
 
 if (typeof __vertxload === 'string') {
-  throw "Use require() to load Vert.x API modules"
+  throw "Use require() to load Vert.x API modules";
 }
 
 var Buffer = require('vertx/buffer');
@@ -90,14 +90,14 @@ var DrainSupport = function(delegate) {
   this.writeQueueMaxSize = function(size) {
     delegate.setWriteQueueMaxSize(size);
     return this;
-  }
+  };
   /**
    * This will return <code>true</code> if there are more bytes in the write
    * queue than the value set using <code>writeQueueMaxSize</code>
    */
   this.writeQueueFull = function() {
     return delegate.writeQueueFull();
-  }
+  };
   /**
    * Set a drain handler on the stream. If the write queue is full, then the
    * handler will be called when the write queue has been reduced to maxSize/2.
@@ -107,7 +107,7 @@ var DrainSupport = function(delegate) {
   this.drainHandler = function(handler) {
     delegate.drainHandler(handler);
     return this;
-  }
+  };
   /**
    * Set an exception handler on the stream
    * @param {Handler} handler the handler to call when an exception occurs
@@ -115,8 +115,8 @@ var DrainSupport = function(delegate) {
   this.exceptionHandler = function(handler) {
     delegate.exceptionHandler(handler);
     return this;
-  }
-}
+  };
+};
 
 /**
  * Provides methods to read from a data stream. It's used by things
@@ -139,17 +139,21 @@ var WriteStream = function(delegate) {
    * @param {module:vertx/buffer~Buffer} data the data to write
    */
   this.write = function(data) {
-    delegate.write(data._to_java_buffer());
+    if (data instanceof Buffer) {
+      delegate.write(data._to_java_buffer());
+    } else {
+      delegate.write(data);
+    }
     return this;
-  }
+  };
 
   DrainSupport.call(this, delegate);
 
   /**
    * @private
    */
-  this._delegate = function() { return delegate; }
-}
+  this._delegate = function() { return delegate; };
+};
 
 /**
  * Provides methods to read from a data stream.  This is used internally and
@@ -167,10 +171,10 @@ var ReadSupport = function(delegate) {
    */
   this.dataHandler = function(handler) {
     delegate.dataHandler(function(buf) {
-      handler(new Buffer(buf))
+      handler(new Buffer(buf));
     });
     return this;
-  }
+  };
   /**
    * Pause the <code>ReadStream</code>. While the stream is paused, no data
    * will be sent to the data Handler
@@ -178,7 +182,7 @@ var ReadSupport = function(delegate) {
   this.pause = function() {
     delegate.pause();
     return this;
-  }
+  };
   /**
    * Resume reading. If the <code>ReadStream</code> has been paused, reading
    * will recommence on it.
@@ -186,7 +190,7 @@ var ReadSupport = function(delegate) {
   this.resume = function() {
     delegate.resume();
     return this;
-  }
+  };
   /**
    * Set an exception handler.
    * @param {Handler} handler the handler to call
@@ -194,8 +198,8 @@ var ReadSupport = function(delegate) {
   this.exceptionHandler = function(handler) {
     delegate.exceptionHandler(handler);
     return this;
-  }
-}
+  };
+};
 
 /**
  * Provides methods to read from a data stream. It's used by things
@@ -216,15 +220,15 @@ var ReadStream = function(delegate) {
   this.endHandler = function(handler) {
     delegate.endHandler(handler);
     return this;
-  }
+  };
 
   ReadSupport.call(this, delegate);
 
   /**
    * @private
    */
-  this._delegate = function() { return delegate; }
-}
+  this._delegate = function() { return delegate; };
+};
 
 module.exports.ReadSupport  = ReadSupport;
 module.exports.ReadStream   = ReadStream;
