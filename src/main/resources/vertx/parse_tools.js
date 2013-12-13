@@ -15,7 +15,7 @@
  */
 
 if (typeof __vertxload === 'string') {
-  throw "Use require() to load Vert.x API modules"
+  throw "Use require() to load Vert.x API modules";
 }
 
 var Buffer = require('vertx/buffer');
@@ -126,11 +126,9 @@ parseTools.RecordParser = function(parser) {
    *
    * @returns {Function} a function you should pass in as function to {module:vertx/streams~ReadStream} dataHandler.
    */
-  this.dataHandler = function() {
-    return function(buf) {
-      _jparser.handle(buf._to_java_buffer());
-    };
-  }
+  this.handle = function(buf) {
+    _jparser.handle(buf._to_java_buffer());
+  };
 };
 
 module.exports = parseTools;

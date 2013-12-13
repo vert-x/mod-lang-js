@@ -28,12 +28,12 @@ var parseToolsTest = {
       if (++lineCount == numLines) {
         vassert.testComplete();
       }
-    }
+    };
 
     var rp = vertx.parseTools.createDelimitedParser('\n', output);
     var input = "qwdqwdline1\nijijiline2\njline3\n";
     var buffer = new vertx.Buffer(input);
-    rp.dataHandler()(buffer);
+    rp.handle(buffer);
   },
 
   testFixed: function() {
@@ -45,7 +45,7 @@ var parseToolsTest = {
       if (++chunkCount == numChunks) {
         vassert.testComplete();
       }
-    }
+    };
 
     var rp = vertx.parseTools.createFixedParser(chunkSize, output);
     var input = new vertx.Buffer(0);
@@ -53,9 +53,9 @@ var parseToolsTest = {
       var buff = tu.generateRandomBuffer(chunkSize);
       input.appendBuffer(buff);
     }
-    rp.dataHandler()(input);
+    rp.handle(input);
   }
-}
+};
 
 vertxTest.startTests(parseToolsTest);
 
