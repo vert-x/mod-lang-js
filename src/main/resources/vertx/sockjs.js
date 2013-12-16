@@ -17,6 +17,8 @@
 if (typeof __vertxload === 'string') {
   throw "Use require() to load Vert.x API modules";
 }
+var Streams  = require('vertx/streams');
+var MultiMap = require('vertx/multi_map').MultiMap;
 
 /**
  * <p>
@@ -118,7 +120,7 @@ sockJS.SockJSServer = function(httpServer) {
    * @return {module:vertx/sockjs.SockJSServer} this
    */
   this.installApp = function(config, handler) {
-    jserver.installApp(new JsonObject(JSON.stringify(config)), handler);
+    jserver.installApp(new JsonObject(JSON.stringify(config)), sockJSHandler(handler));
   };
 
   /**
@@ -173,42 +175,108 @@ sockJS.SockJSServer = function(httpServer) {
 
   function lookup(evt, defaultReturn) {
     return function( /* arguments */ ) {
-      return (hooks[evt] ? hooks[evt].call(arguments) : defaultReturn);
+      return (hooks[evt] ? 
+          hooks[evt].call(hooks[evt], constructHookArgs(evt, arguments))
+          : defaultReturn);
+    };
+  }
+
+  function constructHookArgs(evt /*, arguments */) {
+    return Array.prototype.slice.call(arguments);
+  }
+
+  function sockJSHandler(func) {
+    return function(sock) {
+      func.call(func, [new sockJS.SockJSSocket(sock)]);
     };
   }
 
 };
 
 /**
- * A <code>SockJSHandler</code> is a {@linkcode Handler} that responds to
- * notifications from objects in the <code>vertx/http</code> module and expects
- * an {@linkcode module:vertx/http.HttpServerRequest|HttpServerRequest} object
- * as its parameter.
+ * A <code>SockJSHandler</code> is a {@linkcode Handler} that is called when
+ * new SockJSSockets are created. It takes a {module:vertx/sockjs.SockJSSocket}
+ * as its only parameter.
  *
- * @example
- * var http = require('vertx/http');
- * var server = http.createHttpServer();
- *
- * server.requestHandler( function( request ) {
- *   // This function is executed for each
- *   // request event on our server
- * } );
- *
- * @see module:vertx/http.HttpServer#requestHandler
  * @typedef {function} SockJSHandler
- * @param {SockJSSocket} sockJSSocket The socket object
+ * @param {module:vertx/sockjs.SockJSSocket} sockJSSocket The socket object
  */
 
 /**
- * You interact with SockJS clients through instances of SockJS socket.
- * The API is very similar to {@linkcode module:vertx/http.WebSocket}.
- * It implements both {@linkcode ReadStream} and 
- * {@linkcode WriteStream} so it can be used with 
- * {@linkcode module:vertx/pump~Pump} to pump data with flow control.
+ * <p>Represents a SockJS socket.  You interact with SockJS clients through
+ * instances of a SockJS socket.
+ * The API is very similar to {@linkcode module:vertx/http.WebSocket}.</p>
+ * <p>Instances of this class are created and provided to a {@linkcode SockJSHandler}.</p>
+ * <p>It implements both {@linkcode ReadStream} and {@linkcode WriteStream} so
+ * it can be used with {@linkcode module:vertx/Pump~Pump|Pump} to pump data
+ * with flow control.</p>
  *
- * @see https://github.com/vert-x/vert.x/blob/master/vertx-core/src/main/java/org/vertx/java/core/sockjs/SockJSSocket.java
- * @external org.vertx.java.core.sockjs.SockJSSocket
+ * @constructor
+ *
+ * @param {org.vertx.java.core.sockjs.SockJSSocket} delegate The java SockJSSocket object
+ * @see SockJSHandler
+ * @augments module:vertx/streams~ReadStream
+ * @augments module:vertx/streams~WriteStream
  */
+sockJS.SockJSSocket = function(delegate) {
+  /**
+   * <p>
+   * When a {@code SockJSSocket} is created it automatically registers an event
+   * handler with the event bus, the ID of that handler is given by 
+   * {@linkcode writeHandlerID}.
+   * </p>
+   * <p>
+   * Given this ID, a different event loop can send a buffer to that event
+   * handler using the event bus and that buffer will be received by this
+   * instance in its own event loop and written to the underlying socket. This
+   * allows you to write data to other sockets which are owned by different
+   * event loops.
+   * </p>
+   * @return {string} the ID
+   */
+  this.writeHandlerID = function() {
+    return delegate.writeHandlerID();
+  };
+
+  /**
+   * Close the socket
+   */
+  this.close = function() {
+    delegate.close();
+  };
+
+  /**
+   * Get the local address for this socket
+   * @return {external:java.net.InetSocketAddress} The local address
+   */
+  this.localAddress = function() {
+    return delegate.getLocalAddress();
+  };
+
+  /**
+   * @return {module:vertx/multi_map~MultiMap} The headers map
+   */
+  this.headers = function() {
+    if (_headers === null) {
+      _headers = new MultiMap(delegate.headers());
+    }
+    return _headers;
+  };
+
+  /**
+   * Return the URI corresponding to the last request for this socket or the
+   * websocket handshake
+   * @return {string} The URI string
+   */
+  this.uri = function() {
+    return delegate.uri();
+  };
+
+  var _headers = null;
+  Streams.WriteStream.call(this, delegate);
+  Streams.ReadStream.call(this, delegate);
+};
+
 
 module.exports = sockJS;
 
