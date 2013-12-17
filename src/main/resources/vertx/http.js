@@ -15,7 +15,7 @@
  */
 
 if (typeof __vertxload === 'string') {
-  throw "Use require() to load Vert.x API modules"
+  throw "Use require() to load Vert.x API modules";
 }
 
 /**
@@ -53,7 +53,7 @@ var Buffer = require('vertx/buffer');
  */
 http.createHttpServer = function() {
   return new http.HttpServer();
-}
+};
 
 
 /**
@@ -63,7 +63,7 @@ http.createHttpServer = function() {
  */
 http.createHttpClient = function() {
   return new http.HttpClient();
-}
+};
 
 /**
  * Represents a server-side HttpServerRequest object. This object is created internally
@@ -110,7 +110,7 @@ http.HttpServerRequest = function(jreq) {
       version = jreq.version().toString();
     }
     return version;
-  }
+  };
 
   /**
    *
@@ -123,7 +123,7 @@ http.HttpServerRequest = function(jreq) {
       netSocket = new net.NetSocket(jreq.netSocket());
     }
     return netSocket;
-  }
+  };
 
   /**
    * The HTTP method, one of HEAD, OPTIONS, GET, POST, PUT, DELETE, CONNECT, TRACE
@@ -132,7 +132,7 @@ http.HttpServerRequest = function(jreq) {
    */
   this.method = function() {
     return jreq.method();
-  }
+  };
 
   /**
    * The uri of the request. For example
@@ -142,7 +142,7 @@ http.HttpServerRequest = function(jreq) {
    */
   this.uri = function() {
     return jreq.uri();
-  }
+  };
 
   /**
    * The path part of the uri. For example /path/morepath/resource.foo
@@ -151,7 +151,7 @@ http.HttpServerRequest = function(jreq) {
    */
   this.path = function() {
     return jreq.path();
-  }
+  };
 
   /**
    * The query part of the uri. For example param=32&otherparam=x
@@ -160,7 +160,7 @@ http.HttpServerRequest = function(jreq) {
    */
   this.query = function() {
     return jreq.query();
-  }
+  };
 
   /**
    * The headers of the request.
@@ -172,7 +172,7 @@ http.HttpServerRequest = function(jreq) {
       reqHeaders = new MultiMap(jreq.headers());
     }
     return reqHeaders;
-  }
+  };
 
   /**
    * Return the remote (client side) address of the request
@@ -184,7 +184,7 @@ http.HttpServerRequest = function(jreq) {
       reqParams = new MultiMap(jreq.params());
     }
     return reqParams;
-  }
+  };
 
   /**
    * @external java.net.InetSocketAddress
@@ -197,7 +197,7 @@ http.HttpServerRequest = function(jreq) {
    */
   this.remoteAddress = function() {
     return jreq.remoteAddress();
-  }
+  };
 
   /**
    * Get the address of the server as a Java InetSocketAddress object
@@ -206,7 +206,7 @@ http.HttpServerRequest = function(jreq) {
    */
   this.localAddress = function() {
     return jreq.localAddress();
-  }
+  };
 
   /**
    * Get an array of Java X509Certificate objects
@@ -215,7 +215,7 @@ http.HttpServerRequest = function(jreq) {
    */
   this.peerCertificateChain = function() {
     return jreq.peerCertificateChain();
-  }
+  };
 
   /**
    * Return the absolute URI corresponding to the the HTTP request
@@ -224,7 +224,7 @@ http.HttpServerRequest = function(jreq) {
    */
   this.absoluteURI = function() {
     return jreq.absoluteURI();
-  }
+  };
 
   /**
    * Inform the server that we are expecting a multi-part form.
@@ -237,7 +237,7 @@ http.HttpServerRequest = function(jreq) {
   this.expectMultiPart = function(expect) {
     jreq.expectMultiPart(expect);
     return that;
-  }
+  };
 
   /**
    * Return a form attributes object
@@ -249,7 +249,7 @@ http.HttpServerRequest = function(jreq) {
       reqFormAttrs =  new MultiMap(jreq.formAttributes());
     }
     return reqFormAttrs;
-  }
+  };
 
   /**
    * Set the upload handler. The handler will get notified once a new file
@@ -264,7 +264,7 @@ http.HttpServerRequest = function(jreq) {
       jreq.uploadHandler(wrapUploadHandler(handler));
     }
     return that;
-  }
+  };
 
   /**
    *  Set the body handler for this request, the handler receives a single
@@ -276,7 +276,7 @@ http.HttpServerRequest = function(jreq) {
   this.bodyHandler = function(handler) {
     jreq.bodyHandler(handler);
     return that;
-  }
+  };
 
   var jresp = jreq.response();
 
@@ -291,11 +291,11 @@ http.HttpServerRequest = function(jreq) {
    */
   this._to_java_request = function() {
     return jreq;
-  }
+  };
 
   streams.ReadStream.call(this, jreq);
 
-}
+};
 
 /**
  * <p>
@@ -334,7 +334,7 @@ http.HttpServerResponse = function(jresp) {
     } else {
       return jresp.getStatusCode();
     }
-  }
+  };
 
   /**
    * Get or set HTTP status message of the response.
@@ -348,7 +348,7 @@ http.HttpServerResponse = function(jresp) {
     } else {
       return jresp.getStatusMessage();
     }
-  }
+  };
 
   /**
    * Get or set if the response is chunked
@@ -362,7 +362,7 @@ http.HttpServerResponse = function(jresp) {
     } else {
       return jresp.isChunked();
     }
-  }
+  };
 
   /**
    * Return the http headers of the response
@@ -373,7 +373,7 @@ http.HttpServerResponse = function(jresp) {
       respHeaders = new MultiMap(jresp.headers());
     }
     return respHeaders;
-  }
+  };
 
   /**
    * Put a header on the response.
@@ -385,7 +385,7 @@ http.HttpServerResponse = function(jresp) {
   this.putHeader = function(k, v) {
     jresp.putHeader(k, v);
     return that;
-  }
+  };
 
   /**
    * Return the trailing headers of the response
@@ -397,7 +397,7 @@ http.HttpServerResponse = function(jresp) {
       respTrailers = new MultiMap(jresp.trailers());
     }
     return respTrailers;
-  }
+  };
 
   /**
    * Put a trailing header
@@ -409,7 +409,7 @@ http.HttpServerResponse = function(jresp) {
   this.putTrailer = function(k, v) {
     jresp.putTrailer(k, v);
     return that;
-  }
+  };
 
   /**
    * Write content to the response
@@ -425,7 +425,7 @@ http.HttpServerResponse = function(jresp) {
       jresp.write(body, encoding);
     }
     return that;
-  }
+  };
 
   /**
    * Forces the head of the request to be written before end is called on the
@@ -437,7 +437,7 @@ http.HttpServerResponse = function(jresp) {
   this.sendHead = function() {
     jresp.sendHead();
     return that;
-  }
+  };
 
   /**
    * <p>
@@ -461,7 +461,7 @@ http.HttpServerResponse = function(jresp) {
     } else {
       jresp.end();
     }
-  }
+  };
 
   /**
    * Tell the kernel to stream a file directly from disk to the outgoing
@@ -480,10 +480,10 @@ http.HttpServerResponse = function(jresp) {
       jresp.sendFile(fileName, notFoundFile);
     }
     return that;
-  }
+  };
 
   streams.WriteStream.call(that, jresp);
-}
+};
 
 /**
  * Represents an upload from an HTML form. Created internally and provided to upload
@@ -540,7 +540,7 @@ http.HttpServerFileUpload = function(jupload) {
    */
   this.contentTransferEncoding = function() {
     return jupload.contentTransferEncoding();
-  }
+  };
 
   /**
    * The charset
@@ -549,7 +549,7 @@ http.HttpServerFileUpload = function(jupload) {
    */
   this.charset = function() {
     return jupload.charset().toString();
-  }
+  };
 
   /**
    * The size
@@ -558,10 +558,10 @@ http.HttpServerFileUpload = function(jupload) {
    */
   this.size = function() {
     return jupload.size();
-  }
+  };
 
   streams.ReadStream.call(this, jupload);
-}
+};
 
 /**
  * An <code>UploadHandler</code> is a {@linkcode Handler} that accepts a
@@ -574,8 +574,8 @@ http.HttpServerFileUpload = function(jupload) {
 var wrapUploadHandler = function(handler) {
   return function(jupload) {
     handler(new http.HttpServerFileUpload(jupload));
-  }
-}
+  };
+};
 
 /**
  * <p>Represents an HTML 5 Websocket</p>
@@ -685,7 +685,7 @@ http.WebSocket = function(jwebsocket, server) {
     this.reject = function() {
       jwebsocket.reject();
       return ws;
-    }
+    };
     /**
      * The headers of the handshake request
      * Only available if this is a server websocket.
@@ -697,7 +697,7 @@ http.WebSocket = function(jwebsocket, server) {
         headers = new MultiMap(jwebsocket.headers());
       }
       return headers;
-    }
+    };
 
     /**
      * The URI the websocket handshake occured at
@@ -705,11 +705,11 @@ http.WebSocket = function(jwebsocket, server) {
      */
     this.uri = function() {
       return jwebsocket.uri();
-    }
+    };
   }
   streams.WriteStream.call(this, jwebsocket);
   streams.ReadStream.call(this, jwebsocket);
-}
+};
 
 /**
  * An HTTP and websockets server. Created by calling 
@@ -761,7 +761,7 @@ http.HttpServer = function() {
       jserver.requestHandler(handler);
     }
     return that;
-  }
+  };
 
   /**
    * Set the websocket handler for the server. If a websocket connect
@@ -777,7 +777,7 @@ http.HttpServer = function() {
       jserver.websocketHandler(wrappedWebsocketHandler(true, handler));
     }
     return that;
-  }
+  };
 
   /**
    * Set or get whether the server should compress the http response if the
@@ -791,7 +791,7 @@ http.HttpServer = function() {
       return that;
     }
     return jserver.isCompressionSupported();
-  }
+  };
 
   /**
    * Set or get the maximum frame size for websocket connections exposed
@@ -804,7 +804,7 @@ http.HttpServer = function() {
       return that;
     }
     return jserver.getMaxWebSocketFrameSize();
-  }
+  };
 
   /**
    * Close the server. If a handler is supplied, it will be called
@@ -818,7 +818,7 @@ http.HttpServer = function() {
     } else {
       jserver.close();
     }
-  }
+  };
 
   /**
    * Start to listen for incoming HTTP requests
@@ -837,20 +837,20 @@ http.HttpServer = function() {
     if (handler) {
       handler = helpers.adaptAsyncResultHandler(handler);
     }
-    if (host == null) {
+    if (host === null) {
       host = "0.0.0.0";
     }
     jserver.listen(port, host, handler);
     return that;
-  }
+  };
 
   /**
    * @private
    */
   this._to_java_server = function() {
     return jserver;
-  }
-}
+  };
+};
 
 
 /**
@@ -881,7 +881,7 @@ http.HttpClient = function() {
   this.exceptionHandler = function(handler) {
     jclient.exceptionHandler(handler);
     return that;
-  }
+  };
 
   /**
    * Get or set the maxium number of connections this client will pool
@@ -896,7 +896,7 @@ http.HttpClient = function() {
       jclient.setMaxPoolSize(size);
       return that;
     }
-  }
+  };
 
   /**
    * Set or get the maximum frame size for websocket connections exposed
@@ -909,7 +909,7 @@ http.HttpClient = function() {
       return that;
     }
     return jclient.getMaxWebSocketFrameSize();
-  }
+  };
 
   /**
    * Set or get whether the client should try to use compression
@@ -922,7 +922,7 @@ http.HttpClient = function() {
       return that;
     }
     return jclient.getTryUseCompression();
-  }
+  };
 
   /**
    * <p>
@@ -953,7 +953,7 @@ http.HttpClient = function() {
       jclient.setKeepAlive(ka);
       return that;
     }
-  }
+  };
 
   /**
    * Get or set the port that the client will attempt to connect to on the
@@ -969,7 +969,7 @@ http.HttpClient = function() {
       jclient.setPort(p);
       return that;
     }
-  }
+  };
 
   /**
    *  Get or set the host name or ip address that the client will attempt to
@@ -985,7 +985,7 @@ http.HttpClient = function() {
       jclient.setHost(h);
       return that;
     }
-  }
+  };
 
   /**
    * Get or set if the host should be verified.  If set then the client will
@@ -1003,7 +1003,7 @@ http.HttpClient = function() {
       jclient.setVerifyHost(h);
       return that;
     }
-  }
+  };
 
   /**
    * Attempt to connect an HTML5 websocket to the specified URI.
@@ -1014,7 +1014,7 @@ http.HttpClient = function() {
    */
   this.connectWebsocket = function(uri, handler) {
     jclient.connectWebsocket(uri, wrappedWebsocketHandler(false, handler));
-  }
+  };
 
   /**
    * This is a quick version of the get method where you do not want to do anything with the request
@@ -1028,7 +1028,7 @@ http.HttpClient = function() {
    */
   this.getNow = function(uri, handler) {
     return new http.HttpClientRequest(jclient.getNow(uri, wrapResponseHandler(handler)));
-  }
+  };
 
   /**
    * This method returns an request which represents an HTTP OPTIONS request with the specified uri.
@@ -1040,7 +1040,7 @@ http.HttpClient = function() {
    */
   this.options = function(uri, handler) {
     return new http.HttpClientRequest(jclient.options(uri, wrapResponseHandler(handler)));
-  }
+  };
 
   /**
    * This method returns an request which represents an HTTP GET request with the specified uri.
@@ -1052,7 +1052,7 @@ http.HttpClient = function() {
    */
   this.get =function(uri, handler) {
     return new http.HttpClientRequest(jclient.get(uri, wrapResponseHandler(handler)));
-  }
+  };
 
   /**
    * This method returns an request which represents an HTTP HEAD request with the specified uri.
@@ -1064,7 +1064,7 @@ http.HttpClient = function() {
    */
   this.head =function(uri, handler) {
     return new http.HttpClientRequest(jclient.head(uri, wrapResponseHandler(handler)));
-  }
+  };
 
   /**
    * This method returns an request which represents an HTTP POST request with the specified uri.
@@ -1076,7 +1076,7 @@ http.HttpClient = function() {
    */
   this.post = function(uri, handler) {
     return new http.HttpClientRequest(jclient.post(uri, wrapResponseHandler(handler)));
-  }
+  };
 
   /**
    * This method returns an request which represents an HTTP PUT request with the specified uri.
@@ -1088,7 +1088,7 @@ http.HttpClient = function() {
    */
   this.put = function(uri, handler) {
     return new http.HttpClientRequest(jclient.put(uri, wrapResponseHandler(handler)));
-  }
+  };
 
   /**
    * This method returns an request which represents an HTTP DELETE request with the specified uri.
@@ -1100,7 +1100,7 @@ http.HttpClient = function() {
    */
   this.delete = function(uri, handler) {
     return new http.HttpClientRequest(jclient.delete(uri, wrapResponseHandler(handler)));
-  }
+  };
 
   /**
    * This method returns an request which represents an HTTP TRACE request with the specified uri.
@@ -1112,7 +1112,7 @@ http.HttpClient = function() {
    */
   this.trace = function(uri, handler) {
     return new http.HttpClientRequest(jclient.trace(uri, wrapResponseHandler(handler)));
-  }
+  };
 
   /**
    * This method returns an request which represents an HTTP CONNECT request with the specified uri.
@@ -1124,7 +1124,7 @@ http.HttpClient = function() {
    */
   this.connect = function(uri, handler) {
     return new http.HttpClientRequest(jclient.connect(uri, wrapResponseHandler(handler)));
-  }
+  };
 
   /**
    * This method returns an request which represents an HTTP PATCH request with the specified uri.
@@ -1136,7 +1136,7 @@ http.HttpClient = function() {
    */
   this.patch = function(uri, handler) {
     return new http.HttpClientRequest(jclient.patch(uri, wrapResponseHandler(handler)));
-  }
+  };
 
   /**
    * This method returns an request which represents an HTTP request with the specified uri.
@@ -1149,14 +1149,14 @@ http.HttpClient = function() {
    */
   this.request = function(method, uri, handler) {
     return new http.HttpClientRequest(jclient.request(method, uri, wrapResponseHandler(handler)));
-  }
+  };
 
   /**
    * Close the client
    */
   this.close = function() {
     jclient.close();
-  }
+  };
 
   /**
    * A <code>ResponseHandler</code> is a {@linkcode Handler} that accepts a
@@ -1168,10 +1168,10 @@ http.HttpClient = function() {
   var wrapResponseHandler = function(handler) {
     return function(jresp) {
       handler(new http.HttpClientResponse(jresp));
-    }
-  }
+    };
+  };
 
-}
+};
 
 /**
  * <p>
@@ -1238,7 +1238,7 @@ http.HttpClientRequest = function(jreq) {
       jreq.setChunked(ch);
       return that;
     }
-  }
+  };
 
   /**
    * Returns the headers for the requests
@@ -1250,7 +1250,7 @@ http.HttpClientRequest = function(jreq) {
       reqHeaders = new MultiMap(jreq.headers());
     }
     return reqHeaders;
-  }
+  };
 
   /**
    * Put a header on the request
@@ -1262,7 +1262,7 @@ http.HttpClientRequest = function(jreq) {
   this.putHeader = function(k, v) {
     jreq.putHeader(k, v);
     return that;
-  }
+  };
 
   /**
    * Write to the request body
@@ -1277,7 +1277,7 @@ http.HttpClientRequest = function(jreq) {
       jreq.write(arg0, arg1);
     }
     return that;
-  }
+  };
 
   /**
    * If you send an HTTP request with the header 'Expect' set to the value
@@ -1294,7 +1294,7 @@ http.HttpClientRequest = function(jreq) {
   this.continueHandler = function(handler) {
     jreq.continueHandler(handler);
     return that;
-  }
+  };
 
   /**
    * Forces the head of the request to be written before end is called on the
@@ -1306,7 +1306,7 @@ http.HttpClientRequest = function(jreq) {
   this.sendHead = function() {
     jreq.sendHead();
     return that;
-  }
+  };
 
   /**
    * Ends the request. If no data has been written to the request body, and
@@ -1328,7 +1328,7 @@ http.HttpClientRequest = function(jreq) {
     } else {
       jreq.end();
     }
-  }
+  };
 
   /**
    * Set's the amount of time after which if a response is not received an exception
@@ -1341,9 +1341,9 @@ http.HttpClientRequest = function(jreq) {
   this.timeout = function(t) {
     jreq.setTimeout(t);
     return that;
-  }
+  };
   streams.WriteStream.call(this, jreq);
-}
+};
 
 /**
  * <p>Represents a client-side HTTP response.
@@ -1378,7 +1378,7 @@ http.HttpClientResponse = function(jresp) {
       netSocket = new net.NetSocket(jresp.netSocket());
     }
     return netSocket;
-  }
+  };
 
   /**
    * The HTTP status code of the response.
@@ -1387,7 +1387,7 @@ http.HttpClientResponse = function(jresp) {
    */
   this.statusCode = function() {
     return jresp.statusCode();
-  }
+  };
 
   /**
    * The HTTP Status message of the response
@@ -1396,7 +1396,7 @@ http.HttpClientResponse = function(jresp) {
    */
   this.statusMessage = function() {
     return jresp.statusMessage();
-  }
+  };
 
   /**
    * Get all the headers of the response.
@@ -1408,7 +1408,7 @@ http.HttpClientResponse = function(jresp) {
       respHeaders = new MultiMap(jresp.headers());
     }
     return respHeaders;
-  }
+  };
 
   /**
    * Get all the trailing headers of the response.
@@ -1420,7 +1420,7 @@ http.HttpClientResponse = function(jresp) {
       respTrailers = new MultiMap(jresp.trailers());
     }
     return respTrailers;
-  }
+  };
 
   /**
     * The Set-Cookie headers (including trailers)
@@ -1429,7 +1429,7 @@ http.HttpClientResponse = function(jresp) {
    */
   this.cookies = function() {
     return jresp.cookies();
-  }
+  };
 
   /**
    * Set a handler to receive the entire body in one go - do not use this for large bodies
@@ -1442,9 +1442,9 @@ http.HttpClientResponse = function(jresp) {
       handler(new Buffer(buffer));
     });
     return that;
-  }
+  };
   streams.ReadStream.call(this, jresp);
-}
+};
 
 
 /**
@@ -1518,14 +1518,14 @@ http.RouteMatcher = function() {
       } else {
         return wrappedHandler(jreq);
       }
-    }
+    };
   }
 
   this.call = function(req) {
     var jreq = req._to_java_request();
     req_map.put(jreq, req);
     j_rm.handle(jreq);
-  }
+  };
 
   /**
    * Specify a handler that will be called for a matching HTTP GET
@@ -1537,7 +1537,7 @@ http.RouteMatcher = function() {
   this.get = function(pattern, handler) {
     j_rm.get(pattern, req_map_wrappedRequestHandler(handler));
     return this;
-  }
+  };
 
   /**
    * Specify a handler that will be called for a matching HTTP PUT
@@ -1549,7 +1549,7 @@ http.RouteMatcher = function() {
   this.put = function(pattern, handler) {
     j_rm.put(pattern, req_map_wrappedRequestHandler(handler));
     return this;
-  }
+  };
 
   /**
    * Specify a handler that will be called for a matching HTTP POST
@@ -1561,7 +1561,7 @@ http.RouteMatcher = function() {
   this.post = function(pattern, handler) {
     j_rm.post(pattern, req_map_wrappedRequestHandler(handler));
     return this;
-  }
+  };
 
   /**
    * Specify a handler that will be called for a matching HTTP DELETE
@@ -1573,7 +1573,7 @@ http.RouteMatcher = function() {
   this.delete = function(pattern, handler) {
     j_rm.delete(pattern, req_map_wrappedRequestHandler(handler));
     return this;
-  }
+  };
 
   /**
    * Specify a handler that will be called for a matching HTTP OPTIONS
@@ -1585,7 +1585,7 @@ http.RouteMatcher = function() {
   this.options = function(pattern, handler) {
     j_rm.options(pattern, req_map_wrappedRequestHandler(handler));
     return this;
-  }
+  };
 
   /**
    * Specify a handler that will be called for a matching HTTP HEAD
@@ -1597,7 +1597,7 @@ http.RouteMatcher = function() {
   this.head = function(pattern, handler) {
     j_rm.head(pattern, req_map_wrappedRequestHandler(handler));
     return this;
-  }
+  };
 
   /**
    * Specify a handler that will be called for a matching HTTP TRACE
@@ -1609,7 +1609,7 @@ http.RouteMatcher = function() {
   this.trace = function(pattern, handler) {
     j_rm.trace(pattern, req_map_wrappedRequestHandler(handler));
     return this;
-  }
+  };
 
   /**
    * Specify a handler that will be called for a matching HTTP CONNECT
@@ -1621,7 +1621,7 @@ http.RouteMatcher = function() {
   this.connect = function(pattern, handler) {
     j_rm.connect(pattern, req_map_wrappedRequestHandler(handler));
     return this;
-  }
+  };
 
   /**
    * Specify a handler that will be called for a matching HTTP PATCH
@@ -1633,7 +1633,7 @@ http.RouteMatcher = function() {
   this.patch = function(pattern, handler) {
     j_rm.patch(pattern, req_map_wrappedRequestHandler(handler));
     return this;
-  }
+  };
 
   /**
    * Specify a handler that will be called for a matching HTTP ALL
@@ -1645,7 +1645,7 @@ http.RouteMatcher = function() {
   this.all = function(pattern, handler) {
     j_rm.all(pattern, req_map_wrappedRequestHandler(handler));
     return this;
-  }
+  };
 
   /**
    * Specify a handler that will be called for a matching HTTP GET
@@ -1658,7 +1658,7 @@ http.RouteMatcher = function() {
   this.getWithRegEx = function(pattern, handler) {
     j_rm.getWithRegEx(pattern, req_map_wrappedRequestHandler(handler));
     return this;
-  }
+  };
 
   /**
    * Specify a handler that will be called for a matching HTTP PUT
@@ -1670,7 +1670,7 @@ http.RouteMatcher = function() {
   this.putWithRegEx = function(pattern, handler) {
     j_rm.putWithRegEx(pattern, req_map_wrappedRequestHandler(handler));
     return this;
-  }
+  };
 
   /**
    * Specify a handler that will be called for a matching HTTP POST
@@ -1682,7 +1682,7 @@ http.RouteMatcher = function() {
   this.postWithRegEx = function(pattern, handler) {
     j_rm.postWithRegEx(pattern, req_map_wrappedRequestHandler(handler));
     return this;
-  }
+  };
 
   /**
    * Specify a handler that will be called for a matching HTTP DELETE
@@ -1694,7 +1694,7 @@ http.RouteMatcher = function() {
   this.deleteWithRegEx = function(pattern, handler) {
     j_rm.deleteWithRegEx(pattern, req_map_wrappedRequestHandler(handler));
     return this;
-  }
+  };
 
   /**
    * Specify a handler that will be called for a matching HTTP PUT
@@ -1706,7 +1706,7 @@ http.RouteMatcher = function() {
   this.optionsWithRegEx = function(pattern, handler) {
     j_rm.optionsWithRegEx(pattern, req_map_wrappedRequestHandler(handler));
     return this;
-  }
+  };
 
   /**
    * Specify a handler that will be called for a matching HTTP HEAD
@@ -1718,7 +1718,7 @@ http.RouteMatcher = function() {
   this.headWithRegEx = function(pattern, handler) {
     j_rm.headWithRegEx(pattern, req_map_wrappedRequestHandler(handler));
     return this;
-  }
+  };
 
   /**
    * Specify a handler that will be called for a matching HTTP TRACE
@@ -1730,7 +1730,7 @@ http.RouteMatcher = function() {
   this.traceWithRegEx = function(pattern, handler) {
     j_rm.traceWithRegEx(pattern, req_map_wrappedRequestHandler(handler));
     return this;
-  }
+  };
 
   /**
    * Specify a handler that will be called for a matching HTTP CONNECT
@@ -1742,7 +1742,7 @@ http.RouteMatcher = function() {
   this.connectWithRegEx = function(pattern, handler) {
     j_rm.connectWithRegEx(pattern, req_map_wrappedRequestHandler(handler));
     return this;
-  }
+  };
 
   /**
    * Specify a handler that will be called for a matching HTTP PATCH
@@ -1754,7 +1754,7 @@ http.RouteMatcher = function() {
   this.patchWithRegEx = function(pattern, handler) {
     j_rm.patchWithRegEx(pattern, req_map_wrappedRequestHandler(handler));
     return this;
-  }
+  };
 
   /**
    * Specify a handler that will be called for a matching HTTP request
@@ -1766,7 +1766,7 @@ http.RouteMatcher = function() {
   this.allWithRegEx = function(pattern, handler) {
     j_rm.allWithRegEx(pattern, req_map_wrappedRequestHandler(handler));
     return this;
-  }
+  };
 
   /**
    * Specify a handler that will be called for HTTP request that not match any pattern.
@@ -1777,7 +1777,7 @@ http.RouteMatcher = function() {
   this.noMatch = function(handler) {
     j_rm.noMatch(req_map_wrappedRequestHandler(handler));
     return this;
-  }
+  };
   /**
    *
    * @returns {org.vertx.java.core.http.RouteMatcher}
@@ -1785,7 +1785,7 @@ http.RouteMatcher = function() {
    */
   this._to_java_handler = function() {
     return j_rm;
-  }
+  };
 
   /**
    * For testing.
@@ -1795,13 +1795,13 @@ http.RouteMatcher = function() {
    */
   this._requests_in_limbo_map = function() {
     return req_map;
-  }
+  };
 
   // Regster default noMatchHandler to remove references from req_map.
   this.noMatch(function(req) {
     req.response.statusCode(404).end();
   });
-}
+};
 
 
 /**
@@ -1814,7 +1814,7 @@ http.RouteMatcher = function() {
 function wrappedWebsocketHandler(server, handler) {
   return function(jwebsocket) {
     handler(new http.WebSocket(jwebsocket, server));
-  }
+  };
 }
 
 /**
@@ -1839,7 +1839,7 @@ function wrappedWebsocketHandler(server, handler) {
 function wrappedRequestHandler(handler) {
   return function(jreq) {
     handler(new http.HttpServerRequest(jreq));
-  }
+  };
 }
 
 
