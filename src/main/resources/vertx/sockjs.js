@@ -19,6 +19,7 @@ if (typeof __vertxload === 'string') {
 }
 var Streams  = require('vertx/streams');
 var MultiMap = require('vertx/multi_map').MultiMap;
+var asyncResultHandler = require('vertx/helpers').adaptAsyncResultHandler;
 
 /**
  * <p>
@@ -102,12 +103,39 @@ sockJS.SockJSServer = function(httpServer) {
 
   /**
    *  Specify a function to call on the given event. All functions take a
-   *  SockJSSocket as the first (and perhaps only) parameter.
+   *  SockJSSocket as the first (and perhaps only) parameter. The events are:
    *
    *  <ul>
    *    <li>socket-created - Called when a new socket is created. Use this to
-   *        do things like check the origin header on the socket before accepting it.</li>
+   *        do things like check the origin header on the socket before accepting it.
+   *        The function will be provided with a {module:vertx/sockjs.SockJSSocket}.
+   *        Returning <code>true</code> will allow the socket to be accepted,
+   *        <code>false</code> will cause it to be rejected.
+   *    </li>
+   *    <li>pre-register - Called when a socket registers a handler on the event bus.
+   *        The function will be provided with a {module:vertx/sockjs.SockJSSocket}
+   *        and the address as a {string}. Return true to let the registration occur,
+   *        or false otherwise.
+   *    </li>
+   *    <li>post-register - Called after a socket registers a handler on the event bus.
+   *        do things like check the origin header on the socket before accepting it.
+   *        The function will be provided with a {module:vertx/sockjs.SockJSSocket}
+   *        and the address as a {string}. 
+   *    </li>
+   *    <li>send-or-pub - Called when the client is sending or publishing on the socket.
+   *        The function will be provided with a {module:vertx/sockjs.SockJSSocket};
+   *        a {boolean} that, if true means the client is sending on the socket, or
+   *        if false the client is publishing on the socket; a {JSON} object that is
+   *        the body of the message; and finally the address as a {string}. Return
+   *        <code>true</code> to allow the message to be published/sent, false otherwise.
+   *    </li>
+   *    <li>socket-closed - Called when the client socket has closed.
+   *        The function will be provided with the {module:vertx/sockjs.SockJSSocket}.
+   *    </li>
+   *    <li>authorize - Called on client authorization.</li>
    *  </ul>
+   * @param {string} evt The name of the event
+   * @param {function} func The function to call when the event occurs
    */
   this.on = function(evt, func) {
     hooks[evt] = func;
@@ -149,9 +177,9 @@ sockJS.SockJSServer = function(httpServer) {
       handleSocketCreated: lookup('socket-created', true),
       handlePreRegister  : lookup('pre-register',   true),
       handleUnRegister   : lookup('unregister',     true),
-      handleAuthorize    : lookup('authorize',      true),
-      handlePostRegister : lookup('post-register',  true),
-      handleSocketClosed : lookup('socket-closed',  true),
+      handleAuthorise    : lookup('authorize',      true),
+      handlePostRegister : lookup('post-register'),
+      handleSocketClosed : lookup('socket-closed')
     }));
     if (bridgeConfig) {
       jserver.bridge(new JsonObject(JSON.stringify(config)),
@@ -175,14 +203,20 @@ sockJS.SockJSServer = function(httpServer) {
 
   function lookup(evt, defaultReturn) {
     return function( /* arguments */ ) {
-      return (hooks[evt] ? 
-          hooks[evt].call(hooks[evt], constructHookArgs(evt, arguments))
-          : defaultReturn);
+      if (hooks[evt]) {
+        var args = Array.prototype.slice.call(arguments);
+        if (evt === 'authorize') {
+          // authorize events have an async result handler as
+          // their final argument. Convert it accordingly.
+          args[args.length-1] = asyncResultHandler(args.slice(-1)[0]);
+        } else {
+          // all other events have a SockJSSocket as their first argument
+          args[0] = new sockJS.SockJSSocket(args[0]);
+        }
+        return hooks[evt].call(hooks[evt], args);
+      }
+      return defaultReturn;
     };
-  }
-
-  function constructHookArgs(evt /*, arguments */) {
-    return Array.prototype.slice.call(arguments);
   }
 
   function sockJSHandler(func) {
@@ -190,7 +224,6 @@ sockJS.SockJSServer = function(httpServer) {
       func.call(func, [new sockJS.SockJSSocket(sock)]);
     };
   }
-
 };
 
 /**
