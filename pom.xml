@@ -320,6 +320,7 @@
               <goal>verify</goal>
             </goals>
           </execution>
+          <!--
           <execution>
             <id>Nashorn</id>
             <configuration>
@@ -339,6 +340,7 @@
               <goal>verify</goal>
             </goals>
           </execution>
+          -->
         </executions>
       </plugin>
       <plugin>
