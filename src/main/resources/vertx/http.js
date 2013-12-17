@@ -470,15 +470,22 @@ http.HttpServerResponse = function(jresp) {
    * files.
    *
    * @param {string} fileName Path to file to send.
-   * @param {string} notFoundFile Path to a file to send if <code>fileName</code> can't be found.
+   * @param {string} [notFoundFile] Path to a file to send if <code>fileName</code> can't be found.
+   * @param {ResultHandler} [handler] Function to be called when send has completed (or failed).
    * @returns {module:vertx/http.HttpServerResponse}
    */
-  this.sendFile = function(fileName, notFoundFile) {
-    if (notFoundFile === undefined) {
-      jresp.sendFile(fileName);
-    } else {
-      jresp.sendFile(fileName, notFoundFile);
+  this.sendFile = function(fileName /* arguments */) {
+    var args = Array.prototype.slice.call(arguments, 1);
+    var notFound = args[0];
+    var handler  = args[1];
+    if (typeof notFound === 'undefined') {
+      notFound = null;
+    } else if (typeof notFound === 'function') { 
+      notFound = null;
+      handler = notFound;
     }
+    handler = helpers.adaptAsyncResultHandler(handler);
+    jresp.sendFile(fileName, notFound, handler);
     return that;
   };
 

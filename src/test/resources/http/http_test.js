@@ -20,7 +20,7 @@ var vassert = vertxTest.vassert;
 
 var tu = require('test_utils');
 
-var port = 8080
+var port = 8080;
 var server = vertx.http.createHttpServer();
 var client = vertx.http.createHttpClient().port(port);
 var print  = require('vertx/console').log;
@@ -103,8 +103,8 @@ var httpTest = {
         req.expectMultiPart(true);
         req.response.chunked(true);
         req.uploadHandler(function(upload) {
-          vassert.assertTrue(upload.filename() === "tmp-0.txt")
-          vassert.assertTrue(upload.contentType() === "image/gif")
+          vassert.assertTrue(upload.filename() === "tmp-0.txt");
+          vassert.assertTrue(upload.contentType() === "image/gif");
           upload.dataHandler(function(buffer) {
             vassert.assertEquals(content, buffer.toString());
           });
@@ -185,153 +185,157 @@ var httpTest = {
       });
   },
 
+  testSendFile: function() {
+    vassert.testComplete();
+  },
+
 
   // This is just a basic test. Most testing occurs in the Java tests
 
   testGET: function() {
-    httpMethod(false, "GET", false)
+    httpMethod(false, "GET", false);
   },
 
   testGetSSL: function() {
-    httpMethod(true, "GET", false)
+    httpMethod(true, "GET", false);
   },
 
   testPUT: function() {
-    httpMethod(false, "PUT", false)
+    httpMethod(false, "PUT", false);
   },
 
   testPUTSSL: function() {
-    httpMethod(true, "PUT", false)
+    httpMethod(true, "PUT", false);
   },
 
   testPOST: function() {
-    httpMethod(false, "POST", false)
+    httpMethod(false, "POST", false);
   },
 
   testPOSTSSL: function() {
-    httpMethod(true, "POST", false)
+    httpMethod(true, "POST", false);
   },
 
   testHEAD: function() {
-    httpMethod(false, "HEAD", false)
+    httpMethod(false, "HEAD", false);
   },
 
   testHEADSSL: function() {
-    httpMethod(true, "HEAD", false)
+    httpMethod(true, "HEAD", false);
   },
 
   testOPTIONS: function() {
-    httpMethod(false, "OPTIONS", false)
+    httpMethod(false, "OPTIONS", false);
   },
 
   testOPTIONSSSL: function() {
-    httpMethod(true, "OPTIONS", false)
+    httpMethod(true, "OPTIONS", false);
   },
 
   testDELETE: function() {
-    httpMethod(false, "DELETE", false)
+    httpMethod(false, "DELETE", false);
   },
 
   testDELETESSL: function() {
-    httpMethod(true, "DELETE", false)
+    httpMethod(true, "DELETE", false);
   },
 
   testTRACE: function() {
-    httpMethod(false, "TRACE", false)
+    httpMethod(false, "TRACE", false);
   },
 
   testTRACESSL: function() {
-    httpMethod(true, "TRACE", false)
+    httpMethod(true, "TRACE", false);
   },
 
   testCONNECT: function() {
-    httpMethod(false, "CONNECT", false)
+    httpMethod(false, "CONNECT", false);
   },
 
   testCONNECTSSL: function() {
-    httpMethod(true, "CONNECT", false)
+    httpMethod(true, "CONNECT", false);
   },
 
   testPATCH: function() {
-    httpMethod(false, "PATCH", false)
+    httpMethod(false, "PATCH", false);
   },
 
   testPATCHSSL: function() {
-    httpMethod(true, "PATCH", false)
+    httpMethod(true, "PATCH", false);
   },
 
   testGETChunked: function() {
-    httpMethod(false, "GET", true)
+    httpMethod(false, "GET", true);
   },
 
   testGetSSLChunked: function() {
-    httpMethod(true, "GET", true)
+    httpMethod(true, "GET", true);
   },
 
   testPUTChunked: function() {
-    httpMethod(false, "PUT", true)
+    httpMethod(false, "PUT", true);
   },
 
   testPUTSSLChunked: function() {
-    httpMethod(true, "PUT", true)
+    httpMethod(true, "PUT", true);
   },
 
   testPOSTChunked: function() {
-    httpMethod(false, "POST", true)
+    httpMethod(false, "POST", true);
   },
 
   testPOSTSSLChunked: function() {
-    httpMethod(true, "POST", true)
+    httpMethod(true, "POST", true);
   },
 
   testHEADChunked: function() {
-    httpMethod(false, "HEAD", true)
+    httpMethod(false, "HEAD", true);
   },
 
   testHEADSSLChunked: function() {
-    httpMethod(true, "HEAD", true)
+    httpMethod(true, "HEAD", true);
   },
 
   testOPTIONSChunked: function() {
-    httpMethod(false, "OPTIONS", true)
+    httpMethod(false, "OPTIONS", true);
   },
 
   testOPTIONSSSLChunked: function() {
-    httpMethod(true, "OPTIONS", true)
+    httpMethod(true, "OPTIONS", true);
   },
 
   testDELETEChunked: function() {
-    httpMethod(false, "DELETE", true)
+    httpMethod(false, "DELETE", true);
   },
 
   testDELETESSLChunked: function() {
-    httpMethod(true, "DELETE", true)
+    httpMethod(true, "DELETE", true);
   },
 
   testTRACEChunked: function() {
-    httpMethod(false, "TRACE", true)
+    httpMethod(false, "TRACE", true);
   },
 
   testTRACESSLChunked: function() {
-    httpMethod(true, "TRACE", true)
+    httpMethod(true, "TRACE", true);
   },
 
   testCONNECTChunked: function() {
-    httpMethod(false, "CONNECT", true)
+    httpMethod(false, "CONNECT", true);
   },
 
   testCONNECTSSLChunked: function() {
-    httpMethod(true, "CONNECT", true)
+    httpMethod(true, "CONNECT", true);
   },
 
   testPATCHChunked: function() {
-    httpMethod(false, "PATCH", true)
+    httpMethod(false, "PATCH", true);
   },
 
   testPATCHSSLChunked: function() {
-    httpMethod(true, "PATCH", true)
+    httpMethod(true, "PATCH", true);
   }
-}
+};
 
 function httpMethod(ssl, method, chunked) {
 
@@ -442,19 +446,19 @@ function httpMethod(ssl, method, chunked) {
     request.putHeader('header1', 'vheader1');
     request.headers().set('header2', 'vheader2');
     if (!chunked) {
-      request.putHeader('Content-Length', '' + sent_buff.length())
+      request.putHeader('Content-Length', '' + sent_buff.length());
     }
  
-    request.headers().add('header3', 'vheader3_1').add('header3', 'vheader3')
+    request.headers().add('header3', 'vheader3_1').add('header3', 'vheader3');
     var headers = request.headers();
-    var size = headers.size()
-    var names = headers.names()
-    var names_count = 0
-    vassert.assertTrue(size == names.length)
+    var size = headers.size();
+    var names = headers.names();
+    var names_count = 0;
+    vassert.assertTrue(size == names.length);
 
     headers.forEach(function(k, v) {
       vassert.assertTrue(request.headers().getAll(k).indexOf(v) > -1);
-    })
+    });
 
     request.write(sent_buff);
 
