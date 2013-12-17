@@ -15,6 +15,7 @@
  */
 
 var vertx = require('vertx');
+var fs = require('vertx/file_system');
 var vertxTest = require('vertx_tests');
 var vassert = vertxTest.vassert;
 
@@ -186,11 +187,102 @@ var httpTest = {
   },
 
   testSendFile: function() {
-    vassert.testComplete();
+    var content = tu.randomUnicodeString(10000);
+    var fileName = './test-send-file.html';
+    setupFile(fileName, content);
+    server.requestHandler(function(req) {
+      req.response.sendFile(fileName);
+    });
+    server.listen(8080, "0.0.0.0", function(err, srv) {
+      vassert.assertTrue(err === null);
+      client.port(8080);
+      var req = client.getNow("/some/path", function(resp) {
+        vassert.assertTrue(200 === resp.statusCode());
+        vassert.assertTrue('text/html' === resp.headers().get('content-type'));
+        resp.bodyHandler(function(body) {
+            vassert.assertTrue(tu.buffersEqual(new vertx.Buffer(content), body));
+            fs.deleteSync(fileName);
+            vassert.testComplete();
+        });
+      });
+    });
   },
 
+  testSendFileWithHandler: function() {
+    var content = tu.randomUnicodeString(10000);
+    var fileName = './test-send-file.html';
+    setupFile(fileName, content);
 
-  // This is just a basic test. Most testing occurs in the Java tests
+    server.requestHandler(function(req) {
+      req.response.sendFile(fileName, function(err) {
+        vassert.assertTrue(err === null);
+        vassert.testComplete();
+      });
+    });
+
+    server.listen(8080, "0.0.0.0", function(err, srv) {
+      vassert.assertTrue(err === null);
+      client.port(8080);
+      var req = client.getNow("/some/path", function(resp) {
+        vassert.assertTrue(200 === resp.statusCode());
+        vassert.assertTrue('text/html' === resp.headers().get('content-type'));
+        resp.bodyHandler(function(body) {
+            vassert.assertTrue(tu.buffersEqual(new vertx.Buffer(content), body));
+            fs.deleteSync(fileName);
+        });
+      });
+    });
+  },
+
+  testSendFileNotFound: function() {
+    var content = tu.randomUnicodeString(10000);
+    var fileName = './404.html';
+    setupFile(fileName, content);
+
+    server.requestHandler(function(req) {
+      req.response.sendFile('doesnotexist.html', fileName);
+    });
+
+    server.listen(8080, "0.0.0.0", function(err, srv) {
+      vassert.assertTrue(err === null);
+      client.port(8080);
+      var req = client.getNow("/some/path", function(resp) {
+        vassert.assertTrue(404 === resp.statusCode());
+        vassert.assertTrue('text/html' === resp.headers().get('content-type'));
+        resp.bodyHandler(function(body) {
+            vassert.assertTrue(tu.buffersEqual(new vertx.Buffer(content), body));
+            fs.deleteSync(fileName);
+            vassert.testComplete();
+        });
+      });
+    });
+  },
+
+  testSendFileNotFoundWithHandler: function() {
+    var content = tu.randomUnicodeString(10000);
+    var fileName = './404.html';
+    setupFile(fileName, content);
+
+    server.requestHandler(function(req) {
+      req.response.sendFile('doesnotexist.html', fileName, function(err) {
+        vassert.assertTrue(err === null);
+        fs.deleteSync(fileName);
+        vassert.testComplete();
+      });
+    });
+
+    server.listen(8080, "0.0.0.0", function(err, srv) {
+      vassert.assertTrue(err === null);
+      client.port(8080);
+      var req = client.getNow("/some/path", function(resp) {
+        vassert.assertTrue(404 === resp.statusCode());
+        vassert.assertTrue('text/html' === resp.headers().get('content-type'));
+        resp.bodyHandler(function(body) {
+            vassert.assertTrue(tu.buffersEqual(new vertx.Buffer(content), body));
+        });
+      });
+    });
+  },
 
   testGET: function() {
     httpMethod(false, "GET", false);
@@ -336,6 +428,14 @@ var httpTest = {
     httpMethod(true, "PATCH", true);
   }
 };
+
+function setupFile(fileName, content) {
+  if (fs.existsSync(fileName)) {
+    fs.deleteSync(fileName);
+  }
+  fs.createFileSync(fileName);
+  fs.writeFileSync(fileName, content);
+}
 
 function httpMethod(ssl, method, chunked) {
 

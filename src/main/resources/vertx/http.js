@@ -481,8 +481,8 @@ http.HttpServerResponse = function(jresp) {
     if (typeof notFound === 'undefined') {
       notFound = null;
     } else if (typeof notFound === 'function') { 
-      notFound = null;
       handler = notFound;
+      notFound = null;
     }
     handler = helpers.adaptAsyncResultHandler(handler);
     jresp.sendFile(fileName, notFound, handler);
