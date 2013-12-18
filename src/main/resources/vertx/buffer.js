@@ -146,7 +146,7 @@ var Buffer = function(obj) {
   this.getString = function(start, end, enc) {
     if (typeof enc === 'undefined') {
       return __jbuf.getString(start, end);
-    } else {
+    } else  {
       return __jbuf.getString(start, end, enc);
     }
   };
@@ -228,7 +228,7 @@ var Buffer = function(obj) {
     if (typeof enc === 'undefined') {
       __jbuf.appendString(str);
 
-    } else {
+    } else  {
       __jbuf.appendString(str, enc);
     }
     return this;
