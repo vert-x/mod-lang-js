@@ -188,6 +188,15 @@ var fsTest = {
         });
       });
     });
+  },
+
+  testChownFails: function() {
+    var file = fileDir + "/foo.tmp";
+    fs.chown(file, "root", function(err, res) {
+      vassert.assertTrue(null !== err);
+      vassert.assertTrue(null === res);
+      vassert.testComplete();
+    });
   }
 }
 
