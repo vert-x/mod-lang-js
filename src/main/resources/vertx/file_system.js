@@ -220,6 +220,45 @@ fileSystem.chmodSync = function(path, perms, dirPerms) {
 }
 
 /**
+ * Change the ownership on the file represented by {@code path} to {@code user} and {code group}, asynchronously
+ *
+ * @param {string} path path of file to change permissions
+ * @param {string} user the username
+ * @param {string} [group] the groupname
+ * @param {ResultHandler} handler The handler to call when the operation has completed
+ *
+ * @returns {module:vertx/file_system}
+ */
+fileSystem.chown = function(path, user, arg1, arg2) {
+  var handler;
+  var group;
+  if (arguments.length === 4) {
+    handler = arg2;
+    group = arg1;
+  } else {
+    handler = arg1;
+    group = null;
+  }
+  jfs.chown(path, user, group, wrapHandler(handler));
+  return fileSystem;
+}
+
+/**
+ * Synchronous version of chown
+ *
+ * @param {string} path path of file to change permissions
+ * @param {string} user the username
+ * @param {string} [group] the groupname
+ *
+ * @returns {module:vertx/file_system}
+ */
+fileSystem.chmodSync = function(path, user, group) {
+  if (!group) group = null;
+  jfs.chownSync(path, user, group);
+  return fileSystem;
+}
+
+/**
  * Get file properties for a file, asynchronously.
  *
  * @param {string} path path to file
