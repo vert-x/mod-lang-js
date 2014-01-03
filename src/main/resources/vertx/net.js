@@ -15,7 +15,7 @@
  */
 
 if (typeof __vertxload === 'string') {
-  throw "Use require() to load Vert.x API modules"
+  throw "Use require() to load Vert.x API modules";
 }
 
 /**
@@ -37,7 +37,7 @@ var Buffer = require('vertx/buffer');
  */
 net.createNetServer = function() {
   return new net.NetServer();
-}
+};
 
 /**
  * Creates a {@linkcode module:vertx/net.NetClient|NetClient}.
@@ -45,7 +45,7 @@ net.createNetServer = function() {
  */
 net.createNetClient = function() {
   return new net.NetClient();
-}
+};
 
 /**
  * A <code>ListenHandler</code> is a {@linkcode Handler} that is
@@ -93,7 +93,7 @@ net.NetServer = function() {
       handler(new net.NetSocket(result));
     });
     return that;
-  }
+  };
 
   /**
    * Tell the server to start listening on all available interfaces and
@@ -110,15 +110,15 @@ net.NetServer = function() {
     var handler = helpers.getArgValue('function', args);
     var host = helpers.getArgValue('string', args);
     var port = helpers.getArgValue('number', args);
-    if (handler != null) {
+    if (handler !== null) {
       handler = helpers.adaptAsyncResultHandler(handler);
     }
-    if (host == null) {
+    if (host === null) {
       host = "0.0.0.0";
     }
     jserver.listen(port, host, handler);
     return that;
-  }
+  };
 
   /**
    * Close the server. This will close any open connections.
@@ -130,7 +130,7 @@ net.NetServer = function() {
     } else {
       jserver.close(helpers.adaptAsyncResultHandler(handler));
     }
-  }
+  };
 
   /**
    * The actual port the server is listening on. This is useful if you bound
@@ -139,7 +139,7 @@ net.NetServer = function() {
    */
   this.port = function() {
     return jserver.port();
-  }
+  };
 
   /**
    * The host name
@@ -147,8 +147,8 @@ net.NetServer = function() {
    */
   this.host = function() {
     return jserver.host();
-  }
-}
+  };
+};
 
 /**
  * <p>
@@ -199,7 +199,7 @@ net.NetClient = function() {
       return new net.NetSocket(result);
     }));
     return that;
-  }
+  };
 
   /**
    * Get or set the number of reconnection attempts. Default value is zero.
@@ -213,7 +213,7 @@ net.NetClient = function() {
       jclient.setReconnectAttempts(attempts);
       return that;
     }
-  }
+  };
 
   /**
    * Get or set the reconnection interval, in milliseconds.
@@ -227,7 +227,7 @@ net.NetClient = function() {
       jclient.setReconnectInterval(interval);
       return that;
     }
-  }
+  };
   
   /**
    * Get or set the connect timeout, in milliseconds.
@@ -241,15 +241,15 @@ net.NetClient = function() {
       jclient.setConnectTimeout(timeout);
       return that;
     }
-  }
+  };
   
   /**
    * Close the client.
    */
   this.close = function() {
     jclient.close();
-  }
-}
+  };
+};
 
 /**
  * <p>
@@ -292,7 +292,7 @@ net.NetSocket = function(jNetSocket) {
    */
   this.writeHandlerID = function() {
     return jNetSocket.writeHandlerID();
-  }
+  };
 
   /**
    * Write a string or {@linkcode module:vertx/buffer~Buffer} to the socket.
@@ -311,7 +311,7 @@ net.NetSocket = function(jNetSocket) {
       jNetSocket.write(arg0, arg1);
     }
     return that;
-  }
+  };
 
   /**
    * Tell the kernel to stream a file as specified by <code>filename</code>
@@ -324,7 +324,7 @@ net.NetSocket = function(jNetSocket) {
   this.sendFile = function(filename) {
     jNetSocket.sendFile(filename);
     return that;
-  }
+  };
   
   /**
    * Returns the remote address for this socket
@@ -335,7 +335,7 @@ net.NetSocket = function(jNetSocket) {
       'ipaddress': jNetSocket.remoteAddress().getAddress().getHostAddress(),
       'port': jNetSocket.remoteAddress().getPort()
     };
-  }
+  };
 
   /**
    * Returns the local address for this socket
@@ -346,14 +346,14 @@ net.NetSocket = function(jNetSocket) {
       'ipaddress': jNetSocket.localAddress().getAddress().getHostAddress(),
       'port': jNetSocket.localAddress().getPort()
     };
-  }
+  };
 
   /**
    * Close this socket.
    */
   this.close = function() {
     jNetSocket.close();
-  }
+  };
 
   /**
    * Set a {@linkcode Handler} to be called when this socket is closed
@@ -362,8 +362,42 @@ net.NetSocket = function(jNetSocket) {
   this.closeHandler = function(handler) {
     jNetSocket.closeHandler(handler);
     return that;
-  }
-}
+  };
+
+  /**
+   * Upgrade channel to use SSL/TLS. Be aware that for this to work SSL must
+   * already be configured.
+   *
+   * @example
+   * <pre><code>
+   *     var server = vertx.createNetServer().
+   *                        .keyStorePath('/path/to/your/keystore/server-keystore.jks')
+   *                        .keyStorePassword('password');
+   *     server.connectHandler(function(sock) {
+   *       if (authCheck()) {
+   *         sock.ssl();
+   *       }
+   *     }
+   * </code></pre>
+   *
+   * @param {Handler} [handler] Called when the upgrade has been completed
+   * @returns {module:vertx/net.NetSocket} this
+   */
+  this.ssl = function(handler) {
+    if (!handler) {
+      handler = function() {};
+    }
+    jNetSocket.ssl(handler);
+    return that;
+  };
+
+  /**
+   * Returns true if this socket is SSL/TLS encrypted.
+   */
+  this.isSSL = function() {
+    return jNetSocket.isSsl();
+  };
+};
 
 /**
  * @typedef {{}} Address

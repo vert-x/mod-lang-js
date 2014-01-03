@@ -37,7 +37,7 @@ var fsTest = {
         vassert.testComplete();
       });
     });
-  },
+ },
 
   testCopyFile: function() {
     var from = fileDir + "/foo.tmp";

@@ -39,8 +39,6 @@ var netTest = {
       client.connect(1234, 'localhost', function(err, sock) {
         vassert.assertTrue(err === null);
         vassert.assertTrue(sock !== null);
-        vassert.assertTrue(err === null);
-        vassert.assertTrue(sock !== null);
         vassert.assertTrue(sock.localAddress().ipaddress !== null);
         vassert.assertTrue(sock.localAddress().port > -1);
         vassert.assertTrue(sock.remoteAddress().ipaddress !== null);
@@ -61,6 +59,42 @@ var netTest = {
     client.connect(1234, '127.0.0.2', function(err, sock) {
       vassert.assertTrue(err !== null);
       vassert.testComplete();
+    });
+  },
+
+  DEFERREDtestNetSocketSSL: function() {
+    var server = vertx.net.createNetServer();
+    server.keyStorePath('./src/test/keystores/server-keystore.jks');
+    server.keyStorePassword('wibble');
+    server.trustStorePath('./src/test/keystores/server-truststore.jks');
+    server.trustStorePassword('wibble');
+
+    server.connectHandler(function(sock) {
+      sock.ssl();
+      sock.dataHandler(function(data) {
+        vassert.assertTrue(sock.isSSL());
+        sock.write(data);
+      });
+    });
+
+    server.listen(1234, 'localhost', function(err, server) {
+      vassert.assertTrue(err === null);
+
+      var client = vertx.net.createNetClient();
+      client.connect(1234, 'localhost', function(err, sock) {
+        vassert.assertTrue(err === null);
+        vassert.assertTrue(sock !== null);
+        vassert.assertTrue(sock.localAddress().ipaddress !== null);
+        vassert.assertTrue(sock.localAddress().port > -1);
+        vassert.assertTrue(sock.remoteAddress().ipaddress !== null);
+        vassert.assertTrue(sock.remoteAddress().port > -1);
+
+        sock.dataHandler(function(data) {
+          vassert.testComplete();
+        });
+
+        sock.write( new vertx.Buffer('this is a buffer'));
+      });
     });
   }
 
