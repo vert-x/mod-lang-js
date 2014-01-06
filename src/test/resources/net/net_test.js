@@ -62,7 +62,7 @@ var netTest = {
     });
   },
 
-  DEFERREDtestNetSocketSSL: function() {
+  testNetSocketSSL: function() {
     var server = vertx.net.createNetServer();
     server.keyStorePath('./src/test/keystores/server-keystore.jks');
     server.keyStorePassword('wibble');
@@ -77,12 +77,18 @@ var netTest = {
       });
     });
 
-    server.listen(1234, 'localhost', function(err, server) {
+    server.listen(4043, 'localhost', function(err, server) {
       vassert.assertTrue(err === null);
 
       var client = vertx.net.createNetClient();
-      client.connect(1234, 'localhost', function(err, sock) {
-        vassert.assertTrue(err === null);
+      client.ssl(true);
+      client.trustAll(true);
+      client.keyStorePath('./src/test/keystores/client-keystore.jks');
+      client.keyStorePassword('wibble');
+      client.trustStorePath('./src/test/keystores/client-truststore.jks');
+      client.trustStorePassword('wibble');
+      client.connect(4043, 'localhost', function(err, sock) {
+        vassert.assertTrue("Should not have received an error: " + err, err === null);
         vassert.assertTrue(sock !== null);
         vassert.assertTrue(sock.localAddress().ipaddress !== null);
         vassert.assertTrue(sock.localAddress().port > -1);
