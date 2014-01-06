@@ -14,10 +14,10 @@
  * limitations under the License.
  */
 
-var tu = require('test_utils');
+var vassert = require('vertx_assert');
 
 module.exports = function() {
   var func2 = require('module2');
-  tu.azzert(func2() === 'bar');
+  vassert.assertTrue(func2() === 'bar');
   return "foo";
 };
