@@ -314,6 +314,7 @@
               </includes>
               <summaryFile>target/failsafe-reports/failsafe-summary-dynjs.xml</summaryFile>
               <reportNameSuffix>DynJS</reportNameSuffix>
+              <argLine>-Xss2048k</argLine>
             </configuration>
             <goals>
               <goal>integration-test</goal>
