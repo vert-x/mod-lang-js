@@ -15,7 +15,7 @@
  */
 
 if (typeof __vertxload === 'string') {
-  throw "Use require() to load Vert.x API modules"
+  throw "Use require() to load Vert.x API modules";
 }
 
 /**
@@ -37,15 +37,16 @@ var MultiMap = function(j_map) {
    *          <code>name</code>, the first value is returned.
    */
   this.get = function(name) {
+    if (!j_map) { return undefined; }
     var value = j_map.get(name);
     // Handles discrepancy between how rhino and dynjs deal with null return values 
     // from Java objects. It seems as though Rhino changes the null to undefined, or
     // perhaps has some distinction where undefined is returned iff the key isn't there.
-    if (value == null) { 
-      return undefined 
+    if (value === null) { 
+      return undefined;
     }
     return value;
-  }
+  };
 
   /**
    * Execute the given function for every name, value pair stored
@@ -53,6 +54,7 @@ var MultiMap = function(j_map) {
    * @param {function} func The function to execute
    */
   this.forEach = function(func) {
+    if (!j_map) { return; }
     var names = j_map.names().iterator();
     while (names.hasNext()) {
       var name = names.next();
@@ -61,7 +63,7 @@ var MultiMap = function(j_map) {
         func(name, values.next());
       }
     }
-  }
+  };
 
   /**
    * Return all values stored for the given name.
@@ -70,9 +72,10 @@ var MultiMap = function(j_map) {
    * @returns {Array} The values for the given name
    */
   this.getAll = function(name) {
+    if (!j_map) { return []; }
     var n =  j_map.getAll(name);
     return _convertToArray(n);
-  }
+  };
 
   /**
    * Returns if a value for the given name is stored
@@ -81,8 +84,9 @@ var MultiMap = function(j_map) {
    * @returns {boolean} <code>true</code> if <code>name</code> is stored in this map
    */
   this.contains = function(name) {
+    if (!j_map) { return false; }
     return j_map.contains(name);
-  }
+  };
 
   /**
    * Returns if this map is empty
@@ -90,8 +94,9 @@ var MultiMap = function(j_map) {
    * @returns {boolean} <code>true</code> if empty
    */
   this.isEmpty = function() {
+    if (!j_map) { return true; }
     return j_map.isEmpty();
-  }
+  };
 
   /**
    * Return all names for which values are stored
@@ -99,9 +104,10 @@ var MultiMap = function(j_map) {
    * @returns {Array} The names for which values are stored
    */
   this.names = function() {
+    if (!j_map) { return []; }
     var n =  j_map.names();
     return _convertToArray(n);
-  }
+  };
 
   /**
    * Add a value for the given name
@@ -111,9 +117,11 @@ var MultiMap = function(j_map) {
    * @returns {module:vertx/multi_map~MultiMap}
    */
   this.add = function(name, value) {
-    j_map.add(name, value);
+    if (j_map) { 
+      j_map.add(name, value);
+    }
     return this;
-  }
+  };
 
   /**
    * Set a value for the given name. All previous stored values under the name will get deleted.
@@ -123,9 +131,11 @@ var MultiMap = function(j_map) {
    * @returns {module:vertx/multi_map~MultiMap}
    */
   this.set = function(name, value) {
-    j_map.set(name, value);
+    if (j_map) {
+      j_map.set(name, value);
+    }
     return this;
-  }
+  };
 
   /**
    * Set the content of the given map.
@@ -134,9 +144,11 @@ var MultiMap = function(j_map) {
    * @returns {module:vertx/multi_map~MultiMap} self
    */
   this.setMap = function(map) {
-    j_map.set(map._jmap);
+    if (j_map) {
+      j_map.set(map._jmap);
+    }
     return this;
-  }
+  };
 
   /**
    * Remove all values stored under the name
@@ -145,9 +157,11 @@ var MultiMap = function(j_map) {
    * @returns {module:vertx/multi_map~MultiMap} self
    */
   this.remove = function(name) {
-    j_map.remove(name);
+    if (j_map) {
+      j_map.remove(name);
+    }
     return this;
-  }
+  };
 
   /**
    * Clears the map
@@ -155,27 +169,30 @@ var MultiMap = function(j_map) {
    * @returns {module:vertx/multi_map~MultiMap} self
    */
   this.clear = function() {
-    j_map.clear();
+    if (j_map) {
+      j_map.clear();
+    }
     return this;
-  }
+  };
 
   /**
    * Return the number of names stored.
    * @returns {number} the number of names stored
    */
   this.size = function() {
+    if (!j_map) { return 0; }
     return j_map.size();
-  }
+  };
 
   /**
    * @private
    */
   this._jmap = j_map;
-}
+};
 
 function _convertToArray(j_col) {
   var n = j_col.iterator();
-  var array = new Array();
+  var array = [];
   var i = 0;
 
   while (n.hasNext()) {
@@ -183,6 +200,7 @@ function _convertToArray(j_col) {
   }
   return array;
 }
+
 
 /**
  * @module vertx/multi_map
