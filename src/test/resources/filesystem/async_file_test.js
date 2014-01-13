@@ -40,7 +40,7 @@ var asyncFileTest = {
           asyncFile.close(); // Close it    
           fs.readFile(testFile, function(err, buf) {
             vassert.assertEquals("more data", buf.toString());
-            vassert.testComplete()
+            vassert.testComplete();
           });
         });
       }
@@ -57,7 +57,7 @@ var asyncFileTest = {
           asyncFile.close(); // Close it    
           fs.readFile(testFile, function(err, buf) {
             vassert.assertEquals("some more data", buf.toString());
-            vassert.testComplete()
+            vassert.testComplete();
           });
         });
       }
@@ -76,7 +76,7 @@ var asyncFileTest = {
           asyncFile.close(); // Close it    
           fs.readFile(testFile, function(err, buf) {
             vassert.assertEquals("more data", buf.toString());
-            vassert.testComplete()
+            vassert.testComplete();
           });
         });
       }
@@ -89,7 +89,7 @@ var asyncFileTest = {
         vassert.fail('Failed to open file ' + err);
       } else {
         asyncFile.close(function() {
-            vassert.testComplete()
+            vassert.testComplete();
         });
       }
     });
@@ -108,7 +108,7 @@ var asyncFileTest = {
     }); // fs.open
   },
 
-}
+};
 
 function setup(doneHandler) {
   fs.exists(fileDir, function(err, exists) {

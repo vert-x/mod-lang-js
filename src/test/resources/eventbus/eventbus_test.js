@@ -33,18 +33,18 @@ var emptySent = {
 var reply = {
   desc: "approved",
   status: 123
-}
+};
 
 var assertSent = function(msg) {
   vassert.assertTrue(sent.price === msg.price);
   vassert.assertEquals(sent.name, msg.name);
-}
+};
 
 
 var assertReply = function(rep) {
   vassert.assertEquals(reply.desc, rep.desc);
   vassert.assertTrue(reply.status === rep.status);
-}
+};
 
 var echo = function(msg) {
   var ebus = eb.registerHandler(address, function MyHandler(received, replier) {
@@ -54,7 +54,7 @@ var echo = function(msg) {
   vassert.assertTrue(ebus === eb);
   ebus = eb.send(address, msg, function (reply){
 
-  if (msg != null) {
+  if (msg !== null) {
     for (var field in reply) {
       vassert.assertEquals(msg.field, reply.field);
     }
@@ -62,10 +62,10 @@ var echo = function(msg) {
   vassert.assertTrue(ebus === eb);
   vassert.testComplete();
   });
-}
+};
 
 var NoopHandler = function(msg, replier) {
-}
+};
 var timeout = 500;
 var timers  = require('vertx/timer');
 
@@ -88,8 +88,8 @@ var EventBusTest = {
     });
     eb.sendWithTimeout(address, sent, timeout, function(err, msg) {
       vassert.assertTrue("Message should not have timed out and passed an error", err === null);
-      vassert.assertEquals(reply.desc, msg.desc)
-      vassert.assertTrue("Unexpected reply.status", reply.status === msg.status)
+      vassert.assertEquals(reply.desc, msg.desc);
+      vassert.assertTrue("Unexpected reply.status", reply.status === msg.status);
       vassert.testComplete();
     });
   },
@@ -103,8 +103,8 @@ var EventBusTest = {
       }, timeout);
     });
     eb.send(address, sent, function(msg, replier) {
-      vassert.assertEquals(reply.desc, msg.desc)
-      vassert.assertTrue("Unexpected reply.status", reply.status === msg.status)
+      vassert.assertEquals(reply.desc, msg.desc);
+      vassert.assertTrue("Unexpected reply.status", reply.status === msg.status);
       replier("ack");
     });
   },
@@ -118,7 +118,7 @@ var EventBusTest = {
     });
     eb.sendWithTimeout("some-address", "message", timeout, function(err, msg) {
       vassert.assertTrue("Unexpected reply", !replied);
-      vassert.assertTrue("Message should have timed out and passed an error", err != null);
+      vassert.assertTrue("Message should have timed out and passed an error", err !== null);
       vassert.assertTrue("Message should have timed out, but got: " + msg, msg === null);
       //just to be sure we don't get a reply
       timers.setTimer(timeout*2, function() {
@@ -132,15 +132,15 @@ var EventBusTest = {
 
     eb.registerHandler(address, function(msg, replier) {
       replier(reply, function(err, msg) {
-        vassert.assertTrue("Message should have timed out and passed an error", err != null);
+        vassert.assertTrue("Message should have timed out and passed an error", err !== null);
         vassert.assertTrue("Message should have timed out, but got: " + msg, msg === null);
         vassert.testComplete();
       }, timeout);
     });
 
     eb.send(address, sent, function(msg, replier) {
-      vassert.assertEquals(reply.desc, msg.desc)
-      vassert.assertTrue("Unexpected reply.status", reply.status === msg.status)
+      vassert.assertEquals(reply.desc, msg.desc);
+      vassert.assertTrue("Unexpected reply.status", reply.status === msg.status);
       timers.setTimer(timeout*2, function() {
         replier("ack");
       });
@@ -184,7 +184,7 @@ var EventBusTest = {
     address = "some-address";
     timeout = 500;
     eb.sendWithTimeout(address, "a message", timeout, function(err, msg) {
-      vassert.assertTrue("Message should have failed to send", err != null);
+      vassert.assertTrue("Message should have failed to send", err !== null);
       vassert.assertEquals(err.failureType().toString(), "NO_HANDLERS");
       vassert.testComplete();
     });
@@ -197,8 +197,8 @@ var EventBusTest = {
       meta.fail(23, message);
     }, function() /* registration completion handler */ {
       eb.sendWithTimeout(address, "what happened?", timeout, function(err, msg) {
-        vassert.assertTrue("Reply should have failed", err != null);
-        vassert.assertTrue("Reply should have failed", err != undefined);
+        vassert.assertTrue("Reply should have failed", err !== null);
+        vassert.assertTrue("Reply should have failed", err !== undefined);
         vassert.assertTrue("Unexpected failure code", err.failureCode() === 23);
         vassert.assertEquals(err.failureType().toString(), "RECIPIENT_FAILURE");
         vassert.assertEquals(err.getMessage(), message);
@@ -234,7 +234,7 @@ var EventBusTest = {
     var handler = function(msg, replier) {
       vassert.fail("Handler should have been unregistered");
       vassert.testComplete();
-    }
+    };
     eb.registerHandler(address, handler, function() {
       eb.unregisterHandler(address, handler, function() {
         eb.registerHandler(address, function(msg, replier) {
@@ -292,7 +292,7 @@ var EventBusTest = {
       timers.setTimer(100, function() {
         vassert.testComplete();
       });
-    }
+    };
     var ebus = eb.registerHandler(address, MyHandler);
 
     for (var i = 0; i < 2; i++) {
@@ -384,6 +384,10 @@ var EventBusTest = {
     echo(sent);
   },
 
+  DEFERREDtestEchoArray: function() {
+    echo(['some', 'array']);
+  },
+
   testEchoBuffer: function() {
     echo(new Buffer());
   },
@@ -391,7 +395,7 @@ var EventBusTest = {
   testEchoNull: function() {
     echo(null);
   }
-}
+};
 
 vertxTest.startTests(EventBusTest);
 
