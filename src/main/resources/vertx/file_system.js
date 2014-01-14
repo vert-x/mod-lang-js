@@ -84,7 +84,7 @@ function convertProps(j_props) {
     isRegularFile: j_props.isRegularFile(),
     isSymbolicLink: j_props.isSymbolicLink(),
     size: j_props.size()
-  }
+  };
 }
 
 /**
@@ -109,7 +109,7 @@ fileSystem.copy = function(from, to, arg2, arg3) {
   }
   jfs.copy(from, to, recursive, wrapHandler(handler));
   return fileSystem;
-}
+};
 
 /**
  * Synchronous version of copy
@@ -123,7 +123,7 @@ fileSystem.copySync = function(from, to, recursive) {
   if (!recursive) recursive = false;
   jfs.copySync(from, to, recursive);
   return fileSystem;
-}
+};
 
 /**
  * Move a file, asynchronously. The move will fail if <code>from</code> 
@@ -137,7 +137,7 @@ fileSystem.copySync = function(from, to, recursive) {
 fileSystem.move = function(from, to, handler) {
   jfs.move(from, to, wrapHandler(handler));
   return fileSystem;
-}
+};
 
 /**
  * Synchronous version of move.
@@ -149,7 +149,7 @@ fileSystem.move = function(from, to, handler) {
 fileSystem.moveSync = function(from, to) {
   jfs.moveSync(from, to);
   return fileSystem;
-}
+};
 
 /**
  * Truncate a file, asynchronously. The move will fail if path does not exist.
@@ -162,7 +162,7 @@ fileSystem.moveSync = function(from, to) {
 fileSystem.truncate = function(path, len, handler) {
   jfs.truncate(path, len, wrapHandler(handler));
   return fileSystem;
-}
+};
 
 /**
  * Synchronous version of truncate.
@@ -174,7 +174,7 @@ fileSystem.truncate = function(path, len, handler) {
 fileSystem.truncateSync = function(path, len) {
   jfs.truncateSync(path, len);
   return fileSystem;
-}
+};
 
 /**
  * Change the permissions on a file, asynchronously. If the file is directory
@@ -201,7 +201,7 @@ fileSystem.chmod = function(path, perms, arg2, arg3) {
   }
   jfs.chmod(path, perms, dirPerms, wrapHandler(handler));
   return fileSystem;
-}
+};
 
 /**
  * Synchronous version of chmod.
@@ -217,7 +217,7 @@ fileSystem.chmodSync = function(path, perms, dirPerms) {
   if (!dirPerms) dirPerms = null;
   jfs.chmodSync(path, perms, dirPerms);
   return fileSystem;
-}
+};
 
 /**
  * Change the ownership on the file represented by {@code path} to {@code user} and {code group}, asynchronously
@@ -241,7 +241,7 @@ fileSystem.chown = function(path, user, arg1, arg2) {
   }
   jfs.chown(path, user, group, wrapHandler(handler));
   return fileSystem;
-}
+};
 
 /**
  * Synchronous version of chown
@@ -256,7 +256,7 @@ fileSystem.chmodSync = function(path, user, group) {
   if (!group) group = null;
   jfs.chownSync(path, user, group);
   return fileSystem;
-}
+};
 
 /**
  * Get file properties for a file, asynchronously.
@@ -268,7 +268,7 @@ fileSystem.chmodSync = function(path, user, group) {
 fileSystem.props = function(path, handler) {
   jfs.props(path, wrapPropsHandler(handler));
   return fileSystem;
-}
+};
 
 /**
  * Synchronous version of props.
@@ -278,7 +278,7 @@ fileSystem.props = function(path, handler) {
 fileSystem.propsSync = function(path) {
   var j_props = jfs.propsSync(path);
   return convertProps(j_props);
-}
+};
 
 /**
  * Obtain properties for the link represented by <code>path</code>, asynchronously.
@@ -291,7 +291,7 @@ fileSystem.propsSync = function(path) {
 fileSystem.lprops = function(path, handler) {
   jfs.lprops(path, wrapPropsHandler(handler));
   return fileSystem;
-}
+};
 
 /**
  * Synchronous version of lprops.
@@ -302,7 +302,7 @@ fileSystem.lprops = function(path, handler) {
 fileSystem.lpropsSync = function(path) {
   var j_props = jfs.lpropsSync(path);
   return convertProps(j_props);
-}
+};
 
 /**
  * Create a hard link, asynchronously.
@@ -315,7 +315,7 @@ fileSystem.lpropsSync = function(path) {
 fileSystem.link = function(link, existing, handler) {
   jfs.link(link, existing, wrapHandler(handler));
   return fileSystem;
-}
+};
 
 /**
  * Synchronous version of link.
@@ -326,7 +326,7 @@ fileSystem.link = function(link, existing, handler) {
 fileSystem.linkSync = function(link, existing) {
   jfs.linkSync(link, existing);
   return fileSystem;
-}
+};
 
 /**
  * Create a symbolic link, asynchronously.
@@ -339,7 +339,7 @@ fileSystem.linkSync = function(link, existing) {
 fileSystem.symlink = function(link, existing, handler) {
   jfs.symlink(link, existing, wrapHandler(handler));
   return fileSystem;
-}
+};
 
 /**
  * Synchronous version of symlink.
@@ -350,7 +350,7 @@ fileSystem.symlink = function(link, existing, handler) {
 fileSystem.symlinkSync = function(link, existing) {
   jfs.symlinkSync(link, existing);
   return fileSystem;
-}
+};
 
 /**
  * Unlink a hard link.
@@ -362,7 +362,7 @@ fileSystem.symlinkSync = function(link, existing) {
 fileSystem.unlink = function(link, handler) {
   jfs.unlink(link, wrapHandler(handler));
   return fileSystem;
-}
+};
 
 /**
  * Synchronous version of unlink.
@@ -373,7 +373,7 @@ fileSystem.unlink = function(link, handler) {
 fileSystem.unlinkSync = function(link) {
   jfs.unlinkSync(link);
   return fileSystem;
-}
+};
 
 /**
  * Read a symbolic link, asynchronously. I.e. tells you where the symbolic link points.
@@ -387,7 +387,7 @@ fileSystem.unlinkSync = function(link) {
 fileSystem.readSymlink = function(link, handler) {
   jfs.readSymlink(link, wrapHandler(handler));
   return fileSystem;
-}
+};
 
 /**
  * Synchronous version of readSymlink.
@@ -397,7 +397,7 @@ fileSystem.readSymlink = function(link, handler) {
  */
 fileSystem.readSymlinkSync = function(link) {
   return jfs.readSymlinkSync(link);
-}
+};
 
 /**
  * Delete a file on the file system, asynchronously.
@@ -420,7 +420,7 @@ fileSystem.delete = function(path, arg1, arg2) {
   }
   jfs.delete(path, recursive, wrapHandler(handler));
   return fileSystem;
-}
+};
 
 /**
  * Synchronous version of delete.
@@ -433,7 +433,7 @@ fileSystem.deleteSync = function(path, recursive) {
   if (!recursive) recursive = false;
   jfs.deleteSync(path, recursive);
   return fileSystem;
-}
+};
 
 /**
  * Create a directory, asynchronously.  The create will fail if the directory
@@ -476,7 +476,7 @@ fileSystem.mkDir = function(path, arg1, arg2, arg3) {
   }
   jfs.mkdir(path, perms, createParents, wrapHandler(handler));
   return fileSystem;
-}
+};
 
 /**
  * Synchronous version of mkdir.
@@ -507,7 +507,7 @@ fileSystem.mkDirSync = function(path, arg1, arg2) {
   }
   jfs.mkdirSync(path, perms, createParents);
   return fileSystem;
-}
+};
 
 /**
  * Read a directory, i.e. list it's contents, asynchronously.
@@ -532,7 +532,7 @@ fileSystem.readDir = function(path, arg1, arg2) {
   }
   jfs.readDir(path, filter, wrapHandler(handler));
   return fileSystem;
-}
+};
 
 /**
  * Synchronous version of readDir.
@@ -545,7 +545,7 @@ fileSystem.readDir = function(path, arg1, arg2) {
 fileSystem.readDirSync = function(path, filter) {
   if (!filter) filter = null;
   return jfs.readDirSync(path, filter);
-}
+};
 
 /**
  * Read the contents of the entire file.
@@ -558,7 +558,7 @@ fileSystem.readDirSync = function(path, filter) {
 fileSystem.readFile = function(path, handler) {
   jfs.readFile(path, wrapHandler(handler));
   return fileSystem;
-}
+};
 
 /**
  * Synchronous version of readFile.
@@ -568,7 +568,7 @@ fileSystem.readFile = function(path, handler) {
  */
 fileSystem.readFileSync = function(path) {
   return jfs.readFileSync(path);
-}
+};
 
 /**
  * Write data to a file
@@ -586,7 +586,7 @@ fileSystem.writeFile = function(path, data, handler) {
   }
   jfs.writeFile(path, data, wrapHandler(handler));
   return fileSystem;
-}
+};
 
 /**
  * Synchronous version of writeFile.
@@ -601,7 +601,7 @@ fileSystem.writeFileSync = function(path, data) {
   }
   jfs.writeFileSync(path, data);
   return fileSystem;
-}
+};
 
 /** 
  * Flags used when opening files working with the vert.x 
@@ -668,7 +668,7 @@ fileSystem.openSync = function(path, arg1, arg2, arg3) {
   var asyncFile = jfs.openSync(path, perms, read, write, createNew, flush);
 
   return new fileSystem.AsyncFile(asyncFile);
-}
+};
 
 /**
  * Open a file on the file system, asynchronously.
@@ -735,7 +735,7 @@ fileSystem.open = function(path, arg1, arg2, arg3, arg4) {
     }
   });
   return fileSystem;
-}
+};
 
  /**
  * <p>
@@ -767,11 +767,11 @@ fileSystem.AsyncFile = function(jaf) {
    */
   this.close = function(handler) {
     if (handler) {
-      jaf.close(wrapHandler(handler))
+      jaf.close(wrapHandler(handler));
     } else {
       jaf.close();
     }
-  }
+  };
 
   /**
    * Write to the file asynchronously
@@ -781,7 +781,7 @@ fileSystem.AsyncFile = function(jaf) {
    * @returns {module:vertx/file_system}
    */
   this.write = function(buffer, position, handler) {
-    if (position == null || position == undefined) {
+    if (position === null || position === undefined) {
       // WriteStream interface
       jaf.write(buffer._to_java_buffer());
     } else {
@@ -789,7 +789,7 @@ fileSystem.AsyncFile = function(jaf) {
       jaf.write(buffer._to_java_buffer(), position, wrapHandler(handler));
     }
     return that;
-  }
+  };
 
   /**
    * Read from the file asynchronously
@@ -803,7 +803,7 @@ fileSystem.AsyncFile = function(jaf) {
   this.read = function(buffer, offset, position, length, handler) {
     jaf.read(buffer._to_java_buffer(), offset, position, length, wrapHandler(handler));
     return that;
-  }
+  };
 
   /**
    * Flush any writes made to this file to persistent storage.
@@ -815,8 +815,8 @@ fileSystem.AsyncFile = function(jaf) {
     } else {
       jaf.flush();
     }
-  }
-}
+  };
+};
 
 /**
  * Create a new empty file, asynchronously.
@@ -828,7 +828,7 @@ fileSystem.AsyncFile = function(jaf) {
 fileSystem.createFile = function(path, handler) {
   jfs.createFile(path, wrapHandler(handler));
   return fileSystem;
-}
+};
 
 /**
  * Synchronous version of createFile.
@@ -839,7 +839,7 @@ fileSystem.createFile = function(path, handler) {
 fileSystem.createFileSync = function(path) {
   jfs.createFileSync(path);
   return fileSystem;
-}
+};
 
 /**
  * Check if a file exists, asynchronously.
@@ -851,7 +851,7 @@ fileSystem.createFileSync = function(path) {
 fileSystem.exists = function(path, handler) {
   jfs.exists(path, wrapHandler(handler));
   return fileSystem;
-}
+};
 
 /**
  * Synchronous version of exists.
@@ -861,7 +861,7 @@ fileSystem.exists = function(path, handler) {
  */
 fileSystem.existsSync = function(path) {
   return jfs.existsSync(path);
-}
+};
 
 /** 
  * @typedef {{}} FileSystemProps 
@@ -881,7 +881,7 @@ fileSystem.existsSync = function(path) {
 fileSystem.fsProps = function(path, handler) {
   jfs.fsProps(path, wrapHandler(handler));
   return fileSystem;
-}
+};
 
 /**
  * Synchronous version of fsProps.
@@ -890,7 +890,7 @@ fileSystem.fsProps = function(path, handler) {
  */
 fileSystem.fsPropsSync = function(path) {
   return jfs.fsPropsSync(path);
-}
+};
 
 module.exports = fileSystem;
 
