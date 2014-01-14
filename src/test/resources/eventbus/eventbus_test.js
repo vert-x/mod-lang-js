@@ -384,7 +384,7 @@ var EventBusTest = {
     echo(sent);
   },
 
-  DEFERREDtestEchoArray: function() {
+  testEchoArray: function() {
     echo(['some', 'array']);
   },
 

@@ -15,7 +15,7 @@
  */
 
 if (typeof __vertxload === 'string') {
-  throw "Use require() to load Vert.x API modules"
+  throw "Use require() to load Vert.x API modules";
 }
 
 var helpers = require('vertx/helpers.js');
@@ -250,7 +250,7 @@ var resultConverter = function(jMsg) {
     body = JSON.parse(body.encode());
   }
   return body;
-}
+};
 
 function wrappedHandler(handler) {
   return new org.vertx.java.core.Handler({
@@ -261,7 +261,7 @@ function wrappedHandler(handler) {
         fail: function(code, msg) {
           jMsg.fail(code, msg);
         }
-      }
+      };
       handler(body, function(reply, replyHandler, timeout) {
         if (typeof reply === 'undefined') {
           throw "Reply message must be specified";
@@ -312,6 +312,7 @@ function convertMessage(message) {
     case 'string':
     case 'boolean':
     case 'undefined':
+    case 'org.vertx.java.core.json.JsonArray':
     case 'org.vertx.java.core.buffer.Buffer':
       break;
     case 'number':
@@ -321,7 +322,9 @@ function convertMessage(message) {
       // If null then we just wrap it as an empty JSON message
       // We don't do this if it's a Java class (it has the getClass) method
       // since it may be a Buffer which we want to let through
-      if (message == null || typeof message.getClass === "undefined") {
+      if (message instanceof Array) {
+        message = new org.vertx.java.core.json.JsonArray(message);
+      } else if (message === null || typeof message.getClass === "undefined") {
         // Not a Java object - assume JSON message
         message = new org.vertx.java.core.json.JsonObject(JSON.stringify(message));
       }
