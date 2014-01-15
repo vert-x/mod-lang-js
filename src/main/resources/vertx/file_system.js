@@ -38,29 +38,20 @@ var jfs = __jvertx.fileSystem();
  */
 var fileSystem = {};
 
-var streams = require('vertx/streams');
+var streams     = require('vertx/streams');
+var helpers     = require('vertx/helpers.js');
+var wrapHandler = helpers.adaptAsyncResultHandler;
 
-var helpers = require('vertx/helpers.js');
-
-function wrapHandler(handler) {
-  return function(asyncResult) {
-    if (asyncResult.succeeded()) {
-      handler(null, asyncResult.result());
-    } else {
-      handler(asyncResult.cause(), null);
-    }
-  };
+function propsHandler(handler) {
+  return wrapHandler(handler, function(result) {
+    return convertProps(result);
+  });
 }
 
-function wrapPropsHandler(handler) {
-  return function(asyncResult) {
-    if (asyncResult.succeeded()) {
-      var jsProps = convertProps(asyncResult.result());
-      handler(null, jsProps);
-    } else {
-      handler(asyncResult.cause(), null);
-    }
-  };
+function asyncFileHandler(handler) {
+  return wrapHandler(handler, function(result) {
+    return new fileSystem.AsyncFile(result);
+  });
 }
 
 function convertProps(j_props) {
@@ -266,7 +257,7 @@ fileSystem.chmodSync = function(path, user, group) {
  * @returns {module:vertx/file_system}
  */
 fileSystem.props = function(path, handler) {
-  jfs.props(path, wrapPropsHandler(handler));
+  jfs.props(path, propsHandler(handler));
   return fileSystem;
 };
 
@@ -289,7 +280,7 @@ fileSystem.propsSync = function(path) {
  * @returns {module:vertx/file_system}
  */
 fileSystem.lprops = function(path, handler) {
-  jfs.lprops(path, wrapPropsHandler(handler));
+  jfs.lprops(path, propsHandler(handler));
   return fileSystem;
 };
 
@@ -616,6 +607,43 @@ fileSystem.OPEN_WRITE = 2;
 /** @property {Flag} CREATE_NEW Create new file flag. */
 fileSystem.CREATE_NEW = 4;
 
+function mapOpenArgs(args) {
+  var flags = fileSystem.OPEN_READ  | 
+              fileSystem.OPEN_WRITE | 
+              fileSystem.CREATE_NEW;
+  map = {
+    perms:     null,
+    flush:     false, 
+    read:      true,
+    write:     true,
+    createNew: true,
+  };
+  switch (args.length) {
+    case 0:
+      break;
+    case 1:
+      flags = args[0];
+      break;
+    case 2:
+      flags = args[0];
+      map.flush = args[1];
+      break;
+    case 3:
+      flags = arg[0];
+      map.flush = arg[1];
+      map.perms = arg[2];
+      break;
+    default:
+      throw 'Invalid number of arguments';
+  }
+
+  map.read = (flags & fileSystem.OPEN_READ) == fileSystem.OPEN_READ;
+  map.write = (flags & fileSystem.OPEN_WRITE) == fileSystem.OPEN_WRITE;
+  map.createNew = (flags & fileSystem.CREATE_NEW) == fileSystem.CREATE_NEW;
+
+  return map;
+}
+
 /**
  * Synchronous version of open.
  *
@@ -629,45 +657,12 @@ fileSystem.CREATE_NEW = 4;
  *        file is created when opened.
  * @returns {module:vertx/file_system.AsyncFile}
  */
-fileSystem.openSync = function(path, arg1, arg2, arg3) {
-  // TODO combine this code with the similar code in open
-  var openFlags;
-  var flush;
-  var perms;
-  var handler;
-  switch (arguments.length) {
-    case 1:
-      openFlags = fileSystem.OPEN_READ | fileSystem.OPEN_WRITE
-                | fileSystem.CREATE_NEW;
-      flush = false;
-      perms = null;
-      break;
-    case 2:
-      openFlags = arg1;
-      flush = false;
-      perms = null;
-      break;
-    case 3:
-      openFlags = arg1;
-      flush = arg2;
-      perms = null;
-      break;
-    case 4:
-      openFlags = arg1;
-      flush = arg2;
-      perms = arg3;
-      break;
-    default:
-      throw 'Invalid number of arguments';
-  }
-
-  var read = (openFlags & fileSystem.OPEN_READ) == fileSystem.OPEN_READ;
-  var write = (openFlags & fileSystem.OPEN_WRITE) == fileSystem.OPEN_WRITE;
-  var createNew = (openFlags & fileSystem.CREATE_NEW) == fileSystem.CREATE_NEW;
-
-  var asyncFile = jfs.openSync(path, perms, read, write, createNew, flush);
-
-  return new fileSystem.AsyncFile(asyncFile);
+fileSystem.openSync = function(path) {
+  var rest = Array.prototype.slice.call(arguments, 1);
+  var opts = mapOpenArgs(rest);
+  return new fileSystem.AsyncFile(
+      jfs.openSync(path, opts.perms, opts.read, opts.write, 
+                   opts.createNew, opts.flush));
 };
 
 /**
@@ -685,55 +680,12 @@ fileSystem.openSync = function(path, arg1, arg2, arg3) {
  *        handler will receieve an AsyncFile as a parameter when called.
  * @returns {module:vertx/file_system}
  */
-fileSystem.open = function(path, arg1, arg2, arg3, arg4) {
-
-  var openFlags;
-  var flush;
-  var perms;
-  var handler;
-  switch (arguments.length) {
-    case 2:
-      openFlags = fileSystem.OPEN_READ | fileSystem.OPEN_WRITE
-                | fileSystem.CREATE_NEW;
-      flush = false;
-      perms = null;
-      handler = arg1;
-      break;
-    case 3:
-      openFlags = arg1;
-      flush = false;
-      perms = null;
-        handler = arg2;
-      break;
-    case 4:
-      openFlags = arg1;
-      flush = arg2;
-      perms = null;
-      handler = arg3;
-      break;
-    case 5:
-      openFlags = arg1;
-      flush = arg2;
-      perms = arg3;
-      handler = arg4;
-      break;
-    default:
-      throw 'Invalid number of arguments';
-  }
-
-  var read = (openFlags & fileSystem.OPEN_READ) == fileSystem.OPEN_READ;
-  var write = (openFlags & fileSystem.OPEN_WRITE) == fileSystem.OPEN_WRITE;
-  var createNew = (openFlags & fileSystem.CREATE_NEW) == fileSystem.CREATE_NEW;
-
-  jfs.open(path, perms, read, write, createNew, flush, function(asyncResult) {
-    if (asyncResult.succeeded()) {
-      var jaf = asyncResult.result();
-      var wrapped = new fileSystem.AsyncFile(jaf);
-      handler(null, wrapped);
-    } else {
-      handler(asyncResult.cause(), null);
-    }
-  });
+fileSystem.open = function(path) {
+  var rest    = Array.prototype.slice.call(arguments, 1);
+  var handler = asyncFileHandler(rest.pop());
+  var opts    = mapOpenArgs(rest);
+  jfs.open(path, opts.perms, opts.read, opts.write, 
+           opts.createNew, opts.flush, handler);
   return fileSystem;
 };
 

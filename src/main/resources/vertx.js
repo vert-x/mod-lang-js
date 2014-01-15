@@ -15,7 +15,7 @@
  */
 
 if (typeof __vertxload === 'string') {
-  throw "Use require() to load Vert.x API modules"
+  throw "Use require() to load Vert.x API modules";
 }
 
 /**
@@ -107,11 +107,11 @@ vertx.fileSystem = require('vertx/file_system');
  */
 vertx.runOnContext = function(task) {
   __jvertx.runOnContext(task);
-}
+};
 
 vertx.currentContext = function() {
   return __jvertx.currentContext();
-}
+};
 
 // For compatability with functions that aren't namespaced to the module.
 // For example: `vertx.createHttpServer()` instead of the namespaced
