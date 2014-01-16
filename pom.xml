@@ -36,8 +36,7 @@
 
     <!-- dependency versions -->
     <version.vertx>2.1M3-SNAPSHOT</version.vertx>
-    <version.vertx.testframework>2.0.0-final</version.vertx.testframework>
-    <version.vertx.testtools>2.0.2-final</version.vertx.testtools>
+    <version.vertx.testtools>2.0.3-SNAPSHOT</version.vertx.testtools>
   </properties>
   <developers>
     <developer>
@@ -98,12 +97,6 @@
       <groupId>junit</groupId>
       <artifactId>junit</artifactId>
       <version>4.8.2</version>
-      <scope>test</scope>
-    </dependency>
-    <dependency>
-      <groupId>io.vertx</groupId>
-      <artifactId>vertx-testframework</artifactId>
-      <version>${version.vertx.testframework}</version>
       <scope>test</scope>
     </dependency>
     <dependency>
