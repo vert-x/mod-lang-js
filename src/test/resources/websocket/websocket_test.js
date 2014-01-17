@@ -73,6 +73,7 @@ var webSocketTest = {
   testHeaders: function() {
     server.websocketHandler(function(ws) {
       vassert.assertEquals("Upgrade", ws.headers().get("Connection"));
+      ws.close();
       vassert.testComplete();
     });
     server.listen(8080, '0.0.0.0', function(srv) {
@@ -84,6 +85,7 @@ var webSocketTest = {
     var path = '/path/to/websocket';
     server.websocketHandler(function(ws) {
       vassert.assertEquals(path, ws.uri());
+      ws.close();
       vassert.testComplete();
     });
     server.listen(8080, '0.0.0.0', function(srv) {
@@ -101,6 +103,7 @@ var webSocketTest = {
       client.connectWebsocket("/someurl", function(ws) {
         ws.dataHandler(function(buff) {
           vassert.assertTrue("foo" == buff.toString());
+          ws.close();
           vassert.testComplete();
         });
       });

@@ -47,11 +47,10 @@ function deploy(deployType, name, args) {
   if (config !== null) {
     // Convert to Java Json Object
     var str = JSON.stringify(config);
+    java.lang.System.err.println("GOT CONFIG: " + str);
     config = new org.vertx.java.core.json.JsonObject(str);
   }
-  if (doneHandler !== null) {
-    doneHandler = helpers.adaptAsyncResultHandler(doneHandler);
-  }
+  doneHandler = helpers.adaptAsyncResultHandler(doneHandler);
   if (multiThreaded === null) {
     multiThreaded = false;
   }

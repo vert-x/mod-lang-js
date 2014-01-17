@@ -22,18 +22,18 @@ var deployTest = {
   testSimpleDeploy: function() {
     container.deployVerticle("child.js", function(err, deployId) {
       vassert.assertTrue(null === err);
-      vassert.assertTrue(deployId != null);
+      vassert.assertTrue(deployId !== null);
       vassert.testComplete();
     });
   },
 
   testDeployWithConfig: function() {
-    var conf = {'foo': 'bar'}
+    var conf = {foo: 'bar'};
     container.deployVerticle("child.js", conf, function(err, deployId) {
       vassert.assertTrue(null === err);
       // this should work?
       //vassert.assertEquals('bar', container.config['foo']);
-      vassert.assertTrue(deployId != null);
+      vassert.assertTrue(deployId !== null);
       vassert.testComplete();
     });
   },
@@ -41,16 +41,16 @@ var deployTest = {
   testDeployWithNumInstances: function() {
     container.deployVerticle("child.js", 12, function(err, deployId) {
       vassert.assertTrue(null === err);
-      vassert.assertTrue(deployId != null);
+      vassert.assertTrue(deployId !== null);
       vassert.testComplete();
     });
   },
 
   testDeployWithConfigAndNumInstances: function() {
-    var conf = {foo: 'bar'}
+    var conf = {foo: 'bar'};
     container.deployVerticle("child.js", conf, 12, function(err, deployId) {
       vassert.assertTrue(null === err);
-      vassert.assertTrue(deployId != null);
+      vassert.assertTrue(deployId !== null);
       vassert.testComplete();
     });
   },
@@ -89,6 +89,6 @@ var deployTest = {
     });
   }
 
-}
+};
 
 vertxTest.startTests(deployTest);
