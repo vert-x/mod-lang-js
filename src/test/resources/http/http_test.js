@@ -216,7 +216,6 @@ var httpTest = {
     server.requestHandler(function(req) {
       req.response.sendFile(fileName, function(err) {
         vassert.assertTrue(err === null);
-        vassert.testComplete();
       });
     });
 
@@ -229,6 +228,7 @@ var httpTest = {
         resp.bodyHandler(function(body) {
             vassert.assertTrue(tu.buffersEqual(new vertx.Buffer(content), body));
             fs.deleteSync(fileName);
+            vassert.testComplete();
         });
       });
     });
