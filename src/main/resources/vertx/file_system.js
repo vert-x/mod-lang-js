@@ -19,6 +19,7 @@ if (typeof __vertxload === 'string') {
 }
 
 
+var Buffer = require('vertx/buffer');
 var jfs = __jvertx.fileSystem();
 
 /**
@@ -629,9 +630,9 @@ function mapOpenArgs(args) {
       map.flush = args[1];
       break;
     case 3:
-      flags = arg[0];
-      map.flush = arg[1];
-      map.perms = arg[2];
+      flags = args[0];
+      map.flush = args[1];
+      map.perms = args[2];
       break;
     default:
       throw 'Invalid number of arguments';
@@ -733,6 +734,9 @@ fileSystem.AsyncFile = function(jaf) {
    * @returns {module:vertx/file_system}
    */
   this.write = function(buffer, position, handler) {
+    if (buffer && typeof buffer === 'string') {
+      buffer = new Buffer(buffer);
+    }
     if (position === null || position === undefined) {
       // WriteStream interface
       jaf.write(buffer._to_java_buffer());

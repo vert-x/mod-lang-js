@@ -37,7 +37,45 @@ var fsTest = {
         vassert.testComplete();
       });
     });
- },
+  },
+
+  testOpenRead: function() {
+    var file = fileDir + "/somefile.txt";
+    fs.writeFile(file, "Bibimbap", function() {
+      fs.open(file, fs.OPEN_READ, function(err, f) {
+        vassert.assertTrue(null === err);
+        var buf = new Buffer();
+        f.read(buf, 0, 0, 8, function(e, b) {
+          vassert.assertTrue(null === e);
+          vassert.assertEquals("Bibimbap", b.toString());
+          try {
+            f.write("should fail", 0, function() {});
+          } catch(ex) {
+            vassert.testComplete();
+          }
+        });
+      });
+    });
+  },
+
+  testOpenWrite: function() {
+    var file = fileDir + "/somefile.txt";
+    fs.writeFile(file, "some data", function() {
+      fs.open(file, fs.OPEN_WRITE, true, "rwxr-x---", function(err, f) {
+        f.write(new Buffer("more data"), 0, function() {
+          fs.readFile(file, function(err, res) {
+            vassert.assertTrue(null === err);
+            vassert.assertEquals("more data", res.toString());
+            try {
+              f.read(new Buffer(), 0, 0, 1, function(){});
+            } catch(ex) {
+              vassert.testComplete();
+            }
+          });
+        });
+      });
+    });
+  },
 
   testCopyFile: function() {
     var from = fileDir + "/foo.tmp";

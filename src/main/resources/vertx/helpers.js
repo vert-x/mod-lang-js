@@ -26,7 +26,7 @@ var helpers = {
           handler(null, result);
         }
       }
-    }
+    };
   }
 };
 
