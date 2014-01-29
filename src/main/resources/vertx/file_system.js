@@ -55,6 +55,16 @@ function asyncFileHandler(handler) {
   });
 }
 
+function arrayResultHandler(handler) {
+  return wrapHandler(handler, function(result) {
+    var arry = [];
+    for (var i = 0; i < result.length; i++) {
+      arry.push(result[i]);
+    }
+    return arry;
+  });
+}
+
 function convertProps(j_props) {
   /** 
    * @typedef {{}} FileProps 
@@ -522,7 +532,7 @@ fileSystem.readDir = function(path, arg1, arg2) {
     handler = arg1;
     filter = null;
   }
-  jfs.readDir(path, filter, wrapHandler(handler));
+  jfs.readDir(path, filter, arrayResultHandler(handler));
   return fileSystem;
 };
 
@@ -536,7 +546,12 @@ fileSystem.readDir = function(path, arg1, arg2) {
  */
 fileSystem.readDirSync = function(path, filter) {
   if (!filter) filter = null;
-  return jfs.readDirSync(path, filter);
+  var result = jfs.readDirSync(path, filter);
+  var arry = [];
+  for (var i=0; i<result.length; i++) {
+    arry.push(result[i]);
+  }
+  return arry;
 };
 
 /**

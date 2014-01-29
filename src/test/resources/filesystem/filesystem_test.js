@@ -42,7 +42,7 @@ var fsTest = {
   testOpenRead: function() {
     var file = fileDir + "/somefile.txt";
     fs.writeFile(file, "Bibimbap", function() {
-      fs.open(file, fs.OPEN_READ, function(err, f) {
+      fs.open(file, fs.OPEN_READ, true, "rw-rw-rw-", function(err, f) {
         vassert.assertTrue(null === err);
         var buf = new Buffer();
         f.read(buf, 0, 0, 8, function(e, b) {
@@ -145,10 +145,12 @@ var fsTest = {
           fs.readDir(fileDir, function(err, res) {
             vassert.assertTrue(null === err);
             vassert.assertEquals("3", res.length.toString());
+            // ensure we're dealing with real JS arrays
+            vassert.assertEquals('function', (typeof res.forEach));
             vassert.testComplete();
           });
-        })
-      })
+        });
+      });
     });
   },
 
@@ -236,7 +238,7 @@ var fsTest = {
       vassert.testComplete();
     });
   }
-}
+};
 
 function setup(doneHandler) {
   fs.exists(fileDir, function(err, exists) {
