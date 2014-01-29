@@ -39,7 +39,7 @@ var deployTest = {
   },
 
   testDeployWithNumInstances: function() {
-    container.deployVerticle("child.js", 12, function(err, deployId) {
+    container.deployVerticle("child.js", 4, function(err, deployId) {
       vassert.assertTrue(null === err);
       vassert.assertTrue(deployId !== null);
       vassert.testComplete();
@@ -48,7 +48,7 @@ var deployTest = {
 
   testDeployWithConfigAndNumInstances: function() {
     var conf = {foo: 'bar'};
-    container.deployVerticle("child.js", conf, 12, function(err, deployId) {
+    container.deployVerticle("child.js", conf, 4, function(err, deployId) {
       vassert.assertTrue(null === err);
       vassert.assertTrue(deployId !== null);
       vassert.testComplete();
