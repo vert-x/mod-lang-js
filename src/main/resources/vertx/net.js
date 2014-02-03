@@ -319,10 +319,12 @@ net.NetSocket = function(jNetSocket) {
    * altogether (where supported by the underlying operating system. This is a
    * very efficient way to stream files
    * @param {string} filename The path to the file
+   * @param {function} [callback] A function to be called when the send
+   * has completed or a failure has occurred.
    * @returns {module:vertx/net.NetSocket} this
    */
-  this.sendFile = function(filename) {
-    jNetSocket.sendFile(filename);
+  this.sendFile = function(filename, callback) {
+    jNetSocket.sendFile(filename, helpers.adaptAsyncResultHandler(callback));
     return that;
   };
   

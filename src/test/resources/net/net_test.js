@@ -18,6 +18,10 @@ var vertx = require('vertx');
 var vertxTest = require('vertx_tests');
 var vassert = vertxTest.vassert;
 
+// for testing NetSocket.sendFile
+var fs = require('vertx/file_system');
+var tu = require('test_utils');
+
 var netTest = {
   testConnect: function() {
     var server = vertx.net.createNetServer();
@@ -102,9 +106,68 @@ var netTest = {
         sock.write( new vertx.Buffer('this is a buffer'));
       });
     });
-  }
+  },
+
+  testSendFile: function() {
+    var server = vertx.net.createNetServer();
+    var client = vertx.net.createNetClient();
+    var content = "Some data to write to the file";
+    var fileName = './test-send-file.html';
+    setupFile(fileName, content);
+    server.connectHandler(function(socket) {
+      socket.sendFile(fileName);
+    });
+    server.listen(1234, 'localhost', function(err, srv) {
+      vassert.assertTrue(err === null);
+      client.connect(1234, 'localhost', function(err, sock) {
+        vassert.assertTrue(err === null);
+        vassert.assertTrue(sock !== null);
+        sock.dataHandler(function(body) {
+            vassert.assertTrue(tu.buffersEqual(new vertx.Buffer(content), body));
+            if (fs.existsSync(fileName)) fs.deleteSync(fileName);
+            vassert.testComplete();
+        });
+      });
+    });
+  },
+
+  testSendFileWithHandler: function() {
+    var server = vertx.net.createNetServer();
+    var client = vertx.net.createNetClient();
+    var content = "Some data to write to the file";
+    var fileName = './test-send-file.html';
+    setupFile(fileName, content);
+
+    server.connectHandler(function(socket) {
+      socket.sendFile(fileName, function(err) {
+        vassert.assertTrue(err === null);
+      });
+    });
+
+    server.listen(1234, 'localhost', function(err, srv) {
+      vassert.assertTrue(err === null);
+      client.connect(1234, 'localhost', function(err, socket) {
+        vassert.assertTrue(err === null);
+        vassert.assertTrue(socket !== null);
+        socket.dataHandler(function(body) {
+            vassert.assertTrue(tu.buffersEqual(new vertx.Buffer(content), body));
+            if (fs.existsSync(fileName)) fs.deleteSync(fileName);
+            vassert.testComplete();
+        });
+      });
+    });
+  },
+
 
 };
+
+function setupFile(fileName, content, func) {
+  if (fs.existsSync(fileName)) {
+    fs.deleteSync(fileName);
+  }
+  fs.createFileSync(fileName);
+  fs.writeFileSync(fileName, content);
+}
 
 vertxTest.startTests(netTest);
 
