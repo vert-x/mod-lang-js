@@ -152,13 +152,19 @@ var Buffer = function(obj) {
   };
 
   /**
-   * Append to the buffer.
+   * Append the contents of the provided buffer to this buffer.
    *
    * @param {module:vertx/buffer~Buffer} buf a buffer
+   * @param {number} [offset] the offset in the provided buffer from which
+   * point bytes should be read. Defaults to 0.
+   * @param {number} [length] the number of bytes to read from the provided
+   * buffer. Defaults to buf.length() - offset.
    * @returns {module:vertx/buffer~Buffer} this
    */
-  this.appendBuffer = function(buf) {
-    __jbuf.appendBuffer(buf._to_java_buffer());
+  this.appendBuffer = function(buf, offset, length) {
+    var _offset = offset ? offset : 0;
+    var _length = length ? length : buf.length() - _offset;
+    __jbuf.appendBuffer(buf._to_java_buffer(), _offset, _length);
     return this;
   };
 
@@ -170,6 +176,20 @@ var Buffer = function(obj) {
    */
   this.appendByte = function(b) {
     __jbuf.appendByte(b);
+    return this;
+  };
+
+  /**
+   * Append a byte array to this Buffer.
+   * @param {array} b an array of bytes
+   * @param {number} [o] offset in the byte array from which to start reading
+   * @param {number} [l] the number of bytes to read from the byte array
+   * @returns {module:vertx/buffer~Buffer} this
+   */
+  this.appendBytes = function(b, o, l) {
+    var _offset = o ? o : 0;
+    var _length = l ? l : (b.length - _offset);
+    __jbuf.appendBytes(b, _offset, _length);
     return this;
   };
 
@@ -248,6 +268,21 @@ var Buffer = function(obj) {
   };
 
   /**
+   * Sets a byte array on this Buffer at the given position.
+   * @param {number} p the position to begin writing in this buffer
+   * @param {array} b an array of bytes
+   * @param {number} o offset in the byte array from which to start reading
+   * @param {number} l the number of bytes to read from the byte array
+   * @returns {module:vertx/buffer~Buffer} this
+   */
+  this.setBytes = function(pos, b, o, l) {
+    var _offset = o ? o : 0;
+    var _length = l ? l : (b.length - _offset);
+    __jbuf.setBytes(pos, b, _offset, _length);
+    return this;
+  };
+
+  /**
    * Set on the buffer at the given position.
    *
    * @param {number} pos the position on which to set i
@@ -296,14 +331,20 @@ var Buffer = function(obj) {
   };
 
   /**
-   * Set on the buffer at the given position.
+   * Sets the bytes from the provided buffer onto this buffer.
    *
-   * @param {number} pos the position on which to set s
-   * @param {module:vertx/buffer~Buffer} b a buffer
+   * @param {number} position the position on which to set the buffer
+   * @param {module:vertx/buffer~Buffer} buffer the buffer to read from
+   * @param {number} [offset] the point at which bytes should be read from 
+   * the provided buffer. Defaults to 0.
+   * @param {number} [length] the number of bytes to read from the provided
+   * buffer. Defaults to buffer.length() - offset.
    * @returns {module:vertx/buffer~Buffer} this
    */
-  this.setBuffer = function(pos, b) {
-    __jbuf.setBuffer(pos, b._to_java_buffer());
+  this.setBuffer = function(pos, b, o, l) {
+    var _offset = o ? o : 0;
+    var _length = l ? l : b.length() - _offset;
+    __jbuf.setBuffer(pos, b._to_java_buffer(), _offset, _length);
     return this;
   };
 

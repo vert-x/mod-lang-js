@@ -146,6 +146,89 @@ var BufferTest = {
     vassert.assertTrue(b.equals(c));
     vassert.testComplete();
   },
+
+  testAppendBufferWithOffset: function() {
+    var b = new Buffer("to be");
+    b.appendBuffer(new Buffer("to be or not to be"), 5);
+    vassert.assertEquals("to be or not to be", b.toString());
+    vassert.testComplete();
+  },
+
+  testAppendBufferWithOffsetAndLength: function() {
+    var b = new Buffer("to be");
+    b.appendBuffer(new Buffer("to be or not to be"), 5, 7);
+    vassert.assertEquals("to be or not", b.toString());
+    vassert.testComplete();
+  },
+
+  testSetBuffer: function() {
+    var b = new Buffer("It is not the shopping carts to hold our destiny");
+    var c = new Buffer("stars to hold our destiny, but ourselves");
+    b.setBuffer(14, c);
+    vassert.assertEquals("It is not the stars to hold our destiny, but ourselves", 
+        b.toString());
+    vassert.testComplete();
+  },
+
+  testSetBufferWithOffset: function() {
+    var b = new Buffer("It is not the shopping carts to hold our destiny");
+    var c = new Buffer("not the stars to hold our destiny, but ourselves");
+    b.setBuffer(14, c, 8);
+    vassert.assertEquals("It is not the stars to hold our destiny, but ourselves", 
+        b.toString());
+    vassert.testComplete();
+  },
+
+  testSetBufferWithOffsetAndLength: function() {
+    var b = new Buffer("It is not the shopping carts to hold our destiny");
+    var c = new Buffer("not the stars to hold our destiny, but ourselves, my friend");
+    b.setBuffer(14, c, 8, 40);
+    vassert.assertEquals("It is not the stars to hold our destiny, but ourselves", 
+        b.toString());
+    vassert.testComplete();
+  },
+
+  testAppendBytes: function() {
+    var b = new Buffer("To be");
+    vassert.assertEquals("To be or", b.appendBytes([32, 111, 114]).toString());
+    vassert.testComplete();
+  },
+
+  testAppendBytesWithOffset: function() {
+    var b = new Buffer("To be");
+    b.appendBytes([32, 32, 32, 111, 114], 2);
+    vassert.assertEquals("To be or", b.toString());
+    vassert.testComplete();
+  },
+
+  testAppendBytesWithOffsetAndLength: function() {
+    var b = new Buffer("To be");
+    b.appendBytes([32, 32, 32, 111, 114, 32, 111, 114], 2, 3);
+    vassert.assertEquals("To be or", b.toString());
+    vassert.testComplete();
+  },
+
+  testSetBytes: function() {
+    var b = new Buffer("To be xx not to be");
+    b.setBytes(6, [111, 114]);
+    vassert.assertEquals("To be or not to be", b.toString());
+    vassert.testComplete();
+  },
+
+  testSetBytesWithOffset: function() {
+    var b = new Buffer("To be xx not to be");
+    b.setBytes(6, [99, 111, 114], 1);
+    vassert.assertEquals("To be or not to be", b.toString());
+    vassert.testComplete();
+  },
+
+  testSetBytesWithOffsetAndLength: function() {
+    var b = new Buffer("To be xx not to be");
+    b.setBytes(6, [99, 111, 114, 99, 99], 1, 2);
+    vassert.assertEquals("To be or not to be", b.toString());
+    vassert.testComplete();
+  },
+
 };
 
 vertxTest.startTests(BufferTest);
