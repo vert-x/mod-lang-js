@@ -56,13 +56,11 @@ if (typeof __vertxload === 'string') {
  * // TODO: Finish these examples
  *
  * @constructor
- *
- * @constructor
- * @alias module:vertx/buffer
- * @param {string|number|undefined} [obj] The paramater from which the buffer will be created. If a string is given it
- *                                        create a new Buffer which contains the string. If a number is given it will
- *                                        create a new Buffer which has the given initial size. if no parameter is defined
- *                                        a new empty Buffer will be created.
+ * @param {string|number|undefined} [obj] The paramater from which the buffer
+ * will be created. If a string is given it create a new Buffer which contains
+ * the string. If a number is given it will create a new Buffer which has the
+ * given initial size. if no parameter is defined a new empty Buffer will be
+ * created.
  */
 var Buffer = function(obj) {
   var __jbuf;
@@ -77,7 +75,7 @@ var Buffer = function(obj) {
   }
 
   /**
-   * Get and unsigned 8 bit integer from the buffer.
+   * Get an unsigned 8 bit integer from the buffer.
    *
    * @param {number} pos the position
    * @returns {number}
@@ -87,7 +85,7 @@ var Buffer = function(obj) {
   };
 
   /**
-   * Get and signed 32 bit integer from the buffer.
+   * Get a signed 32 bit integer from the buffer.
    *
    * @param {number} pos the position
    * @returns {number}
@@ -97,7 +95,7 @@ var Buffer = function(obj) {
   };
 
   /**
-   * Get and signed 64 bit double from the buffer.
+   * Get a signed 64 bit double from the buffer.
    *
    * @param {number} pos the position
    * @returns {number}
@@ -107,7 +105,7 @@ var Buffer = function(obj) {
   };
 
   /**
-   * Get and signed 32 bit float from the buffer.
+   * Get a signed 32 bit float from the buffer.
    *
    * @param {number} pos the position
    * @returns {number}
@@ -117,7 +115,7 @@ var Buffer = function(obj) {
   };
 
   /**
-   * Get and signed 16 bit short from the buffer.
+   * Get a signed 16 bit short from the buffer.
    *
    * @param {number} pos the position
    * @returns {number}
@@ -127,21 +125,22 @@ var Buffer = function(obj) {
   };
 
   /**
-   * Get and {Buffer) for the given range from the buffer.
+   * Get a {module:vertx/buffer~Buffer} for the given range from the buffer.
    *
    * @param {number} start of the range
-   * @param {number} end of the range
-   * @returns {Buffer}
+   * @param {number} end of the range, exclusive
+   * @returns {module:vertx/buffer~Buffer}
    */
   this.getBuffer = function(start, end) {
     return new Buffer(__jbuf.getBuffer(start, end));
   };
 
   /**
-   * Get and {string) for the given range from the buffer.
+   * Get a string for the given range from the buffer.
    *
    * @param {number} start of the range
-   * @param {number} end of the range
+   * @param {number} end of the range, exclusive
+   * @param {string} [enc] An optional encoding for the returned string
    * @returns {string}
    */
   this.getString = function(start, end, enc) {
@@ -155,8 +154,8 @@ var Buffer = function(obj) {
   /**
    * Append to the buffer.
    *
-   * @param {Buffer} buf a buffer
-   * @returns {Buffer} this
+   * @param {module:vertx/buffer~Buffer} buf a buffer
+   * @returns {module:vertx/buffer~Buffer} this
    */
   this.appendBuffer = function(buf) {
     __jbuf.appendBuffer(buf._to_java_buffer());
@@ -167,7 +166,7 @@ var Buffer = function(obj) {
    * Append to the buffer.
    *
    * @param {number} b a valid signed 8 bit integer
-   * @returns {Buffer} this
+   * @returns {module:vertx/buffer~Buffer} this
    */
   this.appendByte = function(b) {
     __jbuf.appendByte(b);
@@ -178,7 +177,7 @@ var Buffer = function(obj) {
    * Append to the buffer.
    *
    * @param {number} i a valid signed 32 bit integer
-   * @returns {Buffer} this
+   * @returns {module:vertx/buffer~Buffer} this
    */
   this.appendInt = function(i) {
     __jbuf.appendInt(i);
@@ -189,7 +188,7 @@ var Buffer = function(obj) {
    * Append to the buffer.
    *
    * @param {number} s a valid signed 16 bit short
-   * @returns {Buffer} this
+   * @returns {module:vertx/buffer~Buffer} this
    */
   this.appendShort = function(s) {
     __jbuf.appendShort(s);
@@ -200,7 +199,7 @@ var Buffer = function(obj) {
    * Append to the buffer.
    *
    * @param {number} f a valid signed 32 bit integer
-   * @returns {Buffer} this
+   * @returns {module:vertx/buffer~Buffer} this
    */
   this.appendFloat = function(f) {
     __jbuf.appendFloat(f);
@@ -211,7 +210,7 @@ var Buffer = function(obj) {
    * Append to the buffer.
    *
    * @param {number} d a valid signed 64 bit double
-   * @returns {Buffer} this
+   * @returns {module:vertx/buffer~Buffer} this
    */
   this.appendDouble = function(d) {
     __jbuf.appendDouble(d);
@@ -222,8 +221,9 @@ var Buffer = function(obj) {
    * Append to the buffer.
    *
    * @param {string} str the string
-   * @param {string} enc the encoding to use or {undefined} if the default should be used.
-   * @returns {Buffer} this
+   * @param {string} [enc] the encoding to use or {undefined} if the default
+   * should be used.  
+   * @returns {module:vertx/buffer~Buffer} this
    */
   this.appendString = function(str, enc) {
     if (typeof enc === 'undefined') {
@@ -236,11 +236,11 @@ var Buffer = function(obj) {
   };
 
   /**
-   * Set on the buffer.
+   * Set on the buffer at the given position.
    *
    * @param {number} pos the position on which to set b
    * @param {number} b a valid signed 8 bit integer
-   * @returns {Buffer} this
+   * @returns {module:vertx/buffer~Buffer} this
    */
   this.setByte = function(pos, b) {
     __jbuf.setByte(pos, b);
@@ -248,11 +248,11 @@ var Buffer = function(obj) {
   };
 
   /**
-   * Set on the buffer.
+   * Set on the buffer at the given position.
    *
    * @param {number} pos the position on which to set i
    * @param {number} i a valid signed 32 bit integer
-   * @returns {Buffer} this
+   * @returns {module:vertx/buffer~Buffer} this
    */
   this.setInt = function(pos, i) {
     __jbuf.setInt(pos, i);
@@ -260,11 +260,11 @@ var Buffer = function(obj) {
   };
 
   /**
-   * Set on the buffer.
+   * Set on the buffer at the given position.
    *
    * @param {number} pos the position on which to set d
    * @param {number} d a valid signed 64 bit double
-   * @returns {Buffer} this
+   * @returns {module:vertx/buffer~Buffer} this
    */
   this.setDouble = function(pos, d) {
     __jbuf.setDouble(pos, d);
@@ -272,11 +272,11 @@ var Buffer = function(obj) {
   };
 
   /**
-   * Set on the buffer.
+   * Set on the buffer at the given position.
    *
    * @param {number} pos the position on which to set f
    * @param {number} f a valid signed 32 bit integer
-   * @returns {Buffer} this
+   * @returns {module:vertx/buffer~Buffer} this
    */
   this.setFloat = function(pos, f) {
     __jbuf.setFloat(pos, f);
@@ -284,11 +284,11 @@ var Buffer = function(obj) {
   };
 
   /**
-   * Set on the buffer.
+   * Set on the buffer at the given position.
    *
    * @param {number} pos the position on which to set s
    * @param {number} s a valid signed 16 bit short
-   * @returns {Buffer} this
+   * @returns {module:vertx/buffer~Buffer} this
    */
   this.setShort = function(pos, s) {
     __jbuf.setShort(pos, s);
@@ -296,11 +296,11 @@ var Buffer = function(obj) {
   };
 
   /**
-   * Set on the buffer.
+   * Set on the buffer at the given position.
    *
    * @param {number} pos the position on which to set s
-   * @param {Buffer} b a buffer
-   * @returns {Buffer} this
+   * @param {module:vertx/buffer~Buffer} b a buffer
+   * @returns {module:vertx/buffer~Buffer} this
    */
   this.setBuffer = function(pos, b) {
     __jbuf.setBuffer(pos, b._to_java_buffer());
@@ -308,12 +308,12 @@ var Buffer = function(obj) {
   };
 
   /**
-   * Set on the buffer.
+   * Set a string in the buffer at the given position.
    *
    * @param {number} pos the position on which to set str
    * @param {string} str the string
-   * @param {string} enc the encoding to use or {undefined} if the default should be used.
-   * @returns {Buffer} this
+   * @param {string} [enc] an optional encoding to use
+   * @returns {module:vertx/buffer~Buffer} this
    */
   this.setString = function(pos, str, enc) {
     if (typeof enc === 'undefined') {
@@ -324,19 +324,36 @@ var Buffer = function(obj) {
     return this;
   };
 
+  /**
+   * Get the length of the buffer
+   * @returns {number} The buffer length. Note this is the actual length
+   * of the data in the buffer, not an allocated length. For example, 
+   *
+   * @example
+   *
+   * var b = new Buffer(1024);
+   * b.length(); // => 0
+   * b = new Buffer("Hello world!");
+   * b.length(); // => 12
+   */
   this.length = function() {
     return __jbuf.length();
   };
 
   /**
-   * Create a copy of this buffer and it'S content.
+   * Create a copy of this buffer and its content.
    *
-   * @returns {Buffer}
+   * @returns {module:vertx/buffer~Buffer}
    */
   this.copy = function() {
     return new Buffer(__jbuf.copy());
   };
 
+  /**
+   * Determines if this buffer is equal to the other
+   * @param {module:vertx/buffer~Buffer} other the buffer to compare to this one
+   * @returns {boolean} true if the buffers are equal
+   */
   this.equals = function(o) {
     if (o instanceof Buffer) {
       return __jbuf.equals(o._to_java_buffer());
@@ -344,6 +361,11 @@ var Buffer = function(obj) {
     return false;
   };
 
+  /**
+   * Returns this buffer as a string. The default encoding is UTF-8.
+   * @param {string} [encoding] An optional encoding
+   * @returns {string} This buffer as a string
+   */
   this.toString = function(enc) {
     if (typeof enc === 'undefined')  {
       return __jbuf.toString();
@@ -362,8 +384,6 @@ var Buffer = function(obj) {
 
 
 /**
- * See the Java documentation for information on the public API.
- *
  * @see https://github.com/vert-x/vert.x/blob/master/vertx-core/src/main/java/org/vertx/java/core/buffer/Buffer.java
  * @module vertx/buffer
  */
