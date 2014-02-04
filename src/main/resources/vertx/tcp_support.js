@@ -34,7 +34,6 @@ var NetworkSupport = require('vertx/network_support');
  * function calls to the Java class provided by Vert.x
  *
  * @see https://github.com/eclipse/vert.x/blob/master/vertx-core/src/main/java/org/vertx/java/core/TCPSupport.java
- * @external org.vertx.java.core.TCPSupport
  */
 
 
@@ -115,7 +114,6 @@ var TCPSupport = function(delegate) {
  * function calls to the Java class provided by Vert.x
  *
  * @see https://github.com/eclipse/vert.x/blob/master/vertx-core/src/main/java/org/vertx/java/core/ServerTCPSupport.java
- * @external org.vertx.java.core.ServerTCPSupport
  */
 
 /**

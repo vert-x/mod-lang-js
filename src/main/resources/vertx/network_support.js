@@ -31,7 +31,6 @@ if (typeof __vertxload === 'string') {
  * function calls to the Java class provided by Vert.x
  *
  * @see https://github.com/eclipse/vert.x/blob/master/vertx-core/src/main/java/org/vertx/java/core/NetworkSupport.java
- * @external org.vertx.java.core.NetworkSupport
  */
 
 

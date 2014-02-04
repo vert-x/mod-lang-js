@@ -61,7 +61,6 @@ var parseTools = require('vertx/parse_tools');
  * function calls to the Java class provided by Vert.x
  *
  * @see https://github.com/eclipse/vert.x/blob/master/vertx-core/src/main/java/org/vertx/java/core/streams/ReadStream.java
- * @external org.vertx.java.core.streams.ReadStream
  */
 
 /**
@@ -69,7 +68,7 @@ var parseTools = require('vertx/parse_tools');
  * function calls to the Java class provided by Vert.x
  *
  * @see https://github.com/eclipse/vert.x/blob/master/vertx-core/src/main/java/org/vertx/java/core/streams/WriteStream.java
- * @external org.vertx.java.core.streams.WriteStream
+ *
  */
 
 /**
