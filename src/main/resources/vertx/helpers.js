@@ -27,6 +27,15 @@ var helpers = {
         }
       }
     };
+  },
+
+  convertInetSocketAddress: function(javaAddr) {
+    return {
+      address: javaAddr.getHostString(),
+      port: javaAddr.getPort(),
+      getPort: function() { return javaAddr.getPort(); },
+      getHostString: function() { return javaAddr.getHostString(); }
+    };
   }
 };
 

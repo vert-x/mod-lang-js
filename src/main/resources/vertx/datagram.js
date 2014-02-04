@@ -160,7 +160,7 @@ var DatagramSocket = function(ipv4) {
 
   /** 
    * Get the local address of this socket. 
-   * @return {external:InetSocketAddress}
+   * @return {} An object with the socket's address, port and IP family as properties
    */
   this.localAddress = function() {
     if (_localAddress === undefined) {

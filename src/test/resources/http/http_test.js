@@ -68,6 +68,8 @@ var httpTest = {
       var remote = req.remoteAddress();
       vassert.assertTrue(remote.getPort() > 0);
       vassert.assertTrue(remote.getHostString() !== null);
+      vassert.assertTrue(remote.port === remote.getPort());
+      vassert.assertTrue(remote.address === remote.getHostString());
 
       vassert.testComplete();
     });

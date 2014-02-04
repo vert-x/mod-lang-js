@@ -19,7 +19,8 @@ if (typeof __vertxload === 'string') {
 }
 var Streams  = require('vertx/streams');
 var MultiMap = require('vertx/multi_map').MultiMap;
-var asyncResultHandler = require('vertx/helpers').adaptAsyncResultHandler;
+var helpers  = require('vertx/helpers');
+var asyncResultHandler = helpers.adaptAsyncResultHandler;
 
 /**
  * <p>
@@ -280,10 +281,10 @@ sockJS.SockJSSocket = function(delegate) {
 
   /**
    * Get the local address for this socket
-   * @return {external:java.net.InetSocketAddress} The local address
+   * @return {} The address of the local socket
    */
   this.localAddress = function() {
-    return delegate.getLocalAddress();
+    return helpers.convertInetSocketAddress(delegate.getLocalAddress());
   };
 
   /**

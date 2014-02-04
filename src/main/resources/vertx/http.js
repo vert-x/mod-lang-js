@@ -187,25 +187,24 @@ http.HttpServerRequest = function(jreq) {
   };
 
   /**
-   * @external java.net.InetSocketAddress
-   */
-
-  /**
-   * Get the address of the remote peer as a Java InetSocketAddress object
+   * Get the address of the remote peer. An address object contains
+   * port and address properties.
    *
-   * @return {java.net.InetSocketAddress} the underlying Java socket address instance
+   * @return {} the remote address
    */
   this.remoteAddress = function() {
-    return jreq.remoteAddress();
+    return helpers.convertInetSocketAddress(jreq.remoteAddress());
   };
 
+
   /**
-   * Get the address of the server as a Java InetSocketAddress object
+   * Get the address of the server. An address object contains port
+   * and address properties.
    *
-   * @return {java.net.InetSocketAddress} the underlying Java socket address instance
+   * @return {} the local address.
    */
   this.localAddress = function() {
-    return jreq.localAddress();
+    return helpers.convertInetSocketAddress(jreq.localAddress());
   };
 
   /**
@@ -1848,8 +1847,6 @@ function wrappedRequestHandler(handler) {
     handler(new http.HttpServerRequest(jreq));
   };
 }
-
-
 
 module.exports = http;
 
