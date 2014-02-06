@@ -254,7 +254,7 @@ fileSystem.chown = function(path, user, arg1, arg2) {
  *
  * @returns {module:vertx/file_system}
  */
-fileSystem.chmodSync = function(path, user, group) {
+fileSystem.chownSync = function(path, user, group) {
   if (!group) group = null;
   jfs.chownSync(path, user, group);
   return fileSystem;
