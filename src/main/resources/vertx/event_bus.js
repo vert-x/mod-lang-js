@@ -307,6 +307,7 @@ function registerHandler(address, handler, localOnly, registrationHandler) {
 }
 
 function convertMessage(message) {
+  if (message === null || message === undefined) return "";
   var msgType = typeof message;
   switch (msgType) {
     case 'string':
@@ -324,7 +325,7 @@ function convertMessage(message) {
       // since it may be a Buffer which we want to let through
       if (message instanceof Array) {
         message = new org.vertx.java.core.json.JsonArray(message);
-      } else if (message === null || typeof message.getClass === "undefined") {
+      } else if (typeof message.getClass === "undefined") {
         // Not a Java object - assume JSON message
         message = new org.vertx.java.core.json.JsonObject(JSON.stringify(message));
       }
