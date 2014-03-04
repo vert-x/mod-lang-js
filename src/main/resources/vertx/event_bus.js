@@ -307,12 +307,11 @@ function registerHandler(address, handler, localOnly, registrationHandler) {
 }
 
 function convertMessage(message) {
-  if (message === null || message === undefined) return "";
+  if (message === null || message === undefined) return '';
   var msgType = typeof message;
   switch (msgType) {
     case 'string':
     case 'boolean':
-    case 'undefined':
     case 'org.vertx.java.core.json.JsonArray':
     case 'org.vertx.java.core.buffer.Buffer':
       break;
@@ -320,13 +319,9 @@ function convertMessage(message) {
       message = new java.lang.Double(message);
       break;
     case 'object':
-      // If null then we just wrap it as an empty JSON message
-      // We don't do this if it's a Java class (it has the getClass) method
-      // since it may be a Buffer which we want to let through
       if (message instanceof Array) {
         message = new org.vertx.java.core.json.JsonArray(message);
       } else if (typeof message.getClass === "undefined") {
-        // Not a Java object - assume JSON message
         message = new org.vertx.java.core.json.JsonObject(JSON.stringify(message));
       }
       break;
