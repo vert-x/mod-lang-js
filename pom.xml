@@ -300,7 +300,7 @@
                 <vertx.langs..coffee>dynjs</vertx.langs..coffee>
                 <vertx.langs..js>dynjs</vertx.langs..js>
                 <vertx.mods>target/mods</vertx.mods>
-                <dynjs.compile.mode>off</dynjs.compile.mode>
+                <dynjs.compile.mode>OFF</dynjs.compile.mode>
               </systemPropertyVariables>
               <includes>
                 <include>**/integration/**</include>
