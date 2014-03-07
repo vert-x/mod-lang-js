@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>JSDoc: Module: vertx/streams</title>
+    
+    <script src="scripts/prettify/prettify.js"> </script>
+    <script src="scripts/prettify/lang-css.js"> </script>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <link type="text/css" rel="stylesheet" href="styles/prettify-tomorrow.css">
+    <link type="text/css" rel="stylesheet" href="styles/jsdoc-default.css">
+</head>
+
+<body>
+
+<div id="main">
+    
+    <h1 class="page-title">Module: vertx/streams</h1>
+    
+    
+
+
+
+<section>
+    
+<header>
+    <h2>
+    vertx/streams
+    </h2>
+    
+</header>  
+
+<article>
+    <div class="container-overview">
+    
+    
+    
+        
+            <div class="description"><p>
+There are several objects in vert.x that allow data to be read from and
+written to in the form of Buffers.  In Vert.x, calls to write data return
+immediately and writes are internally queued.
+</p>
+
+<p>
+It's not hard to see that if you write to an object faster than it can
+actually write the data to its underlying resource then the write queue
+could grow without bound - eventually resulting in exhausting available
+memory.
+</p>
+
+<p>
+To solve this problem a simple flow control capability is provided by some
+objects in the vert.x API.
+</p>
+
+<p>
+Any flow control aware object that can be written to is said to implement
+<a href="streams-WriteStream.html"><code>module:vertx/streams~WriteStream</code></a>, and any flow control object
+that can be read from is said to implement <a href="streams-ReadStream.html"><code>module:vertx/streams~ReadStream</code></a>.  
+</p>
+
+<p>
+The object types defined in this module are typically not instantiated
+by directly, but are provided to callback functions in modules such as
+<a href="file_system.html"><code>module:vertx/file_system</code></a>, <a href="net.html"><code>module:vertx/net</code></a> and
+<a href="http.html"><code>module:vertx/http</code></a>.
+</p></div>
+        
+        
+        
+<dl class="details">
+    
+        
+    
+    
+    
+
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="streams.js.html">vertx/streams.js</a>, <a href="streams.js.html#line24">line 24</a>
+    </li></ul></dd>
+    
+    
+    
+    
+    
+    
+    
+</dl>
+
+        
+        
+    
+    </div>
+    
+    
+    
+    
+    
+    
+    
+    
+        <h3 class="subsection-title">Classes</h3>
+        
+        <dl>
+            <dt><a href="streams-DrainSupport.html">DrainSupport</a></dt>
+            <dd></dd>
+        
+            <dt><a href="streams-ReadStream.html">ReadStream</a></dt>
+            <dd></dd>
+        
+            <dt><a href="streams-ReadSupport.html">ReadSupport</a></dt>
+            <dd></dd>
+        
+            <dt><a href="streams-WriteStream.html">WriteStream</a></dt>
+            <dd></dd>
+        </dl>
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+</article>
+
+</section>  
+
+
+
+
+</div>
+
+<nav>
+    <h2><a href="index.html">Index</a></h2><h3>Modules</h3><ul><li><a href="module-vertx.html">vertx</a></li><li><a href="buffer.html">vertx/buffer</a></li><li><a href="console.html">vertx/console</a></li><li><a href="container.html">vertx/container</a></li><li><a href="datagram.html">vertx/datagram</a></li><li><a href="dns.html">vertx/dns</a></li><li><a href="event_bus.html">vertx/event_bus</a></li><li><a href="file_system.html">vertx/file_system</a></li><li><a href="http.html">vertx/http</a></li><li><a href="multi_map.html">vertx/multi_map</a></li><li><a href="net.html">vertx/net</a></li><li><a href="network_support.html">vertx/network_support</a></li><li><a href="parse_tools.html">vertx/parse_tools</a></li><li><a href="pump.html">vertx/pump</a></li><li><a href="shared_data.html">vertx/shared_data</a></li><li><a href="sockjs.html">vertx/sockjs</a></li><li><a href="ssl_support.html">vertx/ssl_support</a></li><li><a href="streams.html">vertx/streams</a></li><li><a href="tcp_support.html">vertx/tcp_support</a></li><li><a href="timer.html">vertx/timer</a></li></ul><h3>Externals</h3><ul><li><a href="Buffer_.html">Buffer</a></li></ul><h3>Classes</h3><ul><li><a href="buffer-Buffer.html">Buffer</a></li><li><a href="datagram-DatagramPacket.html">DatagramPacket</a></li><li><a href="datagram-DatagramSocket.html">DatagramSocket</a></li><li><a href="dns.DnsClient.html">DnsClient</a></li><li><a href="file_system.AsyncFile.html">AsyncFile</a></li><li><a href="http.HttpClient.html">HttpClient</a></li><li><a href="http.HttpClientRequest.html">HttpClientRequest</a></li><li><a href="http.HttpClientResponse.html">HttpClientResponse</a></li><li><a href="http.HttpServer.html">HttpServer</a></li><li><a href="http.HttpServerFileUpload.html">HttpServerFileUpload</a></li><li><a href="http.HttpServerRequest.html">HttpServerRequest</a></li><li><a href="http.HttpServerResponse.html">HttpServerResponse</a></li><li><a href="http.RouteMatcher.html">RouteMatcher</a></li><li><a href="http.WebSocket.html">WebSocket</a></li><li><a href="multi_map-MultiMap.html">MultiMap</a></li><li><a href="net.NetClient.html">NetClient</a></li><li><a href="net.NetServer.html">NetServer</a></li><li><a href="net.NetSocket.html">NetSocket</a></li><li><a href="parse_tools.RecordParser.html">RecordParser</a></li><li><a href="pump-Pump.html">Pump</a></li><li><a href="sockjs.SockJSServer.html">SockJSServer</a></li><li><a href="sockjs.SockJSSocket.html">SockJSSocket</a></li><li><a href="ssl_support-ClientSSLSupport.html">ClientSSLSupport</a></li><li><a href="ssl_support-ServerSSLSupport.html">ServerSSLSupport</a></li><li><a href="ssl_support-SSLSupport.html">SSLSupport</a></li><li><a href="streams-DrainSupport.html">DrainSupport</a></li><li><a href="streams-ReadStream.html">ReadStream</a></li><li><a href="streams-ReadSupport.html">ReadSupport</a></li><li><a href="streams-WriteStream.html">WriteStream</a></li><li><a href="tcp_support-ServerTCPSupport.html">ServerTCPSupport</a></li><li><a href="tcp_support-TCPSupport.html">TCPSupport</a></li></ul><h3><a href="global.html">Global</a></h3>
+</nav>
+
+<br clear="both">
+
+<footer>
+    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.2.0-dev</a> on Fri Mar 07 2014 09:10:19 GMT-0500 (EST)
+</footer>
+
+<script> prettyPrint(); </script>
+<script src="scripts/linenumber.js"> </script>
+</body>
+</html>
