@@ -627,7 +627,7 @@ function mapOpenArgs(args) {
   var flags = fileSystem.OPEN_READ  | 
               fileSystem.OPEN_WRITE | 
               fileSystem.CREATE_NEW;
-  map = {
+  var map = {
     perms:     null,
     flush:     false, 
     read:      true,
