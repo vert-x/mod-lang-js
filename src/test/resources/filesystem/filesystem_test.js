@@ -77,6 +77,15 @@ var fsTest = {
     });
   },
 
+  testOpenSyncWrite: function() {
+    var file = fileDir + "/somefile.txt";
+    fs.writeFile(file, "Bibimbap", function() {
+      var f = fs.openSync(file, fs.OPEN_READ|fs.OPEN_WRITE, true, "rwxrwxrwx");
+      vassert.assertTrue(null !== f);
+      vassert.testComplete();
+    });
+  },
+
   testCopyFile: function() {
     var from = fileDir + "/foo.tmp";
     var to = fileDir + "/bar.tmp";
