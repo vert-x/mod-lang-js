@@ -85,6 +85,15 @@ var Buffer = function(obj) {
   };
 
   /**
+   * Get a copy of the buffer as a byte array.
+   *
+   * @returns {array}
+   */
+  this.getBytes = function() {
+      return __jbuf.getBytes();
+  };
+
+  /**
    * Get a signed 32 bit integer from the buffer.
    *
    * @param {number} pos the position
