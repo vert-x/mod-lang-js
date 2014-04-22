@@ -71,21 +71,26 @@ http.createHttpClient = function() {
  * created.
  *
  * @example
- * var http    = require('vertx/http');
- * var console = require('vertx/console');
+ * var http = require('vertx/http'),
+ * console = require('vertx/console'),
+ * server = http.createHttpServer();
  *
- * var server = http.createHttpServer();
- * server.requestHandler(function(request) {
- *
+ * server.requestHandler(function (request) {
+ *   var str = '';
  *   // Get headers from the HttpServerRequest object
- *   // and write them to the console
- *   for (var k in request.headers()) {
- *     console.log(k + ": " + headers[k]);
- *   }
+ *   // and write them to the console and append to str
+ *   request.headers().forEach(function (k, v) {
+ *      console.log(k + ": " + v);
+ *      str += k + ": " + v + "\n";
+ *   });
  * 
  *   request.response.end(str);
  * 
- * }).listen(8080, 'localhost');
+ * }).listen(8080, 'localhost', function (err) {
+ *     if (!err) {
+ *         console.log('Listen succeeded!');
+ *     }
+ * });
  *
  * @class 
  * @param {org.vertx.java.core.http.HttpServerRequest} request the underlying
