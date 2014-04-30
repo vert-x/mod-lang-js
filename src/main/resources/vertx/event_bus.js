@@ -18,7 +18,8 @@ if (typeof __vertxload === 'string') {
   throw "Use require() to load Vert.x API modules";
 }
 
-var helpers = require('vertx/helpers.js');
+var helpers = require('vertx/helpers');
+var Buffer  = require('vertx/buffer');
 
 /**
  * While JSON is the preferred messaging on the event bus,
@@ -228,26 +229,34 @@ function checkHandlerParams(address, handler) {
 
 var jsonObjectClass = new org.vertx.java.core.json.JsonObject().getClass();
 var jsonArrayClass  = new org.vertx.java.core.json.JsonArray().getClass();
+var bufferClass     = new org.vertx.java.core.buffer.Buffer().getClass();
 
 // Converts a received message from the java event bus into something
 // a little more palatable for javascript
 var resultConverter = function(jMsg) {
   var body = jMsg.body();
 
-  if (typeof body === 'object') {
-    var clazz = body.getClass();
-    if (clazz === jsonObjectClass || clazz === jsonArrayClass) {
-      // Convert to JS JSON
-      if (body) {
-        body = JSON.parse(body.encode());
-      } else {
-        body = undefined;
-      }
-    }
-  } else if (body && typeof body === 'org.vertx.java.core.json.JsonObject') {
-    // DynJS returns a fully qualified class name for `typeof` on most
-    // java objects, so we need to check for this too.
+  // Strings, booleans, numbers, and undefined all
+  // get passed across the bus without conversion
+  switch(typeof body) {
+    case 'string':
+    case 'boolean':
+    case 'number':
+    case 'undefined':
+      return body;
+    case 'object':
+      if (body === null) return undefined;
+      break;
+  }
+    
+  // must be some other kind of object - deal with it
+  var clazz = body.getClass();
+  if (clazz === jsonObjectClass || clazz === jsonArrayClass) {
+    // Convert to JS JSON
     body = JSON.parse(body.encode());
+  } else if (clazz === bufferClass) {
+    // Convert to JS Buffer
+    body = new Buffer(body);
   }
   return body;
 };
@@ -321,6 +330,8 @@ function convertMessage(message) {
     case 'object':
       if (message instanceof Array) {
         message = new org.vertx.java.core.json.JsonArray(message);
+      } else if (message instanceof Buffer) {
+        message = message._to_java_buffer();
       } else if (typeof message.getClass === "undefined") {
         message = new org.vertx.java.core.json.JsonObject(JSON.stringify(message));
       }
