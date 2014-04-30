@@ -119,11 +119,19 @@ parseTools.RecordParser = function(parser) {
   };
 
   /**
-   *
-   * @returns {Function} a function you should pass in as function to {module:vertx/streams~ReadStream} dataHandler.
+   * Allows a Parser to be provided to a {vertx/streams~ReadStream}'s
+   * dataHandler function. 
+   * @param {} the value for 'this'
+   * @param {vertx/buffer.Buffer} buffer 
    */
+  this.call = function(that, buf) {
+    _jparser.handle(buf._to_java_buffer());
+    return that;
+  };
+
   this.handle = function(buf) {
     _jparser.handle(buf._to_java_buffer());
+    return this;
   };
 };
 
