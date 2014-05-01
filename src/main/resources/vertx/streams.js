@@ -170,7 +170,7 @@ var ReadSupport = function(delegate) {
    */
   this.dataHandler = function(handler) {
     delegate.dataHandler(function(buf) {
-      handler(new Buffer(buf));
+      handler.call(handler, new Buffer(buf));
     });
     return this;
   };
