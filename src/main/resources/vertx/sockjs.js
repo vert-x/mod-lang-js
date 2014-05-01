@@ -222,7 +222,7 @@ sockJS.SockJSServer = function(httpServer) {
 
   function sockJSHandler(func) {
     return function(sock) {
-      func.call(func, [new sockJS.SockJSSocket(sock)]);
+      func.call(func, new sockJS.SockJSSocket(sock));
     };
   }
 };

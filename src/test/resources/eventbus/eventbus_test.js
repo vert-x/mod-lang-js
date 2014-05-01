@@ -59,6 +59,9 @@ var echo = function(msg) {
       vassert.assertEquals(msg.field, reply.field);
     }
   }
+  if (msg instanceof Buffer) {
+    vassert.assertTrue(reply instanceof Buffer);
+  }
   vassert.assertTrue(ebus === eb);
   vassert.testComplete();
   });
