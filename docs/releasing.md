@@ -29,6 +29,12 @@ already, so there is rarely a reason to do it manually.
     check <http://search.maven.org> to know when this has completed.
 10. Announce it: twitter, dynjs@, vertx@
 11. Register it in the [module registry](http://modulereg.vertx.io/)
+12. Update API documentation
+    * 12.1 `git checkout gh-pages`
+    * 12.2 `mv target/docs docs/<version-number>`
+    * 12.3 Update link in index.html
+    * 12.4 `git add docs/<version-number> index.html`
+    * 12.5 `git push origin gh-pages`
 
 For reference:
 
