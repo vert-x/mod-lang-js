@@ -12,7 +12,7 @@ the core Javascript API for Vert.x.
 ## Documentation
 
 - [User Manual](http://vertx.io/core_manual_js.html)
-- [1.0.0 API Documentation](http://vertx.io/mod-lang-js/docs/1.0.0/index.html)
+- [1.1.0 API Documentation](http://vertx.io/mod-lang-js/docs/1.1.0/index.html)
 - [HEAD API Documentation](https://vertx.ci.cloudbees.com/view/Javascript/job/vert.x-mod-lang-js/lastSuccessfulBuild/artifact/target/docs/index.html)
 
 ## Continuous Integration
@@ -43,7 +43,7 @@ By default, vert.x runs Javascript verticles and modules with Rhino. Change
 this by creating a `langs.properties` file at the root of your project that
 looks like this for dynjs.
 
-    dynjs=io.vertx~lang-dynjs~1.0.0:org.dynjs.vertx.DynJSVerticleFactory
+    dynjs=io.vertx~lang-dynjs~1.0.1:org.dynjs.vertx.DynJSVerticleFactory
     .js=dynjs
 
 Or if you want to use the experimental nashorn module, do this.
@@ -53,3 +53,4 @@ Or if you want to use the experimental nashorn module, do this.
 
 
 Enjoy. And if you have any problems, hit us on on freenode at #dynjs or #vertx.
+
