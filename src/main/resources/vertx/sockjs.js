@@ -159,7 +159,7 @@ sockJS.SockJSServer = function(httpServer) {
    *                permitted matches for inbound (client->server) traffic 
    * @param {Array} outboundPermitted A list of JSON objects which define 
    *                permitted matches for outbound (server->client) traffic
-   * @param {JSON} bridgeConfig A JSON object containing the configuration for
+   * @param {JSON} bridgeConfig A JSON containing the configuration for
    *   the event bus bridge. Configuration options and their defaults are:
    *    <pre>
    *      auth_address: "vertx.basicauthmanager.authorise"
@@ -184,7 +184,8 @@ sockJS.SockJSServer = function(httpServer) {
     }));
     if (bridgeConfig) {
       jserver.bridge(new JsonObject(JSON.stringify(config)),
-          jInboundPermitted, jOutboundPermitted, bridgeConfig);
+          jInboundPermitted, jOutboundPermitted,
+          new JsonObject(JSON.stringify(bridgeConfig)));
     } else {
       jserver.bridge(new JsonObject(JSON.stringify(config)),
           jInboundPermitted, jOutboundPermitted);
