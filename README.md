@@ -1,4 +1,6 @@
-# Javascript Language Module for Vert.x
+# Vert.x 2.x is **deprecated** - use instead https://github.com/vert-x3/vertx-lang-js
+
+## Javascript Language Module for Vert.x
 
 [![Build Status](https://travis-ci.org/vert-x/mod-lang-js.png?branch=master "Build Status")](https://travis-ci.org/vert-x/mod-lang-js)
 
@@ -9,19 +11,19 @@ This module is not typically used directly, but rather both `mod-lang-rhino`
 and `mod-lang-dynjs` have a dependency on this module which provides
 the core Javascript API for Vert.x.
 
-## Documentation
+### Documentation
 
 - [User Manual](http://vertx.io/core_manual_js.html)
 - [1.1.0 API Documentation](http://vertx.io/mod-lang-js/docs/1.1.0/index.html)
 - [HEAD API Documentation](https://vertx.ci.cloudbees.com/view/Javascript/job/vert.x-mod-lang-js/lastSuccessfulBuild/artifact/target/docs/index.html)
 
-## Continuous Integration
+### Continuous Integration
 
 The module is built on our 
 [Cloudbees CI server](https://vertx.ci.cloudbees.com/view/Javascript/job/vert.x-mod-lang-js/),
 as well as on [Travis CI](https://travis-ci.org/vert-x/mod-lang-js) with each push to GitHub.
 
-## Running the tests
+### Running the tests
 
 You'll need to have Maven and JDK7 or better installed. If you don't, do that
 first. Then you can clone and build.
