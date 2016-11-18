@@ -178,7 +178,7 @@ sockJS.SockJSServer = function(httpServer) {
       handleSocketCreated: lookup('socket-created', true),
       handlePreRegister  : lookup('pre-register',   true),
       handleUnRegister   : lookup('unregister',     true),
-      handleAuthorise    : lookup('authorize',      true),
+      handleAuthorise    : lookup('authorize',      false),
       handlePostRegister : lookup('post-register'),
       handleSocketClosed : lookup('socket-closed')
     }));
